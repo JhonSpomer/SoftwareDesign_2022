@@ -1,5 +1,7 @@
 {
     "dependencies": {
+        "@cloudscape-design/components": "^3.0.63",
+        "@cloudscape-design/global-styles": "^1.0.1",
         "create-react-app": "^5.0.1"
     }
 }
