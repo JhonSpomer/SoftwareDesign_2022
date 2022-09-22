@@ -1,9 +1,9 @@
-//Last update 9/22/2022 3:00 PM
+//Last update 9/22/2022 5:00 PM
 //Jhon. 
-//Added Error state.
+//Last added: querry function.
 
 // I am starting to try and create the login form. I believe we only need
-//the two fields for this page in particular. I still don't know what is up with the button. 
+//the two fields for this page in particular. 
 //
 
 
@@ -34,15 +34,16 @@ function App() {
           <Form
             actions={
               <SpaceBetween direction="horizontal" size="xs">
-                
-            
-                
+
+
+
                 <Button
                   variant="primary"
                   onClick={() => {
                     setUserValue("");
                     setPasswordValue("");
-                    //setErrorValue("AEIUGAEG");
+                    querry(userValue, passwordValue);
+
                   }}
                 >Submit</Button>
               </SpaceBetween>
@@ -52,19 +53,19 @@ function App() {
             <FormField
               description="Username"
               label=""
-              errorText= {ErrorValue}
+              errorText={ErrorValue}
             >
               <Input
                 value={userValue}
                 onChange={event => setUserValue(event.detail.value)
-                //errorText="ERROR"
+
                 }
               />
             </FormField>
             <FormField
               description="Password"
               label=""
-              errorText = {ErrorValue}
+              errorText={ErrorValue}
             >
               <Input
                 value={passwordValue}
@@ -78,6 +79,12 @@ function App() {
       }
     />
   );
+
+  function querry(usrName, pssWord) {
+    //later should querry db, for now, it just flags todo error state.
+    setErrorValue ("TODO ERROR");
+    //return null;
+  }
 }
 
 
