@@ -32,9 +32,9 @@ function App() {
       //label="Form field label"
     >
       <Input
-        value={inputValue}
+        value={value}
         onChange={event =>
-          setInputValue(event.detail.value)
+          setValue(event.detail.value)
         }
       />
     </FormField>
