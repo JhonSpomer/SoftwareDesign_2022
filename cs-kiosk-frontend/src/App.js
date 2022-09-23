@@ -19,11 +19,9 @@ import FormField from "@cloudscape-design/components/form-field";
 import SideNavigation from "@cloudscape-design/components/side-navigation";
 import Admin from "./pages/Admin"
 import Preview from "./pages/Preview"
+import { useHistory } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 
-
-
-import ReactDOM from "react-dom/client";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 //import setActiveHref from "@cloudscape-design/components/s"
 
 import './App.css';
@@ -34,9 +32,10 @@ function App() {
     [userValue, setUserValue] = useState();
   const [passwordValue, setPasswordValue] = React.useState("");
   const [ErrorValue, setErrorValue] = React.useState("");
-  const [activeHref, setActiveHref] = React.useState("#/page1");
+  const [activeHref, setActiveHref] = React.useState("page1");
   const [onAdminPage, setAdminPage] = React.useState(false);
   const [onPreviewPage, setPreviewPage] = React.useState(false);
+  const history = useHistory();
 
   return (
     <Applayout
@@ -48,32 +47,13 @@ function App() {
             if (!event.detail.external) {
               event.preventDefault();
               setActiveHref(event.detail.href);
-
+              history.push(event.detail.href);
               //setAdminPage(true);
-              if (activeHref == "#/page1") {
-                setAdminPage(true);
-                setPreviewPage(false);
-              }
-              
-              else if (activeHref == "#/page4") {
-                setAdminPage(false);
-                setPreviewPage(false);
-                //
-              }
-
-              else if (activeHref == "#/page2") {
-                setAdminPage(false);
-                setPreviewPage(true);
-
-              }
-              else {
-                //default
-              }
               
             }
           }}
           items={[
-            { type: "link", text: "Admin", href: "#/page1" },
+            { type: "link", text: "Admin", href: "page1" },
             { type: "link", text: "Preview", href: "#/page2" },
             { type: "link", text: "Content", href: "#/page3" },
             { type: "link", text: "Login", href: "#/page4" },
@@ -92,59 +72,58 @@ function App() {
 
       content={
 
-        onPreviewPage
-        ? <Preview></Preview>
-        :
-
-        onAdminPage
-        ? <Admin></Admin>
-
-        :
-        <form onSubmit={e => e.preventDefault()}>
-          <Form
-            actions={
-              <SpaceBetween direction="horizontal" size="xs">
-
-
-
-                <Button
-                  variant="primary"
-                  onClick={() => {
-                    setUserValue("");
-                    setPasswordValue("");
-                    querry(userValue, passwordValue);
-
-                  }}
-                >Submit</Button>
-              </SpaceBetween>
-            }
-            header={<Header variant="h1">Form header</Header>}
-          >
-            <FormField
-              description="Username"
-              label=""
-              errorText={ErrorValue}
-            >
-              <Input
-                value={userValue}
-                onChange={event => setUserValue(event.detail.value)
-
-                }
-              />
-            </FormField>
-            <FormField
-              description="Password"
-              label=""
-              errorText={ErrorValue}
-            >
-              <Input
-                value={passwordValue}
-                onChange={event => setPasswordValue(event.detail.value)
-                }
-              />
-            </FormField>
-          </Form>
-        </form>
+      <Routes>
+        <Route path="/page1" element={<Admin />}>
+        <Route path="*" element={
+           <form onSubmit={e => e.preventDefault()}>
+           <Form
+             actions={
+               <SpaceBetween direction="horizontal" size="xs">
+ 
+ 
+ 
+                 <Button
+                   variant="primary"
+                   onClick={() => {
+                     setUserValue("");
+                     setPasswordValue("");
+                     querry(userValue, passwordValue);
+ 
+                   }}
+                 >Submit</Button>
+               </SpaceBetween>
+             }
+             header={<Header variant="h1">Form header</Header>}
+           >
+             <FormField
+               description="Username"
+               label=""
+               errorText={ErrorValue}
+             >
+               <Input
+                 value={userValue}
+                 onChange={event => setUserValue(event.detail.value)
+ 
+                 }
+               />
+             </FormField>
+             <FormField
+               description="Password"
+               label=""
+               errorText={ErrorValue}
+             >
+               <Input
+                 value={passwordValue}
+                 onChange={event => setPasswordValue(event.detail.value)
+                 }
+               />
+             </FormField>
+           </Form>
+         </form>
+        } />
+      </Route>
+    </Routes>
+       
 
       }
     />
