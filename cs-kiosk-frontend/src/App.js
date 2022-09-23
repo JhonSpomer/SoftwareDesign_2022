@@ -19,7 +19,7 @@ import FormField from "@cloudscape-design/components/form-field";
 import SideNavigation from "@cloudscape-design/components/side-navigation";
 import Admin from "./pages/Admin"
 import Preview from "./pages/Preview"
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Route, Routes } from "react-router-dom";
 
 //import setActiveHref from "@cloudscape-design/components/s"
@@ -35,28 +35,28 @@ function App() {
   const [activeHref, setActiveHref] = React.useState("page1");
   const [onAdminPage, setAdminPage] = React.useState(false);
   const [onPreviewPage, setPreviewPage] = React.useState(false);
-  const history = useHistory();
+  const navigate = useNavigate();
 
   return (
     <Applayout
       navigation={
         <SideNavigation
           activeHref={activeHref}
-          header={{ href: "#/", text: "Admin Navigation" }}
+          header={{ href: "/", text: "Admin Navigation" }}
           onFollow={event => {
             if (!event.detail.external) {
               event.preventDefault();
               setActiveHref(event.detail.href);
-              history.push(event.detail.href);
+              navigate(event.detail.href);
               //setAdminPage(true);
               
             }
           }}
           items={[
             { type: "link", text: "Admin", href: "page1" },
-            { type: "link", text: "Preview", href: "#/page2" },
-            { type: "link", text: "Content", href: "#/page3" },
-            { type: "link", text: "Login", href: "#/page4" },
+            { type: "link", text: "Preview", href: "page2" },
+            { type: "link", text: "Content", href: "page3" },
+            { type: "link", text: "Login", href: "page4" },
             { type: "divider" }
             ,{
               //TODO
@@ -73,8 +73,9 @@ function App() {
       content={
 
       <Routes>
-        <Route path="/page1" element={<Admin />}>
-        <Route path="*" element={
+        <Route path="*" element={<div> default </div>}/>
+        <Route path="/page1" element={<Admin />}/>
+        <Route path="/page4" element={
            <form onSubmit={e => e.preventDefault()}>
            <Form
              actions={
@@ -121,7 +122,6 @@ function App() {
            </Form>
          </form>
         } />
-      </Route>
     </Routes>
        
 
