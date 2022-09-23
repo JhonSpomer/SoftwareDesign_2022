@@ -16,6 +16,15 @@ import Form from "@cloudscape-design/components/form";
 import SpaceBetween from "@cloudscape-design/components/space-between"
 import Header from "@cloudscape-design/components/header"
 import FormField from "@cloudscape-design/components/form-field";
+import SideNavigation from "@cloudscape-design/components/side-navigation";
+import Admin from "./pages/Admin"
+import Preview from "./pages/Preview"
+
+
+
+import ReactDOM from "react-dom/client";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+//import setActiveHref from "@cloudscape-design/components/s"
 
 import './App.css';
 
@@ -25,11 +34,72 @@ function App() {
     [userValue, setUserValue] = useState();
   const [passwordValue, setPasswordValue] = React.useState("");
   const [ErrorValue, setErrorValue] = React.useState("");
+  const [activeHref, setActiveHref] = React.useState("#/page1");
+  const [onAdminPage, setAdminPage] = React.useState(false);
+  const [onPreviewPage, setPreviewPage] = React.useState(false);
 
   return (
     <Applayout
+      navigation={
+        <SideNavigation
+          activeHref={activeHref}
+          header={{ href: "#/", text: "Admin Navigation" }}
+          onFollow={event => {
+            if (!event.detail.external) {
+              event.preventDefault();
+              setActiveHref(event.detail.href);
+
+              //setAdminPage(true);
+              if (activeHref == "#/page1") {
+                setAdminPage(true);
+                setPreviewPage(false);
+              }
+              
+              else if (activeHref == "#/page4") {
+                setAdminPage(false);
+                setPreviewPage(false);
+                //
+              }
+
+              else if (activeHref == "#/page2") {
+                setAdminPage(false);
+                setPreviewPage(true);
+
+              }
+              else {
+                //default
+              }
+              
+            }
+          }}
+          items={[
+            { type: "link", text: "Admin", href: "#/page1" },
+            { type: "link", text: "Preview", href: "#/page2" },
+            { type: "link", text: "Content", href: "#/page3" },
+            { type: "link", text: "Login", href: "#/page4" },
+            { type: "divider" }
+            ,{
+              //TODO
+              type: "link",
+              text: "User Guide",
+              href: "https://example.com",
+              external: true
+            }
+          ]}
+        />
+      }
+
 
       content={
+
+        onPreviewPage
+        ? <Preview></Preview>
+        :
+
+        onAdminPage
+        ? <Admin></Admin>
+
+        :
         <form onSubmit={e => e.preventDefault()}>
           <Form
             actions={
@@ -82,9 +152,11 @@ function App() {
 
   function querry(usrName, pssWord) {
     //later should querry db, for now, it just flags todo error state.
-    setErrorValue ("TODO ERROR");
+    setErrorValue("TODO ERROR");
     //return null;
   }
+
+
 }
 
 
