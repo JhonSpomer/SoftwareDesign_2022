@@ -13,10 +13,10 @@ import SpaceBetween from "@cloudscape-design/components/space-between"
 import Header from "@cloudscape-design/components/header"
 import FormField from "@cloudscape-design/components/form-field";
 import SideNavigation from "@cloudscape-design/components/side-navigation";
+import Checkbox from "@cloudscape-design/components/checkbox";
 import Admin from "./pages/Admin"
 import Preview from "./pages/Preview"
-import { useNavigate, useLocation,Route, Routes } from "react-router-dom";
-//import { Route, Routes } from "react-router-dom";
+import { useNavigate, useLocation, Route, Routes } from "react-router-dom";
 import './App.css';
 
 //variables
@@ -25,26 +25,26 @@ function App() {
     [userValue, setUserValue] = useState();
   const [passwordValue, setPasswordValue] = React.useState("");
   const [ErrorValue, setErrorValue] = React.useState("");
-  const [activeHref, setActiveHref] = React.useState("page1");
-  const [onAdminPage, setAdminPage] = React.useState(false);
-  const [onPreviewPage, setPreviewPage] = React.useState(false);
+  const [activeHref, setActiveHref] = React.useState("/");
   const [navigationHide, setNavValue] = React.useState(true);
+  const [toolsHide, setToolsValue] = React.useState(true);
   const navigate = useNavigate();
   const location = useLocation();
+  const [checked, setChecked] = React.useState(false);
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     console.log(location.pathname)
-    if (location.pathname === "/")
-    {
+    if (location.pathname === "/") {
       setNavValue(true);
+      setToolsValue(true);
     }
   }, [location]);
 
 
   return (
     <Applayout
-    navigationHide = {navigationHide}
+      navigationHide={navigationHide}
+      toolsHide={toolsHide}
       navigation={
         <SideNavigation
           activeHref={activeHref}
@@ -55,7 +55,7 @@ function App() {
               setActiveHref(event.detail.href);
               navigate(event.detail.href);
               //setAdminPage(true);
-              
+
             }
           }}
           items={[
@@ -64,7 +64,7 @@ function App() {
             { type: "link", text: "Users", href: "users" },
             { type: "link", text: "Login", href: "/" },
             { type: "divider" }
-            ,{
+            , {
               //TODO
               type: "link",
               text: "User Guide",
@@ -78,74 +78,90 @@ function App() {
 
       content={
 
-      <Routes>
-        <Route path="*" element={<div>This is default page</div> }/>
-        <Route path="/admin" element={<Admin />}/>
-        <Route path="/preview" element={<div>this is preview</div>}/>
-        <Route path="/users" element={<div>this is users</div>}/>
+        <Routes>
+          <Route path="*" element={<div>This is default page</div>} />
+          <Route path="/admin" element={<Admin />} />
+          <Route path="/preview" element={<Preview />}/>
+          <Route path="/users" element={<div>this is users</div>} />
 
-        <Route path="/" element={
-          <div> 
-          <form onSubmit={e => e.preventDefault()}>
-           <Form
-             actions={
-               <SpaceBetween direction="horizontal" size="xs">
-                 <Button
-                   variant="primary"
-                   onClick={() => {
-                     setUserValue("");
-                     setPasswordValue("");
-                     querry(userValue, passwordValue);
-                     //NavBarBool();
- 
-                   }}
-                 >Submit</Button>
-               </SpaceBetween>
-             }
-             header={<Header variant="h1">Login</Header>}
-           >
-             <FormField
-               description="Username"
-               label=""
-               errorText={ErrorValue}
-             >
-               <Input
-                 value={userValue}
-                 onChange={event => setUserValue(event.detail.value)}
-               />
-             </FormField>
-             <FormField
-               description="Password"
-               label=""
-               errorText={ErrorValue}
-             >
-               <Input
-                 value={passwordValue}
-                 onChange={event => setPasswordValue(event.detail.value)
-                 }
-               />
-             </FormField>
-           </Form>
-         </form>
-        </div>
-        } />
-    </Routes>
-       
+          <Route path="/" element={
+            <div>
+              <form onSubmit={e => e.preventDefault()}>
+                <Form
+                  actions={
+                    <SpaceBetween direction="horizontal" size="xs">
+                      <Button
+                        variant="primary"
+                        disabled ={!checked}
+                        onClick={() => {
+                          setUserValue("");
+                          setPasswordValue("");
+                          querry(userValue, passwordValue);
+                          //NavBarBool();
 
+                        }}
+                      >Submit</Button>
+                    </SpaceBetween>
+                  }
+                  header={<Header variant="h1">Login</Header>}
+                >
+                  <FormField
+                    description="Username"
+                    label=""
+                    errorText={ErrorValue}
+                  >
+                    <Input
+                      value={userValue}
+                      onChange={event => setUserValue(event.detail.value)}
+                    />
+                  </FormField>
+                  <FormField
+                    description="Password"
+                    label=""
+                    errorText={ErrorValue}
+                  >
+                    <Input
+                      value={passwordValue}
+                      onChange={event => setPasswordValue(event.detail.value)
+                      }
+                    />
+                  </FormField>
+                </Form>
+              </form>
+
+              <Checkbox
+      onChange={({ detail }) =>
+        setChecked(detail.checked)
+      }
+      checked={checked}
+    >
+      YOU AGREE TO THE --TODO-- TERMS. GREAT THANKS
+    </Checkbox>
+
+            </div>
+          } />
+        </Routes>
       }
     />
   );
 
   function querry(usrName, pssWord) {
     //later should querry db, for now, it just flags todo error state.
-    setErrorValue("TODO ERROR");
     //check if user credentials are in database
 
     //TODO
 
 
     //reset navbar access
-    setNavValue(false);
+    //placeholder var checking.
+    if (usrName == "susan" && pssWord == "admin") {
+      setNavValue(false);
+      navigate("/admin");
+    }
+    else
+    {
+      setErrorValue("INVALID CREDENTIALS");
+    }
   }
 
 
