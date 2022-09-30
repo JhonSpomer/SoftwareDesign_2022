@@ -1,6 +1,16 @@
-//Last update 9/29/2022 9:00 PM
-//
-//Last added: navbar work, dissabling navbar on login page.
+/*
+Last update: 9/29/2022 9:00 PM
+Last worked on by: Jhon
+Last added: navbar work, dissabling navbar on login page.
+
+
+login page and front end, hides nav bar, with error validation.  
+
+-TODO-
+connect to db and remove hard coded test credentials
+checkbox terms with actual text.
+
+*/
 
 //imports
 import React, { useEffect, useState } from 'react';
@@ -81,7 +91,7 @@ function App() {
         <Routes>
           <Route path="*" element={<div>This is default page</div>} />
           <Route path="/admin" element={<Admin />} />
-          <Route path="/preview" element={<Preview />}/>
+          <Route path="/preview" element={<Preview />} />
           <Route path="/users" element={<div>this is users</div>} />
 
           <Route path="/" element={
@@ -92,7 +102,7 @@ function App() {
                     <SpaceBetween direction="horizontal" size="xs">
                       <Button
                         variant="primary"
-                        disabled ={!checked}
+                        disabled={!checked}
                         onClick={() => {
                           setUserValue("");
                           setPasswordValue("");
@@ -130,13 +140,13 @@ function App() {
               </form>
 
               <Checkbox
-      onChange={({ detail }) =>
-        setChecked(detail.checked)
-      }
-      checked={checked}
-    >
-      YOU AGREE TO THE --TODO-- TERMS. GREAT THANKS
-    </Checkbox>
+                onChange={({ detail }) =>
+                  setChecked(detail.checked)
+                }
+                checked={checked}
+              >
+                YOU AGREE TO THE --TODO-- TERMS. GREAT THANKS
+              </Checkbox>
 
             </div>
           } />
@@ -158,8 +168,7 @@ function App() {
       setNavValue(false);
       navigate("/admin");
     }
-    else
-    {
+    else {
       setErrorValue("INVALID CREDENTIALS");
     }
   }

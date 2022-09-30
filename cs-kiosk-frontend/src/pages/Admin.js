@@ -1,13 +1,16 @@
 /*
-Admin page. Last modified 9/29/2022
-Jhon
-
+Last modified: 9/29/2022
+Last worked on by: Jhon
+last added: submit and cancel functions.
 This page should allow user to upload files provided and place them in the carousel and database.
 
 -TODO-
 drag and drop.
-file navigation.
+make upload buttons look nice.
+finish delete and upload functions.
+connect to db.
 */
+
 import React from 'react' //nothing here yet. admin page
 import Form from "@cloudscape-design/components/form";
 import SpaceBetween from "@cloudscape-design/components/space-between"
@@ -32,10 +35,20 @@ export default function Admin() {
             <Form
                 actions={
                     <SpaceBetween direction="horizontal" size="xs">
-                        <Button formAction="none" variant="link">
-                            Cancel
-                        </Button>
-                        <Button variant="primary">Submit</Button>
+                     <Button
+                        variant="primary"
+                        //disabled ={!checked}
+                        onClick={() => {
+                            cancel();
+                        }}
+                      >cancel</Button>
+
+                        <Button 
+                        variant="primary"
+                        onClick={() => {
+                            submit();
+                        }}
+                        >Submit</Button>
                     </SpaceBetween>
                 }
                 header={<Header variant="h1">Form header</Header>}
@@ -43,39 +56,38 @@ export default function Admin() {
                 <FormField
                     description="This is object 1"
                     label="Box 1"
+                    
                 >
-                    <Input
-                        value={FileInputValue}
-                        onChange={event =>
-                            setFileInputValue(event.detail.value)
-                        }
-                    />
+                    <input type = "file" id="fileupload" name="fileupload1"/>
                 </FormField>
                 <FormField
                     description="This is object 2"
                     label="Box 2"
                 >
-                    <Input
-                        value={FileInputValue2}
-                        onChange={event =>
-                            setFileInputValue2(event.detail.value)
-                        }
-                    />
+                    <input type = "file" id="fileupload2" name="fileupload2"/>
                 </FormField>
                 <FormField
                     description="This is object 3"
                     label="Box 3"
                 >
-                    <Input
-                        value={FileInputValue3}
-                        onChange={event =>
-                            setFileInputValue3(event.detail.value)
-                        }
-                    />
+                    <input type = "file" id="fileupload3" name="fileupload3"/>
                 </FormField>
             </Form>
 
             
         </form>
+
+
     </div>
+}
+
+function cancel() {
+
+    //TODO
+
+}
+
+function submit() {
+
+    //TODO
 }
