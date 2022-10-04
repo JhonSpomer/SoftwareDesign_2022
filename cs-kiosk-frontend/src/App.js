@@ -1,14 +1,14 @@
 /*
-Last update: 9/29/2022 9:00 PM
+Last update: 10/4/2022 9:00 PM
 Last worked on by: Jhon
-Last added: navbar work, dissabling navbar on login page.
+Last added: navbar work, dissabling navbar on login page. Documentation.
 
 
 login page and front end, hides nav bar, with error validation.  
 
 -TODO-
 connect to db and remove hard coded test credentials
-checkbox terms with actual text.
+replace checkbox terms with actual text.
 
 */
 

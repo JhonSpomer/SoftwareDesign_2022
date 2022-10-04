@@ -1,12 +1,12 @@
 /*
-Last modified: 9/29/2022
+Last modified: 10/4/2022
 Last worked on by: Jhon
-last added: submit and cancel functions.
-This page should allow user to upload files provided and place them in the carousel and database.
+last added: radio box toggleing.
+This page should allow user to upload files provided and place them in the carousel and database. User can toggle to the input field they desire.
 
 -TODO-
 drag and drop.
-make upload buttons look nice.
+make upload buttons look nice. Hide dissabled input fields.
 finish delete and upload functions.
 connect to db.
 */
