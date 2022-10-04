@@ -92,7 +92,7 @@ function App() {
       content={
 
         <Routes>
-          <Route path="*" element={<div>This is default page</div>} />
+          <Route path="*" element={<div>Oh no! You appear to have gotten lost. Please restart the system to get back to the login page. If this does not fix this problem. Please contact the system maintence team.</div>} />
           <Route path="/test" element={<Tests />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/preview" element={<Preview />} />
