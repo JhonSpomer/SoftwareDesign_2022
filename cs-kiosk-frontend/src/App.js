@@ -14,7 +14,8 @@ replace checkbox terms with actual text.
 
 //imports
 import React, { useEffect, useState } from 'react';
-import "@cloudscape-design/global-styles/index.css";
+
+import "@cloudscape-design/global-styles/index.css"
 import Applayout from "@cloudscape-design/components/app-layout";
 import Button from "@cloudscape-design/components/button";
 import Input from "@cloudscape-design/components/input";
@@ -25,6 +26,8 @@ import FormField from "@cloudscape-design/components/form-field";
 import SideNavigation from "@cloudscape-design/components/side-navigation";
 import Checkbox from "@cloudscape-design/components/checkbox";
 import Admin from "./pages/Admin"
+import Users from "./pages/Users"
+import Tests from "./pages/Test"
 import Preview from "./pages/Preview"
 import { useNavigate, useLocation, Route, Routes } from "react-router-dom";
 import './App.css';
@@ -90,9 +93,10 @@ function App() {
 
         <Routes>
           <Route path="*" element={<div>This is default page</div>} />
+          <Route path="/test" element={<Tests />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/preview" element={<Preview />} />
-          <Route path="/users" element={<div>this is users</div>} />
+          <Route path="/users" element={<Users />} />
 
           <Route path="/" element={
             <div>
