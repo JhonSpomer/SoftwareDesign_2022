@@ -2,6 +2,7 @@
   "name": "cs-kiosk-display",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://localhost:9000/carousel",
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
@@ -14,7 +15,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "BUILD_PATH='../cs-kiosk-backend/public' react-scripts build",
+    "build": "BUILD_PATH='../cs-kiosk-backend/public/carousel' react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
