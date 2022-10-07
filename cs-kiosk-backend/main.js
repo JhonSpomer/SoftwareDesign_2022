@@ -19,7 +19,7 @@ const
         {
             id: "slide1",
             type: "image",
-            content: Binary(fs.readFileSync("1.png"))
+            content: fs.readFileSync("1.png")
         },
         {
             id: "slide2",
@@ -45,7 +45,7 @@ const
     });
 
     api.get("/slides.json", (req, res) => {
-        res.status(200).send("Hello world!");
+        res.status(200).send(JSON.stringify(dummySlides));
     });
 
     api.post("/slides.json", (req, res) => {
