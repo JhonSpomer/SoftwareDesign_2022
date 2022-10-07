@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/mongodb": "^4.0.7",
     "electron": "^20.2.0"
   },
   "dependencies": {
