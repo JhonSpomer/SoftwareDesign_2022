@@ -13,6 +13,7 @@
     "electron": "^20.2.0"
   },
   "dependencies": {
-    "express": "^4.18.1"
+    "express": "^4.18.1",
+    "mongodb": "^4.10.0"
   }
 }
