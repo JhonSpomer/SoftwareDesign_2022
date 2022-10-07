@@ -27,6 +27,7 @@ export default function Admin() {
 
     //variables
     const [urlValue1, setUrlValue1] = useState();
+    const [fileValue0, setFileValue0] = useState();
     const [urlValue2, setUrlValue2] = useState();
     const [urlValue3, setUrlValue3] = useState();
     const [value, setValue] = React.useState(false);
@@ -74,11 +75,17 @@ export default function Admin() {
                     label="File upload 1"
 
                 >
-                    {
-                        value
-                        ? <input type="file" id="fileupload1" name="fileupload1" disabled="disabled" />
-                        : <input type="file" id="fileupload1" name="fileupload1" />
-                    }
+                    {/* This works better. -Matthew */}
+                    <input
+                        type="file"
+                        value={fileValue0}
+                        disabled={value}
+                        onChange={event => {
+                            console.log(event.target.files[0]);
+                            console.log("Look at me!");
+                            setFileValue0(event.target.files[0]);
+                        }}
+                    />
                 </FormField>
                 <FormField
                     label="URL upload 1"
