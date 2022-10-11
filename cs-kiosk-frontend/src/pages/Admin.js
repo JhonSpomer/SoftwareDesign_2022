@@ -19,6 +19,7 @@ import Button from "@cloudscape-design/components/button";
 import React, { useEffect, useState } from 'react';
 import RadioGroup from "@cloudscape-design/components/radio-group";
 import Input from "@cloudscape-design/components/input";
+import { getSlides } from "../utility/retrieve_slides";
 
 
 export default function Admin() {
@@ -26,48 +27,50 @@ export default function Admin() {
     //variables
     const [SlideName, setSlideName] = useState();
     const [ErrorValue, setErrorValue] = React.useState("");
+    const slides = getSlides();
+
     return <div>
 
 
 
         <form onSubmit={e => e.preventDefault()}>
 
-            <Form 
-             actions={
-                <SpaceBetween direction="horizontal" size="xs">
-                    <Button
-                        variant="primary"
-                        onClick={() => {
-                            deleteSlide();
-                            setErrorValue("DELETE SLIDE");
-                            console.log("delete!");
-                        }}
-                    >Remove Slide</Button>
+            <Form
+                actions={
+                    <SpaceBetween direction="horizontal" size="xs">
+                        <Button
+                            variant="primary"
+                            onClick={() => {
+                                deleteSlide();
+                                setErrorValue("DELETE SLIDE");
+                                console.log("delete!");
+                            }}
+                        >Remove Slide</Button>
 
-                    <Button
-                        variant="primary"
-                        onClick={() => {
-                            createSlide();
-                            setErrorValue("CREATE SLIDE");
-                            console.log("add!");
-                        }}
-                    >Add Slide</Button>
-                </SpaceBetween>
-                
-            }
-            header={<Header variant="h1">Please select your choice</Header>}
+                        <Button
+                            variant="primary"
+                            onClick={() => {
+                                createSlide();
+                                setErrorValue("CREATE SLIDE");
+                                console.log("add!");
+                            }}
+                        >Add Slide</Button>
+                    </SpaceBetween>
+
+                }
+                header={<Header variant="h1">Please select your choice</Header>}
 
             >
                 <FormField
                     description="Enter the slide name"
                     label=""
                     errorText={ErrorValue}
-                  >
+                >
                     <Input
-                      value={SlideName}
-                      onChange={event => setSlideName(event.detail.value)}
+                        value={SlideName}
+                        onChange={event => setSlideName(event.detail.value)}
                     />
-                  </FormField>
+                </FormField>
             </Form>
         </form>
     </div>
@@ -76,12 +79,12 @@ export default function Admin() {
 function deleteSlide() {
 
     //TODO navigate to slide delete
-   
+
 
 }
 
 function createSlide() {
 
     //TODO navigate to slide create
-    
+
 }
