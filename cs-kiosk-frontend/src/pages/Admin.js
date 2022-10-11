@@ -30,49 +30,43 @@ export default function Admin() {
     const slides = getSlides();
 
     return <div>
+        <Form
+            actions={
+                <SpaceBetween direction="horizontal" size="xs">
+                    <Button
+                        variant="primary"
+                        onClick={() => {
+                            deleteSlide();
+                            setErrorValue("DELETE SLIDE");
+                            console.log("delete!");
+                        }}
+                    >Remove Slide</Button>
 
+                    <Button
+                        variant="primary"
+                        onClick={() => {
+                            createSlide();
+                            setErrorValue("CREATE SLIDE");
+                            console.log("add!");
+                        }}
+                    >Add Slide</Button>
+                </SpaceBetween>
 
+            }
+            header={<Header variant="h1">Please select your choice</Header>}
 
-        <form onSubmit={e => e.preventDefault()}>
-
-            <Form
-                actions={
-                    <SpaceBetween direction="horizontal" size="xs">
-                        <Button
-                            variant="primary"
-                            onClick={() => {
-                                deleteSlide();
-                                setErrorValue("DELETE SLIDE");
-                                console.log("delete!");
-                            }}
-                        >Remove Slide</Button>
-
-                        <Button
-                            variant="primary"
-                            onClick={() => {
-                                createSlide();
-                                setErrorValue("CREATE SLIDE");
-                                console.log("add!");
-                            }}
-                        >Add Slide</Button>
-                    </SpaceBetween>
-
-                }
-                header={<Header variant="h1">Please select your choice</Header>}
-
+        >
+            <FormField
+                description="Enter the slide name"
+                label=""
+                errorText={ErrorValue}
             >
-                <FormField
-                    description="Enter the slide name"
-                    label=""
-                    errorText={ErrorValue}
-                >
-                    <Input
-                        value={SlideName}
-                        onChange={event => setSlideName(event.detail.value)}
-                    />
-                </FormField>
-            </Form>
-        </form>
+                <Input
+                    value={SlideName}
+                    onChange={event => setSlideName(event.detail.value)}
+                />
+            </FormField>
+        </Form>
     </div>
 }
 
