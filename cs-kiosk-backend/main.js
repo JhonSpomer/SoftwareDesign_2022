@@ -13,16 +13,19 @@ const
     dummySlides = [
         {
             id: "slide0",
+            name: "Slide 0",
             type: "link",
             content: "https://example.com"
         },
         {
             id: "slide1",
+            name: "Slide 1",
             type: "image",
             content: fs.readFileSync("1.png")
         },
         {
             id: "slide2",
+            name: "Slide 2",
             type: "link",
             content: "https://example.com"
         }
