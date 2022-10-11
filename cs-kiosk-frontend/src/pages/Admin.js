@@ -24,11 +24,7 @@ import Input from "@cloudscape-design/components/input";
 export default function Admin() {
 
     //variables
-    const [urlValue1, setUrlValue1] = useState();
-    const [fileValue0, setFileValue0] = useState();
-    const [urlValue2, setUrlValue2] = useState();
-    const [urlValue3, setUrlValue3] = useState();
-    const [value, setValue] = React.useState(false);
+    const [SlideName, setSlideName] = useState();
     const [ErrorValue, setErrorValue] = React.useState("");
     return <div>
 
@@ -43,6 +39,8 @@ export default function Admin() {
                         variant="primary"
                         onClick={() => {
                             deleteSlide();
+                            setErrorValue("DELETE SLIDE");
+                            console.log("delete!");
                         }}
                     >Remove Slide</Button>
 
@@ -50,24 +48,40 @@ export default function Admin() {
                         variant="primary"
                         onClick={() => {
                             createSlide();
+                            setErrorValue("CREATE SLIDE");
+                            console.log("add!");
                         }}
                     >Add Slide</Button>
                 </SpaceBetween>
+                
             }
             header={<Header variant="h1">Please select your choice</Header>}
 
-            ></Form>
+            >
+                <FormField
+                    description="Enter the slide name"
+                    label=""
+                    errorText={ErrorValue}
+                  >
+                    <Input
+                      value={SlideName}
+                      onChange={event => setSlideName(event.detail.value)}
+                    />
+                  </FormField>
+            </Form>
         </form>
     </div>
 }
 
 function deleteSlide() {
 
-    //TODO
+    //TODO navigate to slide delete
+   
 
 }
 
-function addSlide() {
+function createSlide() {
 
-    //TODO
+    //TODO navigate to slide create
+    
 }
