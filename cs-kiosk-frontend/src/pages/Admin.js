@@ -140,7 +140,10 @@ export default function Admin() {
                                 Edit slide
                             </Button>
                             <Button
-                                onClick={() => console.log("del")}
+                                onClick={() => {
+                                    console.log("del");
+                                    setItems(items.filter(i => i.name !== item.name));
+                                }}
                             >
                                 Delete slide
                             </Button></SpaceBetween>
