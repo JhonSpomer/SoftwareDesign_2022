@@ -71,98 +71,145 @@ export default function Admin() {
     const which = false;
 
     return which
-    ? <div>
-        <Form
-            actions={
-                <SpaceBetween direction="horizontal" size="xs">
-                    <Button
-                        variant="primary"
-                        onClick={() => {
-                            //deleteSlide();
-                            //setErrorValue("DELETE SLIDE");
-                            console.log("delete!");
-                        }}
-                    >Remove Slide</Button>
+        ? <div>
+            <Form
+                actions={
+                    <SpaceBetween direction="horizontal" size="xs">
+                        <Button
+                            variant="primary"
+                            onClick={() => {
+                                //deleteSlide();
+                                //setErrorValue("DELETE SLIDE");
+                                console.log("delete!");
+                            }}
+                        >Remove Slide</Button>
 
-                    <Button
-                        variant="primary"
-                        onClick={() => {
-                           //createSlide();
-                            //setErrorValue("CREATE SLIDE");
-                            console.log("add!");
-                        }}
-                    >Add Slide</Button>
-                </SpaceBetween>
+                        <Button
+                            variant="primary"
+                            onClick={() => {
+                                //createSlide();
+                                //setErrorValue("CREATE SLIDE");
+                                console.log("add!");
+                            }}
+                        >Add Slide</Button>
+                    </SpaceBetween>
 
-            }
-            header={<Header variant="h1">Please select your choice</Header>}
-
-        >
-            <FormField
-                description="Enter the slide name"
-                label=""
-                errorText={ErrorValue}
-            >
-                <Input
-                    value={SlideName}
-                    onChange={event => setSlideName(event.detail.value)}
-                />
-            </FormField>
-        </Form>
-    </div>
-
-    : <Cards
-        ariaLabels={{
-            itemSelectionLabel: (e, t) => `select ${t.name}`,
-            selectionGroupLabel: "Item selection"
-        }}
-        cardDefinition={{
-            header: item => (
-                <Link fontSize="heading-m">{item.name}</Link>
-            ),
-            sections: [
-                {
-                    id: "description",
-                    header: "Description",
-                    content: item => item.description
-                },
-                {
-                    id: "type",
-                    header: "Type",
-                    content: item => <Button
-                        onClick={() => console.log("Hi!")}
-                    >
-                        Click me
-                    </Button>
-                },
-                {
-                    id: "size",
-                    header: "Size",
-                    content: item => item.size
                 }
-            ]
-        }}
-        cardsPerRow={[
-            { cards: 1 },
-            { minWidth: 500, cards: 1 }
-        ]}
-        items={items}
-        loadingText="Loading resources"
-        empty={
-            <Box textAlign="center" color="inherit">
-                <b>No resources</b>
-                <Box
-                    padding={{ bottom: "s" }}
-                    variant="p"
-                    color="inherit"
+                header={<Header variant="h1">Please select your choice</Header>}
+
+            >
+                <FormField
+                    description="Enter the slide name"
+                    label=""
+                    errorText={ErrorValue}
                 >
-                    No resources to display.
+                    <Input
+                        value={SlideName}
+                        onChange={event => setSlideName(event.detail.value)}
+                    />
+                </FormField>
+            </Form>
+        </div>
+
+        : <Cards
+            ariaLabels={{
+                itemSelectionLabel: (e, t) => `select ${t.name}`,
+                selectionGroupLabel: "Item selection"
+            }}
+            cardDefinition={{
+                header: item => (
+                    <Link fontSize="heading-m">{item.name}</Link>
+                ),
+                sections: [
+                    {
+                        id: "description",
+                        header: "Description",
+                        content: item => item.description
+                    },
+                    {
+                        id: "type",
+                        header: "Type",
+                        content: item => <SpaceBetween
+                            direction="horizontal"
+                            size="m"
+                        >
+
+                            <Button
+                                onClick={() => console.log("add")}
+                            >
+                                Edit
+                            </Button>
+                            <Button
+                                onClick={() => console.log("del")}
+                            >
+                                Delete
+                            </Button></SpaceBetween>
+                    },
+                    {
+                        id: "size",
+                        header: "Size",
+                        content: item => item.size
+                    }
+                ]
+            }}
+            cardsPerRow={[
+                { cards: 1 },
+                { minWidth: 500, cards: 1 }
+            ]}
+            items={[
+                {
+                    name: "Item 1",
+                    alt: "First",
+                    description: "This is the first item"
+
+                },
+                {
+                    name: "Item 2",
+                    alt: "Second",
+                    description: "This is the second item"
+
+                },
+                {
+                    name: "Item 3",
+                    alt: "Third",
+                    description: "This is the third item"
+
+                },
+                {
+                    name: "Item 4",
+                    alt: "Fourth",
+                    description: "This is the fourth item"
+
+                },
+                {
+                    name: "Item 5",
+                    alt: "Fifth",
+                    description: "This is the fifth item"
+
+                },
+                {
+                    name: "Item 6",
+                    alt: "Sixth",
+                    description: "This is the sixth item"
+
+                }
+            ]}
+            loadingText="Loading resources"
+            empty={
+                <Box textAlign="center" color="inherit">
+                    <b>No resources</b>
+                    <Box
+                        padding={{ bottom: "s" }}
+                        variant="p"
+                        color="inherit"
+                    >
+                        No resources to display.
+                    </Box>
+                    <Button>Create resource</Button>
                 </Box>
-                <Button>Create resource</Button>
-            </Box>
-        }
-        header={<Header>Example Cards</Header>}
-    />;
+            }
+            header={<Header>Example Cards</Header>}
+        />;
 }
 
 function deleteSlide() {
