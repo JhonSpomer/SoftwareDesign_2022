@@ -90,7 +90,11 @@ export default function Admin() {
                 {
                     id: "type",
                     header: "Type",
-                    content: item => item.type
+                    content: item => <Button
+                        onClick={() => console.log("Hi!")}
+                    >
+                        Click me
+                    </Button>
                 },
                 {
                     id: "size",
