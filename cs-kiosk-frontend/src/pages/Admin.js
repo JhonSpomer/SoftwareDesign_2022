@@ -137,12 +137,12 @@ export default function Admin() {
                             <Button
                                 onClick={() => console.log("add")}
                             >
-                                Edit
+                                Edit slide
                             </Button>
                             <Button
                                 onClick={() => console.log("del")}
                             >
-                                Delete
+                                Delete slide
                             </Button></SpaceBetween>
                     },
                     {
