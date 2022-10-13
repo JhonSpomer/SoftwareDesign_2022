@@ -40,8 +40,8 @@ export default function Admin() {
                     <Button
                         variant="primary"
                         onClick={() => {
-                            deleteSlide();
-                            setErrorValue("DELETE SLIDE");
+                            //deleteSlide();
+                            //setErrorValue("DELETE SLIDE");
                             console.log("delete!");
                         }}
                     >Remove Slide</Button>
@@ -49,8 +49,8 @@ export default function Admin() {
                     <Button
                         variant="primary"
                         onClick={() => {
-                            createSlide();
-                            setErrorValue("CREATE SLIDE");
+                           //createSlide();
+                            //setErrorValue("CREATE SLIDE");
                             console.log("add!");
                         }}
                     >Add Slide</Button>
@@ -72,6 +72,7 @@ export default function Admin() {
             </FormField>
         </Form>
     </div>
+
     : <Cards
         ariaLabels={{
             itemSelectionLabel: (e, t) => `select ${t.name}`,
@@ -105,50 +106,44 @@ export default function Admin() {
         }}
         cardsPerRow={[
             { cards: 1 },
-            { minWidth: 500, cards: 2 }
+            { minWidth: 500, cards: 1 }
         ]}
         items={[
             {
                 name: "Item 1",
                 alt: "First",
-                description: "This is the first item",
-                type: "1A",
-                size: "Small"
+                description: "This is the first item"
+
             },
             {
                 name: "Item 2",
                 alt: "Second",
-                description: "This is the second item",
-                type: "1B",
-                size: "Large"
+                description: "This is the second item"
+
             },
             {
                 name: "Item 3",
                 alt: "Third",
-                description: "This is the third item",
-                type: "1A",
-                size: "Large"
+                description: "This is the third item"
+
             },
             {
                 name: "Item 4",
                 alt: "Fourth",
-                description: "This is the fourth item",
-                type: "2A",
-                size: "Small"
+                description: "This is the fourth item"
+
             },
             {
                 name: "Item 5",
                 alt: "Fifth",
-                description: "This is the fifth item",
-                type: "2A",
-                size: "Large"
+                description: "This is the fifth item"
+
             },
             {
                 name: "Item 6",
                 alt: "Sixth",
-                description: "This is the sixth item",
-                type: "1A",
-                size: "Small"
+                description: "This is the sixth item"
+
             }
         ]}
         loadingText="Loading resources"

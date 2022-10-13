@@ -10,6 +10,9 @@ login page and front end, hides nav bar, with error validation.
 connect to db and remove hard coded test credentials
 replace checkbox terms with actual text.
 
+-KNOWN BUGS-
+Page starts on login in the nav bar, even though it redirects to admin.
+
 */
 
 //imports
