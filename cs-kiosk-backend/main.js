@@ -48,23 +48,35 @@ const
     });
 
     api.get("/slides.json", (req, res) => {
-        res.status(200).send(JSON.stringify(dummySlides));
+        res.setHeader("Access-Control-Allow-Origin", "*");
+        res
+            .status(200)
+            .send(JSON.stringify(dummySlides));
     });
 
     api.post("/slides.json", (req, res) => {
         req.on("data", chunk => console.log(chunk.toString()));
         req.on("close", () => console.log("Closed"));
-        res.status(200).send("Done");
+        res.setHeader("Access-Control-Allow-Origin", "*");
+        res
+            .status(200)
+            .send("Done");
     });
 
     api.get("/order.json", (req, res) => {
-        res.status(200).send(JSON.stringify(dummyOrder));
+        res.setHeader("Access-Control-Allow-Origin", "*");
+        res
+            .status(200)
+            .send(JSON.stringify(dummyOrder));
     });
 
     api.post("/order.json", (req, res) => {
         req.on("data", chunk => console.log(chunk.toString()));
         req.on("close", () => console.log("Closed"));
-        res.status(200).send("Done");
+        res.setHeader("Access-Control-Allow-Origin", "*");
+        res
+            .status(200)
+            .send("Done");
     });
 
     // Electron kiosk display
