@@ -9,7 +9,17 @@ Display react/bootstrap carosuel to preview current kiosk display.
 literally all of it.
 
 */
-import React from 'react' //nothing here yet. admin page
+
+import React from "react";
+import ContentLayout from "@cloudscape-design/components/content-layout";
+import Container from "@cloudscape-design/components/container";
+
 export default function Preview () {
-    return <div> hello, this is preview page </div>
+    return <ContentLayout>
+        <iframe
+            src="http://localhost:9000/carousel"
+            width={"100%"}
+            height={"100%"}
+        />
+    </ContentLayout>;
 }
