@@ -3,12 +3,9 @@ Last modified: 10/11/2022
 Last worked on by: Jhon
 last added: radio box toggleing.
 This page should allow user to upload files provided and place them in the carousel and database. 
-
 --NOTE--
 This is an attempt to make the front page look cleaner. With the site directing the user to the correct page based on the button choice.
-
 -TODO-
-
 */
 
 import Form from "@cloudscape-design/components/form";
@@ -159,44 +156,7 @@ export default function Admin() {
                 { cards: 1 },
                 { minWidth: 500, cards: 1 }
             ]}
-            items={[
-                {
-                    name: "Item 1",
-                    alt: "First",
-                    description: "This is the first item"
-
-                },
-                {
-                    name: "Item 2",
-                    alt: "Second",
-                    description: "This is the second item"
-
-                },
-                {
-                    name: "Item 3",
-                    alt: "Third",
-                    description: "This is the third item"
-
-                },
-                {
-                    name: "Item 4",
-                    alt: "Fourth",
-                    description: "This is the fourth item"
-
-                },
-                {
-                    name: "Item 5",
-                    alt: "Fifth",
-                    description: "This is the fifth item"
-
-                },
-                {
-                    name: "Item 6",
-                    alt: "Sixth",
-                    description: "This is the sixth item"
-
-                }
-            ]}
+            items={items}
             loadingText="Loading resources"
             empty={
                 <Box textAlign="center" color="inherit">
