@@ -10,6 +10,10 @@ literally all of it.
 
 */
 import React from 'react' //nothing here yet. admin page
+import Button from "@cloudscape-design/components/button";
 export default function Tests () {
-    return <div> hello, this is test page </div>
+    return 
+    <div> hello, this is test page. If you are a normal user you shouldn't be here </div>
+
+    
 }

@@ -6,6 +6,9 @@ This page should allow user to upload files provided and place them in the carou
 --NOTE--
 This is an attempt to make the front page look cleaner. With the site directing the user to the correct page based on the button choice.
 -TODO-
+
+--BUGS--
+-If you reload page, the navbar dissapears.
 */
 
 import Form from "@cloudscape-design/components/form";
@@ -171,7 +174,18 @@ export default function Admin() {
                     <Button>Create resource</Button>
                 </Box>
             }
-            header={<Header>Example Cards</Header>}
+            header={<Header
+                action={<Button
+                    onClick={() => {
+                        setItems(
+                            [{
+                                name: "testitem",
+                                alt: "test",
+                                description: "test"
+                            }]);
+                    }}>Create User
+
+                </Button>}>Example Cards</Header>}
         />;
 }
 
