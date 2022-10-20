@@ -15,10 +15,10 @@ import SpaceBetween from "@cloudscape-design/components/space-between"
 import Header from "@cloudscape-design/components/header"
 import FormField from "@cloudscape-design/components/form-field";
 import Button from "@cloudscape-design/components/button";
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import RadioGroup from "@cloudscape-design/components/radio-group";
 import Input from "@cloudscape-design/components/input";
-import {getSlides} from "../utility/retrieve_slides";
+import { getSlides } from "../utility/retrieve_slides";
 import Cards from "@cloudscape-design/components/cards";
 import Link from "@cloudscape-design/components/link";
 import Box from "@cloudscape-design/components/box";
@@ -127,7 +127,14 @@ export default function Admin() {
                             size="m"
                         >
                             <Button
-                                onClick={() => console.log("add")}
+                                onClick={async () => {
+                                    console.log("add");
+                                    const data = await (await fetch('http://localhost:9000/slides.json', {
+                                        mode: 'cors'
+                                    })).json();
+                                    console.log(data);
+                                }
+                                }
                             >
                                 Edit slide
                             </Button>
@@ -149,8 +156,8 @@ export default function Admin() {
                 ]
             }}
             cardsPerRow={[
-                {cards: 1},
-                {minWidth: 500, cards: 1}
+                { cards: 1 },
+                { minWidth: 500, cards: 1 }
             ]}
             items={items}
             loadingText="Loading resources"
@@ -158,7 +165,7 @@ export default function Admin() {
                 <Box textAlign="center" color="inherit">
                     <b>No resources</b>
                     <Box
-                        padding={{bottom: "s"}}
+                        padding={{ bottom: "s" }}
                         variant="p"
                         color="inherit"
                     >
