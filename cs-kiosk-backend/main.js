@@ -39,6 +39,7 @@ const
 ;(async () => {
     await app.whenReady();
 
+
     // Express API server
 
     api.use("/carousel", express.static(path.join(__dirname, "public/carousel")));
@@ -78,6 +79,7 @@ const
             .status(200)
             .send("Done");
     });
+
 
     // Electron kiosk display
     
