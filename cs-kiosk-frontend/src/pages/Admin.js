@@ -16,10 +16,10 @@ import SpaceBetween from "@cloudscape-design/components/space-between"
 import Header from "@cloudscape-design/components/header"
 import FormField from "@cloudscape-design/components/form-field";
 import Button from "@cloudscape-design/components/button";
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import RadioGroup from "@cloudscape-design/components/radio-group";
 import Input from "@cloudscape-design/components/input";
-import { getSlides } from "../utility/retrieve_slides";
+import {getSlides} from "../utility/retrieve_slides";
 import Cards from "@cloudscape-design/components/cards";
 import Link from "@cloudscape-design/components/link";
 import Box from "@cloudscape-design/components/box";
@@ -34,37 +34,31 @@ export default function Admin() {
             name: "Item 1",
             alt: "First",
             description: "This is the first item"
-
         },
         {
             name: "Item 2",
             alt: "Second",
             description: "This is the second item"
-
         },
         {
             name: "Item 3",
             alt: "Third",
             description: "This is the third item"
-
         },
         {
             name: "Item 4",
             alt: "Fourth",
             description: "This is the fourth item"
-
         },
         {
             name: "Item 5",
             alt: "Fifth",
             description: "This is the fifth item"
-
         },
         {
             name: "Item 6",
             alt: "Sixth",
             description: "This is the sixth item"
-
         }
     ]);
     const slides = getSlides();
@@ -133,7 +127,6 @@ export default function Admin() {
                             direction="horizontal"
                             size="m"
                         >
-
                             <Button
                                 onClick={() => console.log("add")}
                             >
@@ -146,7 +139,8 @@ export default function Admin() {
                                 }}
                             >
                                 Delete slide
-                            </Button></SpaceBetween>
+                            </Button>
+                        </SpaceBetween>
                     },
                     {
                         id: "size",
@@ -156,8 +150,8 @@ export default function Admin() {
                 ]
             }}
             cardsPerRow={[
-                { cards: 1 },
-                { minWidth: 500, cards: 1 }
+                {cards: 1},
+                {minWidth: 500, cards: 1}
             ]}
             items={items}
             loadingText="Loading resources"
@@ -165,7 +159,7 @@ export default function Admin() {
                 <Box textAlign="center" color="inherit">
                     <b>No resources</b>
                     <Box
-                        padding={{ bottom: "s" }}
+                        padding={{bottom: "s"}}
                         variant="p"
                         color="inherit"
                     >
