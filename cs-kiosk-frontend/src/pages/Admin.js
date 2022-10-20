@@ -23,7 +23,7 @@ import Cards from "@cloudscape-design/components/cards";
 import Link from "@cloudscape-design/components/link";
 import Box from "@cloudscape-design/components/box";
 
-export default function Admin() {
+export default function Admin(props) {
 
     //variables
     const [SlideName, setSlideName] = useState();
