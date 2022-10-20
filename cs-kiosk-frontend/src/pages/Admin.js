@@ -8,6 +8,7 @@ This is an attempt to make the front page look cleaner. With the site directing 
 -TODO-
 --BUGS--
 -If you reload page, the navbar dissapears.
+test comment
 */
 
 import Form from "@cloudscape-design/components/form";
