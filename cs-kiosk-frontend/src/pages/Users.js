@@ -2,12 +2,9 @@
 Last updated: 10/17/2022
 Last worked on by: Jhon
 Last added: cards, started adding functionality for add user. 
-
-
 -TODO-
 -Add button
 -Navigates to user page?
-
 */
 
 import Form from "@cloudscape-design/components/form";

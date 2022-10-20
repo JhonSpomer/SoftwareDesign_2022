@@ -6,7 +6,6 @@ This page should allow user to upload files provided and place them in the carou
 --NOTE--
 This is an attempt to make the front page look cleaner. With the site directing the user to the correct page based on the button choice.
 -TODO-
-
 --BUGS--
 -If you reload page, the navbar dissapears.
 */
@@ -169,7 +168,7 @@ export default function Admin() {
                 </Box>
             }
             header={<Header
-                action={<Button
+                actions={<Button
                     onClick={() => {
                         setItems(
                             [{
