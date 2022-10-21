@@ -83,7 +83,7 @@ const
             .send("Done");
     });
 
-    api.all("/image", (req, res, next) => {
+    api.all("/image/*", (req, res, next) => {
         res.setHeader("Access-Control-Allow-Headers", "*");
         next();
     });
