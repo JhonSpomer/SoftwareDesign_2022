@@ -91,6 +91,7 @@ const
 
     api.post("/image/:image(\\w+\\.(png|jpg))", (req, res) => {
         console.log(req.params.image);
+        console.log(req.body);
     });
 
 
