@@ -184,9 +184,11 @@ export default function Admin(props) {
                                 alt: "test",
                                 description: "test"
                             }]);
-                    }}>Create User
-
-                </Button>}>Example Cards</Header>}
+                    }}>Create Slide
+                </Button>}
+            >
+                Example Cards
+            </Header>}
         />;
 }
 

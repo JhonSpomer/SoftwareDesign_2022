@@ -6,3 +6,10 @@ export async function getSlides() {
     });
     return await res.json();
 }
+
+export async function getImage(image) {
+    const res = await fetch(new URL("/image/1.png", `http://${endpoint}:9000`), {
+        method: "GET"
+    });
+    return await res.arrayBuffer();
+}

@@ -14,7 +14,8 @@ export default function EditSlide() {
         [slideType, setSlideType] = useState("none"),
         [slideError, setSlideError] = useState(undefined);
     const [fileValue0, setFileValue0] = useState();
-    const [value, setValue] = React.useState(false);
+    const [value, setValue] = React.useState(false),
+        [imageName, setImageName] = useState("");
 
     return <Wizard
 
@@ -78,17 +79,28 @@ export default function EditSlide() {
                             <FormField label="First field">
                                 <input
                                     type="file"
-                                    value={fileValue0}
-                                    disabled={value}
+                                    disabled={value === "image"}
                                     onChange={event => {
                                         console.log("Look at me!");
-                                        setFileValue0(fileValue0);
-                                        console.log(fileValue0)
+                                        console.log(event.target.files[0]);
+                                        setImageName(event.target.files[0].name);
+                                        const fr = new FileReader();
+                                        fr.readAsArrayBuffer(event.target.files[0]);
+                                        fr.onload = () => setFileValue0(fr.result);
+                                        // setFileValue0(event.target.files[0]);
                                     }}
                                 />
                                 <Button
-                                    onClick={() => {
+                                    onClick={async () => {
                                         console.log("submit");
+                                        console.log(fileValue0);
+                                        await fetch(`localhost:9000/image/${imageName}`, {
+                                            method: "POST",
+                                            headers: {
+                                                "Content-Type": "application/octet-stream"
+                                            },
+                                            body: fileValue0
+                                        });
                                     }}>upload</Button>
                             </FormField>
                         </SpaceBetween>

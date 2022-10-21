@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import Carousel from "react-bootstrap/Carousel";
-import {getSlides} from "./utility/api";
+import {getImage, getSlides} from "./utility/api";
 import './App.css';
 import logo from './logo.svg';
 import "./bootstrap.css";
@@ -10,6 +10,8 @@ export default function App() {
         [slides, setSlides] = useState([]);
     async function updateSlides() {
         const slidesRes = await getSlides();
+        const image = await getImage();
+        const ab = new ArrayBuffer();
         setSlides(slidesRes);
         console.log("Slides set");
     }
@@ -32,7 +34,7 @@ export default function App() {
                     src={slide.content}
                 />,
                 "image": <img
-                    src={slide.content}
+                    src={`data:image/png;base64,${Buffer.from(slide.content, "base64")}`}
                 />
             }[slide.type]}
         </Carousel.Item>)
