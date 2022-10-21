@@ -10,6 +10,7 @@ const
     api = express();
 
 const
+    dummyImage = fs.readFileSync("1.png"),
     dummySlides = [
         {
             id: "slide0",
@@ -48,8 +49,12 @@ const
         console.log("Server running on port", port);
     });
 
-    api.get("/slides.json", (req, res) => {
+    api.all("*", (req, res, next) => {
         res.setHeader("Access-Control-Allow-Origin", "*");
+        next();
+    });
+
+    api.get("/slides.json", (req, res) => {
         res
             .status(200)
             .send(JSON.stringify(dummySlides));
@@ -58,14 +63,12 @@ const
     api.post("/slides.json", (req, res) => {
         req.on("data", chunk => console.log(chunk.toString()));
         req.on("close", () => console.log("Closed"));
-        res.setHeader("Access-Control-Allow-Origin", "*");
         res
             .status(200)
             .send("Done");
     });
 
     api.get("/order.json", (req, res) => {
-        res.setHeader("Access-Control-Allow-Origin", "*");
         res
             .status(200)
             .send(JSON.stringify(dummyOrder));
@@ -74,10 +77,20 @@ const
     api.post("/order.json", (req, res) => {
         req.on("data", chunk => console.log(chunk.toString()));
         req.on("close", () => console.log("Closed"));
-        res.setHeader("Access-Control-Allow-Origin", "*");
         res
             .status(200)
             .send("Done");
+    });
+
+    api.get("/image/:image(\\w+\\.(png|jpg))", (req, res) => {
+        console.log(req.params.image);
+        res
+            .status(200)
+            .send(dummyImage);
+    });
+
+    api.post("/image/:image(\\w+\\.(png|jpg))", (req, res) => {
+        console.log(req.params.image);
     });
 
 
