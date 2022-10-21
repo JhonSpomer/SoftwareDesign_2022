@@ -50,6 +50,7 @@ const
     });
 
     api.all("*", (req, res, next) => {
+        console.log(req.path);
         res.setHeader("Access-Control-Allow-Origin", "*");
         next();
     });
@@ -82,14 +83,15 @@ const
             .send("Done");
     });
 
-    api.get("/image/:image(\\w+\\.(png|jpg))", (req, res) => {
+    api.get("/image/:image(\\w+).((png|jpg))", (req, res) => {
+        console.log(`Getting image: ${req.path}`);
         console.log(req.params.image);
         res
             .status(200)
             .send(dummyImage);
     });
 
-    api.post("/image/:image(\\w+\\.(png|jpg))", (req, res) => {
+    api.post("/image/:image(\\w+).((png|jpg))", (req, res) => {
         console.log(req.params.image);
         console.log(req.body);
     });

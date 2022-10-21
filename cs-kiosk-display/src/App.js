@@ -34,7 +34,8 @@ export default function App() {
                     src={slide.content}
                 />,
                 "image": <img
-                    src={`data:image/png;base64,${Buffer.from(slide.content, "base64")}`}
+                    src={slide.content}
+                    // src={`data:image/png;base64,${Buffer.from(slide.content, "base64")}`}
                 />
             }[slide.type]}
         </Carousel.Item>)
