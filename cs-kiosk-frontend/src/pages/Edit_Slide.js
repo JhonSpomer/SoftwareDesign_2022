@@ -94,7 +94,7 @@ export default function EditSlide() {
                                     onClick={async () => {
                                         console.log("submit");
                                         console.log(fileValue0);
-                                        await fetch(`localhost:9000/image/${imageName}`, {
+                                        await fetch(`http://localhost:9000/image/${imageName}`, {
                                             method: "POST",
                                             headers: {
                                                 "Content-Type": "application/octet-stream"
