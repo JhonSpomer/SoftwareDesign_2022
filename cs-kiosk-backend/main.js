@@ -83,6 +83,11 @@ const
             .send("Done");
     });
 
+    api.all("/image", (req, res, next) => {
+        res.setHeader("Access-Control-Allow-Headers", "*");
+        next();
+    });
+
     api.get("/image/:image(\\w+).((png|jpg))", (req, res) => {
         console.log(`Getting image: ${req.path}`);
         console.log(req.params.image);
