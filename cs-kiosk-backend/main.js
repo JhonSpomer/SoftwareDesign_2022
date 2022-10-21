@@ -44,6 +44,7 @@ const
     // Express API server
 
     api.use("/carousel", express.static(path.join(__dirname, "public/carousel")));
+    api.use(express.raw());
 
     const server = api.listen(port, () => {
         console.log("Server running on port", port);

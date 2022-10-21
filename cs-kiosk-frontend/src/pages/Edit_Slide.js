@@ -116,7 +116,7 @@ export default function EditSlide() {
                                             headers: {
                                                 "Content-Type": "application/octet-stream"
                                             },
-                                            body: new Blob([fileValue0], {type: "image/jpg"} )
+                                            body: fileValue0
                                         });
                                     }}>upload</Button>
                             </FormField>
