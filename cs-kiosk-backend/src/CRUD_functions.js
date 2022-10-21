@@ -45,7 +45,7 @@ async function delUser(_UN) {
   try {
     //delete document with given username
     const result = await _database._collection.deleteOne({ username: _UN });
-    //console.log(`A document was deleted with the _id: ${result.deleteID}`);
+    console.log(`A document was deleted with the _id: ${result.deleteID}`);
   } finally {
     await client.close();
   }
@@ -56,6 +56,39 @@ async function modSlide(_RS, _name, _type, _user, _date, _expDate, targetID) {
   try {
     if (targetID===undefined)
     {
-      _RS.pipe
+      const result = _RS.pipeTo(bucket.openUploadStream(_name,{metadata: {type:_type, owner:_user, lastModifiedBy:_user, lastModifiedDate:_date, expDate:_expDate}}));
+      console.log('A slide file was added with the id: ${result.id}');
     }
+    else
+    {
+      const result = _RS.pipeTo(bucket.openUploadStream(_name,{metadata: {type:_type, owner:_user, lastModifiedBy:_user, lastModifiedDate:_date, expDate:_expDate}}));
+      console.log('A slide file was added with the _id: ${result.insertedId}');
+    }
+  }
+  finally {
+    await client.close();
+  }
+}
+run().catch(console.dir);
 
+async function getSlide(_targetID){
+  try
+  {
+    return bucket.openDownloadStream(ObjectId(_targetID));
+  }
+  finally {
+    await client.close();
+  }
+}
+run().catch(console.dir);
+
+async function delSlide(_targetID){
+  try
+  {
+    return bucket.delete(ObjectId(_targetID));
+  }
+  finally {
+    await client.close();
+  }
+}
+run().catch(console.dir);
