@@ -1,3 +1,18 @@
+/*
+Last updated: 10/20/2022
+Last updated by: Jhon and Matt
+Last change: Modified to send image to server.
+
+
+--BUGS--
+
+
+--TODO--
+
+
+*/
+
+
 import React, { useState } from "react";
 import Wizard from "@cloudscape-design/components/wizard";
 import RadioGroup from "@cloudscape-design/components/radio-group";
@@ -97,10 +112,11 @@ export default function EditSlide() {
                                         console.log(fileValue0);
                                         await fetch(`http://localhost:9000/image/${imageName}`, {
                                             method: "POST",
+                                            mode: 'cors',
                                             headers: {
                                                 "Content-Type": "application/octet-stream"
                                             },
-                                            body: fileValue0
+                                            body: new Blob([fileValue0], {type: "image/jpg"} )
                                         });
                                     }}>upload</Button>
                             </FormField>
