@@ -30,14 +30,17 @@ export default function App() {
             interval={slide.interval || 500}
         >
             {{
-                "link": <iframe
+                "link": () => <iframe
                     src={slide.content}
                 />,
-                "image": <img
-                    src={slide.content}
-                    // src={`data:image/png;base64,${Buffer.from(slide.content, "base64")}`}
+                "image": () => <img
+                    // src={slide.content}
+                    src={`data:image/png;base64, ${window.btoa(
+                        (new Uint8Array(slide.content.data))
+                        .reduce((prev, cur) => prev + String.fromCharCode(cur), "")
+                    )}`}
                 />
-            }[slide.type]}
+            }[slide.type]()}
         </Carousel.Item>)
         : <Carousel.Item>
             <h1
@@ -47,20 +50,5 @@ export default function App() {
                 }}
             >No content available.</h1>
         </Carousel.Item>}
-        <Carousel.Item
-            interval={500}
-        >
-            <img
-                className="d-block w-100"
-                src={logo}
-            />
-        </Carousel.Item>
-        <Carousel.Item
-            interval={500}
-        >
-            <p>
-                Hello world!
-            </p>
-        </Carousel.Item>
     </Carousel>;
 }
