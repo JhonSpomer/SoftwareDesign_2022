@@ -100,55 +100,54 @@ function App() {
           <Route path="/test" element={<Tests />} />
           <Route path="/admin" element={<Admin
             navigate={navigate}
+            setActiveHref={setActiveHref}
           />} />
           <Route path="/preview" element={<Preview />} />
           <Route path="/users" element={<Users />} />
-          <Route path="/edit" element={<EditSlide />} />
+          <Route path="/edit/*" element={<EditSlide />} />
 
           <Route path="/" element={
             <div>
-              <form onSubmit={e => e.preventDefault()}>
                 <Form
-                  actions={
+                    actions={
                     <SpaceBetween direction="horizontal" size="xs">
-                      <Button
+                        <Button
                         variant="primary"
                         disabled={!checked}
                         onClick={() => {
-                          setUserValue("");
-                          setPasswordValue("");
-                          querry(userValue, passwordValue);
-                          //NavBarBool();
+                            setUserValue("");
+                            setPasswordValue("");
+                            query(userValue, passwordValue);
+                            //NavBarBool();
 
                         }}
-                      >Submit</Button>
+                        >Submit</Button>
                     </SpaceBetween>
-                  }
-                  header={<Header variant="h1">Login</Header>}
+                    }
+                    header={<Header variant="h1">Login</Header>}
                 >
-                  <FormField
+                    <FormField
                     description="Username"
                     label=""
                     errorText={ErrorValue}
-                  >
+                    >
                     <Input
-                      value={userValue}
-                      onChange={event => setUserValue(event.detail.value)}
+                        value={userValue}
+                        onChange={event => setUserValue(event.detail.value)}
                     />
-                  </FormField>
-                  <FormField
+                    </FormField>
+                    <FormField
                     description="Password"
                     label=""
                     errorText={ErrorValue}
-                  >
+                    >
                     <Input
-                      value={passwordValue}
-                      onChange={event => setPasswordValue(event.detail.value)
-                      }
+                        value={passwordValue}
+                        onChange={event => setPasswordValue(event.detail.value)
+                        }
                     />
-                  </FormField>
+                    </FormField>
                 </Form>
-              </form>
 
               <Checkbox
                 onChange={({ detail }) =>
@@ -166,8 +165,8 @@ function App() {
     />
   );
 
-  function querry(usrName, pssWord) {
-    //later should querry db, for now, it just flags todo error state.
+  function query(usrName, pssWord) {
+    //later should query db, for now, it just flags todo error state.
     //check if user credentials are in database
 
     //TODO
@@ -175,7 +174,7 @@ function App() {
 
     //reset navbar access
     //placeholder var checking.
-    if (usrName == "susan" && pssWord == "admin") {
+    if (usrName === "susan" && pssWord === "admin") {
       setNavValue(false);
       navigate("/admin");
     }

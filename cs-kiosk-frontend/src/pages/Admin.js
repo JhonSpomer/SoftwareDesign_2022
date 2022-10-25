@@ -31,31 +31,37 @@ export default function Admin(props) {
     const [ErrorValue, setErrorValue] = React.useState("");
     const [items, setItems] = useState([
         {
+            _id: "0",
             name: "Item 1",
             alt: "First",
             description: "This is the first item"
         },
         {
+            _id: "1",
             name: "Item 2",
             alt: "Second",
             description: "This is the second item"
         },
         {
+            _id: "2",
             name: "Item 3",
             alt: "Third",
             description: "This is the third item"
         },
         {
+            _id: "3",
             name: "Item 4",
             alt: "Fourth",
             description: "This is the fourth item"
         },
         {
+            _id: "4",
             name: "Item 5",
             alt: "Fifth",
             description: "This is the fifth item"
         },
         {
+            _id: "5",
             name: "Item 6",
             alt: "Sixth",
             description: "This is the sixth item"
@@ -128,12 +134,16 @@ export default function Admin(props) {
                             size="m"
                         >
                             <Button
-                                onClick={async () => {
-                                    console.log("add");
-                                    const data = await (await fetch('http://localhost:9000/slides.json', {
-                                        mode: 'cors'
-                                    })).json();
-                                    console.log(data);
+                                onClick={async event => {
+                                    event.preventDefault();
+                                    const href = `/edit/${item._id}`;
+                                    props.setActiveHref(href);
+                                    props.navigate(href);
+                                    // console.log("add");
+                                    // const data = await (await fetch('http://localhost:9000/slides.json', {
+                                    //     mode: 'cors'
+                                    // })).json();
+                                    // console.log(data);
                                 }
                                 }
                             >
