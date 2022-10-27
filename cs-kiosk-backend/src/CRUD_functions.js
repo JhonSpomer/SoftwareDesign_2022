@@ -1,13 +1,13 @@
-const { MongoClient } = require("mongodb");
+const mongo = require("mongodb");
 const fs = require('fs');
 
 const buffer = fs.readFileSync("../.mongodb.auth")
 const uri = buffer.toString();
 
-const client = new MongoClient(uri)
+const client = new mongo.MongoClient(uri)
 const _database = client.db("BulletinDisplay");
 const _collection = _database.collection("users");
-const bucket = new mongodb.GridFSBucket(_DB, { bucketName: 'newSlides' });
+const bucket = new mongo.GridFSBucket(_database, { bucketName: 'newSlides' });
 
 module.exports = {
     newUser: async function (UN, PS) {
