@@ -12,6 +12,7 @@ const bucket = new mongodb.GridFSBucket(database, { bucketName: 'newSlides' });
 
 module.exports = {
     newUser: async function (UN, PS) {
+        await client.connect();
         try {
             // create a document to insert
             const doc =
@@ -28,6 +29,7 @@ module.exports = {
     },
 
     updUser: async function (oldUN, newUN, newPS) {
+        await client.connect();
         try {
             if (newUN === undefined) {
                 newUN = oldUN;
@@ -50,6 +52,7 @@ module.exports = {
 
 
     delUser: async function (_UN) {
+        await client.connect();
         try {
             //delete document with given username
             const result = await database.collection.deleteOne({ username: _UN });
@@ -61,10 +64,12 @@ module.exports = {
     },
 
     getUser: async function (UN, PS) {
+        await client.connect();
         //how are we handling checking users against the user DB?
     },
 
     delSlide: async function (_targetID) {
+        await client.connect();
         try {
             return bucket.delete(ObjectId(_targetID));
         }
@@ -75,6 +80,7 @@ module.exports = {
 
 
     modSlide: async function (_RS, _name, _type, _user, _date, _expDate, targetID) {
+        await client.connect();
         try {
             if (targetID === undefined) {
                 const result = _RS.pipeTo(bucket.openUploadStream(_name, { metadata: { type: _type, owner: _user, lastModifiedBy: _user, lastModifiedDate: _date, expDate: _expDate } }));
@@ -95,6 +101,7 @@ module.exports = {
 
 
     getSlide: async function (_targetID) {
+        await client.connect();
         try {
             return bucket.openDownloadStream(ObjectId(_targetID));
         }
