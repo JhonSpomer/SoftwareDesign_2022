@@ -3,7 +3,7 @@ const
     express = require("express"),
     {app, BrowserWindow, protocol, session} = require("electron"),
     fs = require("fs"),
-    Binary = require("mongodb").Binary;
+    db = require("./src/CRUD_functions");
 
 const
     port = 9000,

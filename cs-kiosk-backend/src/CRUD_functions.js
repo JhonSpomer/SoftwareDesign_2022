@@ -1,4 +1,4 @@
-import { MongoClient } from "mongodb";
+const { MongoClient } = require("mongodb");
 const fs = require('fs');
 
 const buffer = fs.readFileSync("../.mongodb.auth")
@@ -99,7 +99,7 @@ async function modSlide(_RS, _name, _type, _user, _date, _expDate, targetID)
     else
     {
       //delete old slide
-      delSlide(targetID);
+      await delSlide(targetID);
       //upload new slide
       const result = _RS.pipeTo(bucket.openUploadStream(_name,{metadata: {type:_type, owner:_user, lastModifiedBy:_user, lastModifiedDate:_date, expDate:_expDate}}));
       //console.log('A slide file was added with the _id: ${result.insertedId}');
