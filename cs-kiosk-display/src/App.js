@@ -27,11 +27,13 @@ export default function App() {
     >
         {slides.length
         ? slides.map(slide => <Carousel.Item
-            interval={slide.interval || 500}
+            interval={slide.interval || 1000}
         >
             {{
-                "link": () => <iframe
+                "link": () => <embed
                     src={slide.content}
+                    width={"2000vw"}
+                    height={"1000vh"}
                 />,
                 "image": () => <img
                     // src={slide.content}
