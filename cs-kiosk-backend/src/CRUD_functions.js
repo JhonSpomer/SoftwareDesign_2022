@@ -1,13 +1,14 @@
-const mongo = require("mongodb");
-const fs = require('fs');
+const
+    mongodb = require("mongodb"),
+    fs = require('fs');
 
-const buffer = fs.readFileSync("../.mongodb.auth")
+const buffer = fs.readFileSync("../.mongodb.auth");
 const uri = buffer.toString();
 
-const client = new mongo.MongoClient(uri)
-const _database = client.db("BulletinDisplay");
-const _collection = _database.collection("users");
-const bucket = new mongo.GridFSBucket(_database, { bucketName: 'newSlides' });
+const client = new mongodb.MongoClient(uri);
+const database = client.db("BulletinDisplay");
+const collection = database.collection("users");
+const bucket = new mongodb.GridFSBucket(database, { bucketName: 'newSlides' });
 
 module.exports = {
     newUser: async function (UN, PS) {
@@ -18,7 +19,7 @@ module.exports = {
                 username: UN,
                 password: PS,
             };
-            const result = await _database._collection.insertOne(doc);
+            const result = await database.collection.insertOne(doc);
             //console.log(`A document was inserted with the _id: ${result.insertedId}`);
         }
         finally {
@@ -39,7 +40,7 @@ module.exports = {
             };
             //update document with given username
             //upsert set to true - will insert given document if it does not already exixst
-            const result = await _database._collection.updateOne({ username: oldUN, }, { $set: upDoc }, { upsert: true });
+            const result = await database.collection.updateOne({ username: oldUN, }, { $set: upDoc }, { upsert: true });
             console.log(`A document was updated with the _id: ${result.updateId._id}`);
         }
         finally {
@@ -51,7 +52,7 @@ module.exports = {
     delUser: async function (_UN) {
         try {
             //delete document with given username
-            const result = await _database._collection.deleteOne({ username: _UN });
+            const result = await database.collection.deleteOne({ username: _UN });
             console.log(`A document was deleted with the _id: ${result.deleteID._id}`);
         }
         finally {
