@@ -1,7 +1,7 @@
 const
     path = require("path"),
     express = require("express"),
-    {app, BrowserWindow, protocol} = require("electron"),
+    {app, BrowserWindow, protocol, session} = require("electron"),
     fs = require("fs"),
     Binary = require("mongodb").Binary;
 
@@ -16,7 +16,7 @@ const
             id: "slide0",
             name: "Slide 0",
             type: "link",
-            content: "https://example.com"
+            content: "https://webflow.com/made-in-webflow/website/Interactive-Sphere-Portfolio"
         },
         {
             id: "slide1",
@@ -105,6 +105,23 @@ const
 
     // Electron kiosk display
     
+    // session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
+    //     callback({
+    //         responseHeaders: {
+    //             ...details.responseHeaders,
+    //             "Content-Security-Policy": ["default-src * 'unsafe-inline'; frame-ancestors *"]
+    //         }
+    //     });
+    // });
+
+    const filter = {
+        urls: ['https://*.com/*', 'http://*.com/*'],
+    };
+    session.defaultSession.webRequest.onBeforeSendHeaders(filter, (details, callback) => {
+        details.requestHeaders['Referer'] = details.url;
+        callback({ cancel: false, requestHeaders: details.requestHeaders });
+    });
+
     const win = new BrowserWindow({
         fullscreen: true
     });
