@@ -11,5 +11,6 @@ export async function getImage(image) {
     const res = await fetch(new URL("/image/1.png", `http://${endpoint}:9000`), {
         method: "GET"
     });
+    console.log(res);
     return await res.arrayBuffer();
 }

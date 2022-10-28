@@ -91,24 +91,32 @@ const
         next();
     });
 
-    api.get("/image/:image(\\w+).((png|jpg))", async (req, res) => {
-        console.log(`Getting image: ${req.path}`);
-        const image = await db.getSlide("635b19d44611bda98d9d3410");
+    api.get("/image/:image", async (req, res) => {
+        res.setHeader("Content-Type", "application/octet-stream");
+        const image = await db.getSlide(req.params.image);
         const buffers = [];
-        image.pipe(res);
-        // console.log(image);
-        // image.on("data", chunk => res.write(chunk));
-        // image.once("close", () => res.end());
-        // res
-        //     .status(200)
-        //     .send(dummyImage);
+        image.on("data", chunk => buffers.push(chunk));
+        image.once("end", () => {
+            const buffer = Buffer.concat(buffers);
+            res
+                .status(200)
+                .send(buffer);
+        });
     });
 
-    api.post("/image/:image(\\w+).((png|jpg))", async (req, res) => {
-        console.log(req.params.image);
-        console.log(req.body);
-        await db.modSlide(stream.Readable.from(Buffer.from(req.body)), req.params.image, "image", "yeet", (new Date()).toISOString(), "");
+    api.post("/image/:image", async (req, res) => {
+        await db.modSlide(
+            stream.Readable.from(Buffer.from(req.body)),
+            req.query.name,
+            "image",
+            req.query.user,
+            req.query.date,
+            req.query.expiration || "",
+            req.params.image
+        );
     });
+
+    api.post("/image/new", async (req, res) => {});
 
 
     // Electron kiosk display
