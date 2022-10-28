@@ -25,20 +25,27 @@ import Container from "@cloudscape-design/components/container";
 import Input from "@cloudscape-design/components/input";
 
 
-export default function EditSlide() {
+export default function EditSlide(props) {
     const
         [activeStepIndex, setActiveStepIndex] = useState(0),
         [slideType, setSlideType] = useState("none"),
-        [slideError, setSlideError] = useState(undefined);
-    const [fileValue0, setFileValue0] = useState();
-    const [value, setValue] = React.useState(false),
-        [imageName, setImageName] = useState("");
-    const [urlValue1, setUrlValue1] = useState();
-    const [PDFValue, setPDFValue] = useState();
-    const [PDFName, setPDFName] = useState("");
+        [slideError, setSlideError] = useState(undefined),
+        [fileValue0, setFileValue0] = useState(),
+        [value, setValue] = React.useState(false),
+        [imageName, setImageName] = useState(""),
+        [urlValue1, setUrlValue1] = useState(),
+        [PDFValue, setPDFValue] = useState(),
+        [PDFName, setPDFName] = useState(""),
+        [SlideName, setSlideName] = useState("");
     return <Wizard
 
-        onSubmit={console.log("submitButton")}
+        onSubmit={async () => {
+            console.log("final submit!");
+            const href = `/preview`;
+            props.setActiveHref(href);
+            props.navigate(href);
+
+        }}
         i18nStrings={{
             stepNumberLabel: stepNumber =>
                 `Step ${stepNumber}`,
@@ -50,7 +57,7 @@ export default function EditSlide() {
             cancelButton: "Cancel",
             previousButton: "Previous",
             nextButton: "Next",
-            submitButton: "Launch instance",
+            submitButton: "View Preview",
             optional: "optional"
         }}
         onNavigate={event => {
@@ -85,6 +92,24 @@ export default function EditSlide() {
                 />,
 
                 errorText: slideError
+            },
+            {
+                title: "Enter a slide name",
+                description: "Choose a name for your slide for easy reference.",
+                content: <Container><Input
+                value={SlideName}
+                onChange={event => setSlideName(event.detail.value)}></Input>
+                <Button
+                onClick={async () => {
+                    console.log("name submit!");
+                    console.log(SlideName)
+                    setSlideName()
+                    //setUrlValue1("");
+
+                    //hit db here
+
+                }
+                }>submit</Button></Container>
             },
             {
                 title: "Choose a file",
@@ -158,33 +183,33 @@ export default function EditSlide() {
                     ),
                     "pdf": (
                         <Container
-                        header={
-                            <Header variant="h2">
-                                Enter a pdf to display
-                            </Header>
-                        }
-                    >                            <SpaceBetween direction="vertical" size="l">
-                    <FormField label="First field">
-                        <input
-                            type="file"
-                            disabled={value === "pdf"}
-                            onChange={event => {
-                                console.log(event.target.files[0]);
-                                setPDFName(event.target.files[0].name);
-                                const fr = new FileReader();
-                                fr.readAsArrayBuffer(event.target.files[0]);
-                                fr.onload = () => setPDFValue(fr.result);
-                                // setFileValue0(event.target.files[0]);
-                            }}
-                        />
-                        <Button
-                            onClick={async () => {
-                                console.log("submit");
-                                console.log(PDFValue);
-                               
-                            }}>upload</Button>
-                    </FormField>
-                </SpaceBetween></Container>
+                            header={
+                                <Header variant="h2">
+                                    Enter a pdf to display
+                                </Header>
+                            }
+                        >                            <SpaceBetween direction="vertical" size="l">
+                                <FormField label="First field">
+                                    <input
+                                        type="file"
+                                        disabled={value === "pdf"}
+                                        onChange={event => {
+                                            console.log(event.target.files[0]);
+                                            setPDFName(event.target.files[0].name);
+                                            const fr = new FileReader();
+                                            fr.readAsArrayBuffer(event.target.files[0]);
+                                            fr.onload = () => setPDFValue(fr.result);
+                                            // setFileValue0(event.target.files[0]);
+                                        }}
+                                    />
+                                    <Button
+                                        onClick={async () => {
+                                            console.log("submit");
+                                            console.log(PDFValue);
+
+                                        }}>upload</Button>
+                                </FormField>
+                            </SpaceBetween></Container>
                     )
                 }[slideType]
             }

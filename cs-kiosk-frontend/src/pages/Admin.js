@@ -190,9 +190,9 @@ export default function Admin(props) {
                     onClick={() => {
                         setItems(
                             [{
-                                name: "testitem",
-                                alt: "test",
-                                description: "test"
+                                name: "defaultslide",
+                                alt: "default",
+                                description: "default"
                             }]);
                     }}>Create Slide
                 </Button>}
