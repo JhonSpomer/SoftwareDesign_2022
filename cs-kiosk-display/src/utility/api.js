@@ -8,7 +8,7 @@ export async function getSlides() {
 }
 
 export async function getImage(image) {
-    const res = await fetch(new URL("/image/1.png", `http://${endpoint}:9000`), {
+    const res = await fetch(new URL("/image/1.png", `http://${endpoint}:9000/${image}`), {
         method: "GET"
     });
     console.log(res);

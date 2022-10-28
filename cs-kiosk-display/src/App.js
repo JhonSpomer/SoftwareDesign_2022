@@ -9,7 +9,7 @@ export default function App() {
         [slides, setSlides] = useState([]);
     async function updateSlides() {
         const slidesRes = await getSlides();
-        const image = await getImage();
+        const image = await getImage("635b2c87c1078d59803396c8");
         console.log("Image:", image);
         slides.push({
             id: "testimage",
