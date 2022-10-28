@@ -24,7 +24,7 @@ module.exports = {
             //console.log(`A document was inserted with the _id: ${result.insertedId}`);
         }
         finally {
-            await client.close();
+            // await client.close();
         }
     },
 
@@ -46,7 +46,7 @@ module.exports = {
             console.log(`A document was updated with the _id: ${result.updateId._id}`);
         }
         finally {
-            await client.close();
+            // await client.close();
         }
     },
 
@@ -59,7 +59,7 @@ module.exports = {
             console.log(`A document was deleted with the _id: ${result.deleteID._id}`);
         }
         finally {
-            await client.close();
+            // await client.close();
         }
     },
 
@@ -71,10 +71,10 @@ module.exports = {
     delSlide: async function (_targetID) {
         await client.connect();
         try {
-            return bucket.delete(ObjectId(_targetID));
+            return bucket.delete(mongodb.ObjectId(_targetID));
         }
         finally {
-            await client.close();
+            // await client.close();
         }
     },
 
@@ -95,7 +95,7 @@ module.exports = {
             }
         }
         finally {
-            await client.close();
+            // await client.close();
         }
     },
 
@@ -103,10 +103,10 @@ module.exports = {
     getSlide: async function (_targetID) {
         await client.connect();
         try {
-            return bucket.openDownloadStream(ObjectId(_targetID));
+            return bucket.openDownloadStream(mongodb.ObjectId(_targetID));
         }
         finally {
-            await client.close();
+            // await client.close();
         }
     }
 };

@@ -94,7 +94,8 @@ const
     api.get("/image/:image(\\w+).((png|jpg))", async (req, res) => {
         console.log(`Getting image: ${req.path}`);
         console.log(req.params.image);
-        const image = await db.getSlide("");
+        const image = await db.getSlide("635b1cf5db1e4ba8d14ee8d2");
+        console.log(image.read());
         res
             .status(200)
             .send(dummyImage);
