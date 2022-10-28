@@ -34,6 +34,8 @@ export default function EditSlide() {
     const [value, setValue] = React.useState(false),
         [imageName, setImageName] = useState("");
     const [urlValue1, setUrlValue1] = useState();
+    const [PDFValue, setPDFValue] = useState();
+    const [PDFName, setPDFName] = useState("");
     return <Wizard
 
         onSubmit={console.log("submitButton")}
@@ -68,9 +70,9 @@ export default function EditSlide() {
                 content: <RadioGroup
                     onChange={
                         event => setSlideType(event.detail.value)
-                       // setWhich(false)
-                        
-                    
+                        // setWhich(false)
+
+
                     }
                     value={slideType}
                     items={[
@@ -89,7 +91,7 @@ export default function EditSlide() {
                 description:
                     "Choose a file to upload to the slide or a URL to display in the slide",
                 content: {
-                    
+
                     "image": (
                         <Container
                             header={
@@ -104,7 +106,7 @@ export default function EditSlide() {
                                         type="file"
                                         disabled={value === "image"}
                                         onChange={event => {
-                                            console.log("Look at me!");
+                                            //console.log("Look at me!");
                                             console.log(event.target.files[0]);
                                             setImageName(event.target.files[0].name);
                                             const fr = new FileReader();
@@ -130,36 +132,65 @@ export default function EditSlide() {
                             </SpaceBetween>
                         </Container>
                     ),
-                    "link" : (
+                    "link": (
+                        <Container
+                            header={
+                                <Header variant="h2">
+                                    Enter a website to display
+                                </Header>
+                            }
+                        >
+                            <Input
+                                value={urlValue1}
+                                onChange={event => setUrlValue1(event.detail.value)}>
+                            </Input>
+                            <Button
+                                onClick={async () => {
+                                    console.log("url submit!");
+                                    console.log(urlValue1)
+                                    setUrlValue1("");
+
+                                    //hit db here
+
+                                }
+                                }
+                            >Upload</Button></Container>
+                    ),
+                    "pdf": (
                         <Container
                         header={
                             <Header variant="h2">
-                                Enter a website to display
-                            </Header>    
+                                Enter a pdf to display
+                            </Header>
                         }
-                        >
-                            <Input
-                                                    value={urlValue1}
-                                                    onChange={event => setUrlValue1(event.detail.value)}>
-                                                        </Input> 
-                        <Button 
-                        onClick={async () => {
-                            console.log("url submit!");
-                            console.log(urlValue1)
-                            setUrlValue1("");
-
-                            //hit db here
-
-                        }
-                    }
-                        >Upload</Button></Container>
+                    >                            <SpaceBetween direction="vertical" size="l">
+                    <FormField label="First field">
+                        <input
+                            type="file"
+                            disabled={value === "pdf"}
+                            onChange={event => {
+                                console.log(event.target.files[0]);
+                                setPDFName(event.target.files[0].name);
+                                const fr = new FileReader();
+                                fr.readAsArrayBuffer(event.target.files[0]);
+                                fr.onload = () => setPDFValue(fr.result);
+                                // setFileValue0(event.target.files[0]);
+                            }}
+                        />
+                        <Button
+                            onClick={async () => {
+                                console.log("submit");
+                                console.log(PDFValue);
+                               
+                            }}>upload</Button>
+                    </FormField>
+                </SpaceBetween></Container>
                     )
                 }[slideType]
             }
         ]}
     />;
-    
+
 
 }
 
-                
