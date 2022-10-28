@@ -36,7 +36,9 @@ import './App.css';
 import EditSlide from './pages/Edit_Slide';
 
 //variables
-function App() {
+
+function App() 
+{
   const
    [userValue, setUserValue] = useState(),
    [passwordValue, setPasswordValue] = React.useState(""),
@@ -50,7 +52,8 @@ function App() {
 
   useEffect(() => {
     console.log(location.pathname)
-    if (location.pathname === "/") {
+    if (location.pathname === "/") 
+    {
       setNavValue(true);
       setToolsValue(true);
     }
@@ -175,11 +178,13 @@ function App() {
 
     //reset navbar access
     //placeholder var checking.
-    if (usrName === "susan" && pssWord === "admin") {
+    if (usrName === "susan" && pssWord === "admin") 
+    {
       setNavValue(false);
       navigate("/admin");
     }
-    else {
+    else 
+    {
       setErrorValue("INVALID CREDENTIALS");
     }
   }
