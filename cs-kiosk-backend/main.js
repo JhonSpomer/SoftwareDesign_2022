@@ -105,6 +105,7 @@ const
     });
 
     api.post("/image/:image", async (req, res) => {
+        console.log(req.params.image);
         await db.modSlide(
             stream.Readable.from(Buffer.from(req.body)),
             req.query.name,
