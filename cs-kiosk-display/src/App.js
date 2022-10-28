@@ -10,7 +10,7 @@ export default function App() {
         [slides, setSlides] = useState([]);
     async function updateSlides() {
         const slidesRes = await getSlides();
-        const image = await getImage();
+        // const image = await getImage();
         const ab = new ArrayBuffer();
         setSlides(slidesRes);
         console.log("Slides set");

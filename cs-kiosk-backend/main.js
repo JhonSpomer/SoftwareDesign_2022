@@ -3,8 +3,9 @@ const
     express = require("express"),
     {app, BrowserWindow, protocol, session} = require("electron"),
     fs = require("fs"),
-    db = require("./src/CRUD_functions");
-    // db = require("mongodb");
+    db = require("./src/CRUD_functions"),
+    {Binary} = require("mongodb"),
+    stream = require("stream");
 
 const
     port = 9000,
@@ -90,17 +91,20 @@ const
         next();
     });
 
-    api.get("/image/:image(\\w+).((png|jpg))", (req, res) => {
+    api.get("/image/:image(\\w+).((png|jpg))", async (req, res) => {
         console.log(`Getting image: ${req.path}`);
         console.log(req.params.image);
+        const image = await db.getSlide("635b1cf5db1e4ba8d14ee8d2");
+        console.log(image.read());
         res
             .status(200)
             .send(dummyImage);
     });
 
-    api.post("/image/:image(\\w+).((png|jpg))", (req, res) => {
+    api.post("/image/:image(\\w+).((png|jpg))", async (req, res) => {
         console.log(req.params.image);
         console.log(req.body);
+        await db.modSlide(stream.Readable.from(Buffer.from(req.body)), req.params.image, "image", "yeet", (new Date()).toISOString(), "");
     });
 
 
