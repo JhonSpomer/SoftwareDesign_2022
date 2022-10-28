@@ -20,12 +20,12 @@ const
             type: "link",
             content: "https://webflow.com/made-in-webflow/website/Interactive-Sphere-Portfolio"
         },
-        {
-            id: "slide1",
-            name: "Slide 1",
-            type: "image",
-            content: fs.readFileSync("1.png")
-        },
+        // {
+        //     id: "slide1",
+        //     name: "Slide 1",
+        //     type: "image",
+        //     content: fs.readFileSync("1.png")
+        // },
         {
             id: "slide2",
             name: "Slide 2",
