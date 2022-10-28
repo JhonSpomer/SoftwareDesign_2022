@@ -22,6 +22,7 @@ import FormField from "@cloudscape-design/components/form-field";
 import Button from "@cloudscape-design/components/button";
 import Link from "@cloudscape-design/components/link";
 import Container from "@cloudscape-design/components/container";
+import Input from "@cloudscape-design/components/input";
 
 
 export default function EditSlide() {
@@ -32,7 +33,7 @@ export default function EditSlide() {
     const [fileValue0, setFileValue0] = useState();
     const [value, setValue] = React.useState(false),
         [imageName, setImageName] = useState("");
-
+    const [urlValue1, setUrlValue1] = useState();
     return <Wizard
 
         onSubmit={console.log("submitButton")}
@@ -65,7 +66,12 @@ export default function EditSlide() {
                 title: "Choose a slide type",
                 description: "Choose whether you want this slide to be a link to a website, an image, or a PDF.",
                 content: <RadioGroup
-                    onChange={event => setSlideType(event.detail.value)}
+                    onChange={
+                        event => setSlideType(event.detail.value)
+                       // setWhich(false)
+                        
+                    
+                    }
                     value={slideType}
                     items={[
                         { value: "none", label: "None" },
@@ -79,53 +85,81 @@ export default function EditSlide() {
                 errorText: slideError
             },
             {
-                title: "Choose instance type",
-                info: <Link variant="Info">Info</Link>,
+                title: "Choose a file",
                 description:
-                    "Each instance type includes one or more instance sizes, allowing you to scale your resources to the requirements of your target workload.",
-                content: (
-                    <Container
+                    "Choose a file to upload to the slide or a URL to display in the slide",
+                content: {
+                    
+                    "image": (
+                        <Container
+                            header={
+                                <Header variant="h2">
+                                    Select a file to upload
+                                </Header>
+                            }
+                        >
+                            <SpaceBetween direction="vertical" size="l">
+                                <FormField label="First field">
+                                    <input
+                                        type="file"
+                                        disabled={value === "image"}
+                                        onChange={event => {
+                                            console.log("Look at me!");
+                                            console.log(event.target.files[0]);
+                                            setImageName(event.target.files[0].name);
+                                            const fr = new FileReader();
+                                            fr.readAsArrayBuffer(event.target.files[0]);
+                                            fr.onload = () => setFileValue0(fr.result);
+                                            // setFileValue0(event.target.files[0]);
+                                        }}
+                                    />
+                                    <Button
+                                        onClick={async () => {
+                                            console.log("submit");
+                                            console.log(fileValue0);
+                                            await fetch(`http://localhost:9000/image/${imageName}`, {
+                                                method: "POST",
+                                                mode: 'cors',
+                                                headers: {
+                                                    "Content-Type": "application/octet-stream"
+                                                },
+                                                body: fileValue0
+                                            });
+                                        }}>upload</Button>
+                                </FormField>
+                            </SpaceBetween>
+                        </Container>
+                    ),
+                    "link" : (
+                        <Container
                         header={
                             <Header variant="h2">
-                                Form container header
-                            </Header>
+                                Enter a website to display
+                            </Header>    
                         }
-                    >
-                        <SpaceBetween direction="vertical" size="l">
-                            <FormField label="First field">
-                                <input
-                                    type="file"
-                                    disabled={value === "image"}
-                                    onChange={event => {
-                                        console.log("Look at me!");
-                                        console.log(event.target.files[0]);
-                                        setImageName(event.target.files[0].name);
-                                        const fr = new FileReader();
-                                        fr.readAsArrayBuffer(event.target.files[0]);
-                                        fr.onload = () => setFileValue0(fr.result);
-                                        // setFileValue0(event.target.files[0]);
-                                    }}
-                                />
-                                <Button
-                                    onClick={async () => {
-                                        console.log("submit");
-                                        console.log(fileValue0);
-                                        await fetch(`http://localhost:9000/image/${imageName}`, {
-                                            method: "POST",
-                                            mode: 'cors',
-                                            headers: {
-                                                "Content-Type": "application/octet-stream"
-                                            },
-                                            body: fileValue0
-                                        });
-                                    }}>upload</Button>
-                            </FormField>
-                        </SpaceBetween>
-                    </Container>
-                )
+                        >
+                            <Input
+                                                    value={urlValue1}
+                                                    onChange={event => setUrlValue1(event.detail.value)}>
+                                                        </Input> 
+                        <Button 
+                        onClick={async () => {
+                            console.log("url submit!");
+                            console.log(urlValue1)
+                            setUrlValue1("");
+
+                            //hit db here
+
+                        }
+                    }
+                        >Upload</Button></Container>
+                    )
+                }[slideType]
             }
         ]}
     />;
     
 
 }
+
+                
