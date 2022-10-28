@@ -1,14 +1,14 @@
 /*
-Last updated: 10/20/2022
-Last updated by: Jhon and Matt
-Last change: Modified to send image to server.
+Last updated: 10/27/2022
+Last updated by: Jhon
+Last change: Work on toggle for different image selection
 
 
 --BUGS--
 
 
 --TODO--
-
+Get the slide rename function to work
 
 */
 

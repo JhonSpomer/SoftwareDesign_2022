@@ -1,14 +1,14 @@
 /*
-Last modified: 10/11/2022
+Last modified: 10/27/2022
 Last worked on by: Jhon
-last added: radio box toggleing.
+last added: Modification to href to allow edit slide to navigate to preview.
 This page should allow user to upload files provided and place them in the carousel and database. 
 --NOTE--
-This is an attempt to make the front page look cleaner. With the site directing the user to the correct page based on the button choice.
+Admin_Old is no longer needed, but it is still in the github repo for reference.
 -TODO-
 --BUGS--
--If you reload page, the navbar dissapears.
-test comment
+-If user reloads page, the navbar dissapears.
+-Can bypass login by directly entering navigation path
 */
 
 import Form from "@cloudscape-design/components/form";
