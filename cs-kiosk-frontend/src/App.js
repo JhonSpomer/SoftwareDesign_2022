@@ -1,18 +1,17 @@
 /*
-Last update: 10/4/2022 9:00 PM
+Last update: 10/27/2022 9:00 PM
 Last worked on by: Jhon
-Last added: navbar work, dissabling navbar on login page. Documentation.
+Last added: Cleaned up stateful values.
 
 
 login page and front end, hides nav bar, with error validation.  
 
 -TODO-
-connect to db and remove hard coded test credentials
-replace checkbox terms with actual text.
+Remove Hardcoded credentials.
 
--KNOWN BUGS-
-Page starts on login in the nav bar, even though it redirects to admin.
-
+--BUGS--
+-Page starts on login in the nav bar, even though it redirects to admin.
+-Can skip login page by direct path in navbar.
 */
 
 //imports
@@ -39,15 +38,15 @@ import EditSlide from './pages/Edit_Slide';
 //variables
 function App() {
   const
-    [userValue, setUserValue] = useState();
-  const [passwordValue, setPasswordValue] = React.useState("");
-  const [ErrorValue, setErrorValue] = React.useState("");
-  const [activeHref, setActiveHref] = React.useState("/");
-  const [navigationHide, setNavValue] = React.useState(true);
-  const [toolsHide, setToolsValue] = React.useState(true);
-  const navigate = useNavigate();
-  const location = useLocation();
-  const [checked, setChecked] = React.useState(false);
+   [userValue, setUserValue] = useState(),
+   [passwordValue, setPasswordValue] = React.useState(""),
+   [ErrorValue, setErrorValue] = React.useState(""),
+   [activeHref, setActiveHref] = React.useState("/"),
+   [navigationHide, setNavValue] = React.useState(true),
+   [toolsHide, setToolsValue] = React.useState(true),
+   navigate = useNavigate(),
+   location = useLocation(),
+   [checked, setChecked] = React.useState(false);
 
   useEffect(() => {
     console.log(location.pathname)
