@@ -2,7 +2,6 @@ import React, {useEffect, useState} from "react";
 import Carousel from "react-bootstrap/Carousel";
 import {getImage, getSlides} from "./utility/api";
 import './App.css';
-import logo from './logo.svg';
 import "./bootstrap.css";
 
 export default function App() {
@@ -12,6 +11,12 @@ export default function App() {
         const slidesRes = await getSlides();
         const image = await getImage();
         console.log("Image:", image);
+        slides.push({
+            id: "testimage",
+            name: "Test Image",
+            type: "image",
+            content: image
+        });
         setSlides(slidesRes);
         console.log("Slides set");
     }
