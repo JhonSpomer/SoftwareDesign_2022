@@ -116,7 +116,16 @@ const
         );
     });
 
-    api.post("/image/new", async (req, res) => {});
+    api.post("/image/new", async (req, res) => {
+        await db.modSlide(
+            stream.Readable.from(Buffer.from(req.body)),
+            req.query.name,
+            "image",
+            req.query.user,
+            req.query.date,
+            req.query.expiration
+        );
+    });
 
 
     // Electron kiosk display
