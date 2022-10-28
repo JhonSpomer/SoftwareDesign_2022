@@ -87,10 +87,10 @@ module.exports = {
                 //console.log('A slide file was added with the id: ${result.uploadID._id}');
             }
             else {
-                //delete old slide
-                await module.exports.delSlide(targetID);
+                // //delete old slide
+                // await delSlide(targetID);
                 //upload new slide
-                const result = _RS.pipe(bucket.openUploadStream(_name, { metadata: { type: _type, owner: _user, lastModifiedBy: _user, lastModifiedDate: _date, expDate: _expDate } }));
+                const result = _RS.pipe(bucket.openUploadStreamWithId(targetID, _name, { metadata: { type: _type, owner: _user, lastModifiedBy: _user, lastModifiedDate: _date, expDate: _expDate } }));
                 //console.log('A slide file was added with the _id: ${result.insertedId}');
             }
         }
