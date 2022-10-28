@@ -93,12 +93,15 @@ const
 
     api.get("/image/:image(\\w+).((png|jpg))", async (req, res) => {
         console.log(`Getting image: ${req.path}`);
-        console.log(req.params.image);
-        const image = await db.getSlide("635b1cf5db1e4ba8d14ee8d2");
-        console.log(image.read());
-        res
-            .status(200)
-            .send(dummyImage);
+        const image = await db.getSlide("635b19d44611bda98d9d3410");
+        const buffers = [];
+        image.pipe(res);
+        // console.log(image);
+        // image.on("data", chunk => res.write(chunk));
+        // image.once("close", () => res.end());
+        // res
+        //     .status(200)
+        //     .send(dummyImage);
     });
 
     api.post("/image/:image(\\w+).((png|jpg))", async (req, res) => {
