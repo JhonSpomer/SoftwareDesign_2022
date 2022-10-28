@@ -104,7 +104,9 @@ function App() {
           />} />
           <Route path="/preview" element={<Preview />} />
           <Route path="/users" element={<Users />} />
-          <Route path="/edit/*" element={<EditSlide />} />
+          <Route path="/edit/*" element={<EditSlide
+            navigate={navigate}
+            setActiveHref={setActiveHref} />} />
 
           <Route path="/" element={
             <div>

@@ -144,10 +144,13 @@ export default function EditSlide(props) {
                                         onClick={async () => {
                                             console.log("submit");
                                             console.log(fileValue0);
-                                            await fetch(`http://localhost:9000/image/${imageName}`, {
+                                            await fetch(`http://localhost:9000/image/635b2c87c1078d59803396c8`, {
                                                 method: "POST",
                                                 mode: 'cors',
                                                 headers: {
+
+                                                //${imageName} old 
+                                                //await fetch(`http://localhost:9000/image/${imageName}' , {
                                                     "Content-Type": "application/octet-stream"
                                                 },
                                                 body: fileValue0
