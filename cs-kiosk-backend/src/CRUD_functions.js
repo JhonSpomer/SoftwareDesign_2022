@@ -90,6 +90,48 @@ module.exports = {
         -search for record that with matching UN and PS
         -return T/F
         */
+        var user;
+        try 
+        {
+            //findOne() returns null if user does not exist
+            if (PS === undefined)
+            {
+                user = await users.findOne({ username:UN },{username:1});
+                if (user===null)
+                {
+                    return false;
+                }
+                else if (user.username === UN)
+                {
+                    return true;
+                }
+                else 
+                {
+                    console.log('findOne() has returned and unexpected value: ', user)
+                }
+
+            }
+            else
+            {
+                user = await users.findOne({ username:UN, password:PS },{username:1, password:1});
+                if (user===null)
+                {
+                    return false;
+                }
+                else if (user.username === UN && user.password === PS)
+                {
+                    return true;
+                }
+                else 
+                {
+                    console.log('findOne() has returned and unexpected value: ', user)
+                }
+            }
+        }
+        finally 
+        {
+            return user;
+        }
     },
 
     delSlide: async function (_targetID) {
@@ -147,5 +189,6 @@ module.exports = {
     }
 };
 
-
+// module.exports.checkUser('qwerty');
+// module.exports.checkUser('asdaf','zxcv');
 
