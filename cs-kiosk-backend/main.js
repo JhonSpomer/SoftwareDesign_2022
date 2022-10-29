@@ -58,6 +58,22 @@ const
         next();
     });
 
+    api.post("/authenticate.json", async (req, res) => {
+        let buffer = "";
+        req.on("data", chunk => buffer += chunk.toString());
+        req.on("close", async () => {
+            try {
+                const {username, password} = JSON.parse(buffer);
+                await db.getUser(username, password);
+                res
+                    .status(200)
+                    .send("Authenticated");
+            } catch (e) {
+                console.log("Failed to extract username and password.");
+            }
+        });
+    });
+
     api.get("/slides.json", (req, res) => {
         res
             .status(200)
@@ -155,7 +171,7 @@ const
     win.loadURL("http://localhost:9000/carousel");
 
     await db.updUser("admin", "newAdmin", "newPassword");
-    await db.getUser("newAdmin", "newPassword");
+    console.log(await db.getUser("newAdmin", "newPassword"));
 
     // Cleanup
 
