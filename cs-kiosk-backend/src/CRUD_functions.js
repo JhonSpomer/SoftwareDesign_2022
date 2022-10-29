@@ -67,6 +67,15 @@ module.exports = {
         await client.connect();
         //how are we handling checking users against the user DB?
         //return raw results from DB
+        var user;
+        try 
+        {
+            user = users.findOne({ username:UN, password:PS }, {username:1, password:1});
+        }
+        finally 
+        {
+            return user;
+        }
  
     },
 
