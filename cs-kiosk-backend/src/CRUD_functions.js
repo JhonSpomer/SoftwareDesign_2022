@@ -43,7 +43,7 @@ module.exports = {
             //update document with given username
             //upsert set to true - will insert given document if it does not already exixst
             const result = await users.updateOne({ username: oldUN, }, { $set: upDoc }, { upsert: true });
-            console.log(`A document was updated with the _id: ${result.updateId._id}`);
+            console.log(`A document was updated with the _id: ${result.upsertedId}`);
         }
         finally {
             // await client.close();
@@ -56,7 +56,7 @@ module.exports = {
         try {
             //delete document with given username
             const result = await users.deleteOne({ username: _UN });
-            console.log(`A document was deleted with the _id: ${result.deleteID._id}`);
+            console.log(`${result.deletedCount} document(s) deleted.`);
         }
         finally {
             // await client.close();

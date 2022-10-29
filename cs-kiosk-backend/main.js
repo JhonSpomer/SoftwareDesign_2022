@@ -154,6 +154,9 @@ const
 
     win.loadURL("http://localhost:9000/carousel");
 
+    await db.updUser("admin", "newAdmin", "newPassword");
+    await db.getUser("newAdmin", "newPassword");
+
     // Cleanup
 
     app.on("window-all-closed", () => {
