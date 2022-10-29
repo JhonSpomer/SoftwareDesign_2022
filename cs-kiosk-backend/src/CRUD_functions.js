@@ -66,6 +66,21 @@ module.exports = {
     getUser: async function (UN, PS) {
         await client.connect();
         //how are we handling checking users against the user DB?
+        //return raw results from DB
+ 
+    },
+
+    checkUser: async function (UN,PS)
+    {
+        /*
+        For user creation:
+        -check for record with username
+        -return T/F
+
+        For login:
+        -search for record that with matching UN and PS
+        -return T/F
+        */
     },
 
     delSlide: async function (_targetID) {
@@ -104,6 +119,18 @@ module.exports = {
         await client.connect();
         try {
             return bucket.openDownloadStream(mongodb.ObjectId(_targetID));
+
+            /*
+            const image = await db.getSlide(req.params.image);
+            const buffers = [];
+            image.on("data", chunk => buffers.push(chunk));
+            image.once("end", () => {
+            const buffer = Buffer.concat(buffers);
+            res
+                .status(200)
+                .send(buffer);
+            });
+            */
         }
         finally {
             // await client.close();
