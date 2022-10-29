@@ -7,7 +7,7 @@ const uri = buffer.toString();
 
 const client = new mongodb.MongoClient(uri);
 const database = client.db("BulletinDisplay");
-const collection = database.collection("users");
+const users = database.collection("users");
 const bucket = new mongodb.GridFSBucket(database, { bucketName: 'newSlides' });
 
 module.exports = {
@@ -20,7 +20,7 @@ module.exports = {
                 username: UN,
                 password: PS,
             };
-            const result = await collection.insertOne(doc);
+            const result = await users.insertOne(doc);
             //console.log(`A document was inserted with the _id: ${result.insertedId}`);
         }
         finally {
@@ -42,7 +42,7 @@ module.exports = {
             };
             //update document with given username
             //upsert set to true - will insert given document if it does not already exixst
-            const result = await collection.updateOne({ username: oldUN, }, { $set: upDoc }, { upsert: true });
+            const result = await users.updateOne({ username: oldUN, }, { $set: upDoc }, { upsert: true });
             console.log(`A document was updated with the _id: ${result.updateId._id}`);
         }
         finally {
@@ -55,7 +55,7 @@ module.exports = {
         await client.connect();
         try {
             //delete document with given username
-            const result = await database.collection.deleteOne({ username: _UN });
+            const result = await users.deleteOne({ username: _UN });
             console.log(`A document was deleted with the _id: ${result.deleteID._id}`);
         }
         finally {
