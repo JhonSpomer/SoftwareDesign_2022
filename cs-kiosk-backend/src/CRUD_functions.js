@@ -20,7 +20,7 @@ module.exports = {
                 username: UN,
                 password: PS,
             };
-            const result = await database.collection.insertOne(doc);
+            const result = await collection.insertOne(doc);
             //console.log(`A document was inserted with the _id: ${result.insertedId}`);
         }
         finally {
@@ -42,7 +42,7 @@ module.exports = {
             };
             //update document with given username
             //upsert set to true - will insert given document if it does not already exixst
-            const result = await database.collection.updateOne({ username: oldUN, }, { $set: upDoc }, { upsert: true });
+            const result = await collection.updateOne({ username: oldUN, }, { $set: upDoc }, { upsert: true });
             console.log(`A document was updated with the _id: ${result.updateId._id}`);
         }
         finally {
