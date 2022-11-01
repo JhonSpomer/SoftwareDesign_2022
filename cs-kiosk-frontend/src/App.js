@@ -1,13 +1,13 @@
 /*
-Last update: 10/27/2022 9:00 PM
+Last update: 11/1/2022 9:00 PM
 Last worked on by: Jhon
-Last added: Cleaned up stateful values.
+Last added: Added code to iclude UserEdit.js
 
 
 login page and front end, hides nav bar, with error validation.  
 
 -TODO-
-Remove Hardcoded credentials.
+Remove Hardcoded credentials and link to database instead.
 
 --BUGS--
 -Page starts on login in the nav bar, even though it redirects to admin.
@@ -34,26 +34,25 @@ import Preview from "./pages/Preview"
 import { useNavigate, useLocation, Route, Routes } from "react-router-dom";
 import './App.css';
 import EditSlide from './pages/Edit_Slide';
+import UserEdit from './pages/UserEdit';
 
 //variables
 
-function App() 
-{
+function App() {
   const
-   [userValue, setUserValue] = useState(),
-   [passwordValue, setPasswordValue] = React.useState(""),
-   [ErrorValue, setErrorValue] = React.useState(""),
-   [activeHref, setActiveHref] = React.useState("/"),
-   [navigationHide, setNavValue] = React.useState(true),
-   [toolsHide, setToolsValue] = React.useState(true),
-   navigate = useNavigate(),
-   location = useLocation(),
-   [checked, setChecked] = React.useState(false);
+    [userValue, setUserValue] = useState(),
+    [passwordValue, setPasswordValue] = React.useState(""),
+    [ErrorValue, setErrorValue] = React.useState(""),
+    [activeHref, setActiveHref] = React.useState("/"),
+    [navigationHide, setNavValue] = React.useState(true),
+    [toolsHide, setToolsValue] = React.useState(true),
+    navigate = useNavigate(),
+    location = useLocation(),
+    [checked, setChecked] = React.useState(false);
 
   useEffect(() => {
     console.log(location.pathname)
-    if (location.pathname === "/") 
-    {
+    if (location.pathname === "/") {
       setNavValue(true);
       setToolsValue(true);
     }
@@ -105,53 +104,60 @@ function App()
             setActiveHref={setActiveHref}
           />} />
           <Route path="/preview" element={<Preview />} />
-          <Route path="/users" element={<Users />} />
+          <Route path="/users" element={<Users
+            navigate={navigate}
+            setActiveHref={setActiveHref}
+          />} />
+          <Route path="/UserEdit" element={<UserEdit
+            navigate={navigate}
+            setActiveHref={setActiveHref} />} />
+
           <Route path="/edit/*" element={<EditSlide
             navigate={navigate}
             setActiveHref={setActiveHref} />} />
 
           <Route path="/" element={
             <div>
-                <Form
-                    actions={
-                    <SpaceBetween direction="horizontal" size="xs">
-                        <Button
-                        variant="primary"
-                        disabled={!checked}
-                        onClick={() => {
-                            setUserValue("");
-                            setPasswordValue("");
-                            query(userValue, passwordValue);
-                            //NavBarBool();
+              <Form
+                actions={
+                  <SpaceBetween direction="horizontal" size="xs">
+                    <Button
+                      variant="primary"
+                      disabled={!checked}
+                      onClick={() => {
+                        setUserValue("");
+                        setPasswordValue("");
+                        query(userValue, passwordValue);
+                        //NavBarBool();
 
-                        }}
-                        >Submit</Button>
-                    </SpaceBetween>
-                    }
-                    header={<Header variant="h1">Login</Header>}
+                      }}
+                    >Submit</Button>
+                  </SpaceBetween>
+                }
+                header={<Header variant="h1">Login</Header>}
+              >
+                <FormField
+                  description="Username"
+                  label=""
+                  errorText={ErrorValue}
                 >
-                    <FormField
-                    description="Username"
-                    label=""
-                    errorText={ErrorValue}
-                    >
-                    <Input
-                        value={userValue}
-                        onChange={event => setUserValue(event.detail.value)}
-                    />
-                    </FormField>
-                    <FormField
-                    description="Password"
-                    label=""
-                    errorText={ErrorValue}
-                    >
-                    <Input
-                        value={passwordValue}
-                        onChange={event => setPasswordValue(event.detail.value)
-                        }
-                    />
-                    </FormField>
-                </Form>
+                  <Input
+                    value={userValue}
+                    onChange={event => setUserValue(event.detail.value)}
+                  />
+                </FormField>
+                <FormField
+                  description="Password"
+                  label=""
+                  errorText={ErrorValue}
+                >
+                  <Input
+                    value={passwordValue}
+                    onChange={event => setPasswordValue(event.detail.value)
+                    }
+                  />
+                </FormField>
+              </Form>
 
               <Checkbox
                 onChange={({ detail }) =>
@@ -178,13 +184,11 @@ function App()
 
     //reset navbar access
     //placeholder var checking.
-    if (usrName === "susan" && pssWord === "admin") 
-    {
+    if (usrName === "susan" && pssWord === "admin") {
       setNavValue(false);
       navigate("/admin");
     }
-    else 
-    {
+    else {
       setErrorValue("INVALID CREDENTIALS");
     }
   }
