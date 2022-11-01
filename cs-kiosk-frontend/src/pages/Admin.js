@@ -1,11 +1,15 @@
 /*
-Last modified: 10/27/2022
+Last modified: 11/1/2022
 Last worked on by: Jhon
-last added: Modification to href to allow edit slide to navigate to preview.
+last added: Modification to href to allow edit slide to navigate to preview. Deleted large block of depreciated code.
+
 This page should allow user to upload files provided and place them in the carousel and database. 
 --NOTE--
 Admin_Old is no longer needed, but it is still in the github repo for reference.
+
 -TODO-
+-Link to database, rather than dummy array data.
+
 --BUGS--
 -If user reloads page, the navbar dissapears.
 -Can bypass login by directly entering navigation path
@@ -70,48 +74,7 @@ export default function Admin(props) {
     const slides = getSlides();
     const which = false;
 
-    return which
-        ? <div>
-            <Form
-                actions={
-                    <SpaceBetween direction="horizontal" size="xs">
-                        <Button
-                            variant="primary"
-                            onClick={() => {
-                                //deleteSlide();
-                                //setErrorValue("DELETE SLIDE");
-                                console.log("delete!");
-                            }}
-                        >Remove Slide</Button>
-
-                        <Button
-                            variant="primary"
-                            onClick={() => {
-                                //createSlide();
-                                //setErrorValue("CREATE SLIDE");
-                                console.log("add!");
-                            }}
-                        >Add Slide</Button>
-                    </SpaceBetween>
-
-                }
-                header={<Header variant="h1">Please select your choice</Header>}
-
-            >
-                <FormField
-                    description="Enter the slide name"
-                    label=""
-                    errorText={ErrorValue}
-                >
-                    <Input
-                        value={SlideName}
-                        onChange={event => setSlideName(event.detail.value)}
-                    />
-                </FormField>
-            </Form>
-        </div>
-
-        : <Cards
+    return  <Cards
             ariaLabels={{
                 itemSelectionLabel: (e, t) => `select ${t.name}`,
                 selectionGroupLabel: "Item selection"
@@ -182,22 +145,35 @@ export default function Admin(props) {
                     >
                         No resources to display.
                     </Box>
-                    <Button>Create resource</Button>
+                    <Button
+                    onClick={() => {
+                        setItems(
+                            [...items, {
+                                _id:items.length,
+                                name: "slide " + (items.length+1),
+                                alt:"dfeault",
+                                description: "This is default description for slide " + (items.length+1)
+                            }]
+                        )
+                    }}>Create slide</Button>
                 </Box>
             }
             header={<Header
                 actions={<Button
                     onClick={() => {
+                        
                         setItems(
-                            [{
-                                name: "defaultslide",
+                            [... items, {
+                                _id: items.length,
+                                name: "slide " + (items.length+1),
                                 alt: "default",
-                                description: "default"
+                                description: "This is default description for slide " + (items.length+1)
                             }]);
+                            
                     }}>Create Slide
                 </Button>}
             >
-                Example Cards
+                Current Slides
             </Header>}
         />;
 }

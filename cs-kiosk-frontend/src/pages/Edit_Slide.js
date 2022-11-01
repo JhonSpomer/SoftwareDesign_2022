@@ -1,15 +1,15 @@
 /*
-Last updated: 10/27/2022
+Last updated: 11/1/2022
 Last updated by: Jhon
-Last change: Work on toggle for different image selection
+Last change: edit and delete now work properly.
 
 
 --BUGS--
-
+-navigating off the page resets the array
 
 --TODO--
-Get the slide rename function to work
-
+-Get the slide rename function to work
+-link to database rather than test array
 */
 
 
@@ -103,7 +103,7 @@ export default function EditSlide(props) {
                 onClick={async () => {
                     console.log("name submit!");
                     console.log(SlideName)
-                    setSlideName()
+                    //setSlideName(event.detail.value)
                     //setUrlValue1("");
 
                     //hit db here

@@ -1,10 +1,13 @@
 /*
-Last updated: 10/17/2022
+Last updated: 11/1/2022
 Last worked on by: Jhon
-Last added: cards, started adding functionality for add user. 
+Last added: Properly add and delete from the array. Edit button works now.
+
 -TODO-
--Add button
--Navigates to user page?
+-link array to user database.
+
+--BUGS--
+-array resets when navigating off page.
 */
 
 import Form from "@cloudscape-design/components/form";
@@ -20,7 +23,7 @@ import Link from "@cloudscape-design/components/link";
 import Box from "@cloudscape-design/components/box";
 
 
-export default function Users() {
+export default function Users(props) {
     //variables
     const [SlideName, setSlideName] = useState();
     const [items, setItems] = useState([
@@ -66,88 +69,99 @@ export default function Users() {
 
 
     return <Cards
-        ariaLabels={{
-            itemSelectionLabel: (e, t) => `select ${t.name}`,
-            selectionGroupLabel: "Item selection"
-        }}
-        cardDefinition={{
-            header: item => (
-                <Link fontSize="heading-m">{item.name}</Link>
-            ),
-            sections: [
-                {
-                    id: "description",
-                    header: "Description",
-                    content: item => item.description
-                },
-                {
-                    id: "type",
-                    header: "Type",
-                    content: item => <SpaceBetween
-                        direction="horizontal"
-                        size="m"
-                    >
-
-                        <Button
-                            onClick={() => console.log("add")}
-                        >
-                            Edit slide
-                        </Button>
-                        <Button
-                            onClick={() => {
-                                console.log("del");
-                                setItems(items.filter(i => i.name !== item.name));
-                            }}
-                        >
-                            Delete slide
-                        </Button></SpaceBetween>
-                },
-                {
-                    id: "size",
-                    header: "Size",
-                    content: item => item.size
-                }
-            ]
-        }}
-        cardsPerRow={[
-            { cards: 1 },
-            { minWidth: 500, cards: 1 }
-        ]}
-        items={items}
-        loadingText="Loading resources"
-        empty={
-            <Box textAlign="center" color="inherit">
-                <b>No resources</b>
-                <Box
-                    padding={{ bottom: "s" }}
-                    variant="p"
-                    color="inherit"
+    ariaLabels={{
+        itemSelectionLabel: (e, t) => `select ${t.name}`,
+        selectionGroupLabel: "Item selection"
+    }}
+    cardDefinition={{
+        header: item => (
+            <Link fontSize="heading-m">{item.name}</Link>
+        ),
+        sections: [
+            {
+                id: "description",
+                header: "Description",
+                content: item => item.description
+            },
+            {
+                id: "type",
+                header: "Type",
+                content: item => <SpaceBetween
+                    direction="horizontal"
+                    size="m"
                 >
-                    No resources to display.
-                </Box>
-                <Button
-                    onClick={() => {
-                        //create();
-                        setItems(
-                            [{
-                                name: "testitem",
-                                alt: "test",
-                                description: "test"
-                            }]);
-                    }}>Create User
-
-                </Button>
+                    <Button
+                        onClick={async event => {
+                            event.preventDefault();
+                            const href = `/UserEdit/`;
+                            props.setActiveHref(href);
+                            props.navigate(href);
+                            // console.log("add");
+                            // const data = await (await fetch('http://localhost:9000/slides.json', {
+                            //     mode: 'cors'
+                            // })).json();
+                            // console.log(data);
+                        }
+                        }
+                    >
+                        Edit slide
+                    </Button>
+                    <Button
+                        onClick={() => {
+                            console.log("del");
+                            setItems(items.filter(i => i.name !== item.name));
+                        }}
+                    >
+                        Delete slide
+                    </Button>
+                </SpaceBetween>
+            },
+            {
+                id: "size",
+                header: "Size",
+                content: item => item.size
+            }
+        ]
+    }}
+    cardsPerRow={[
+        { cards: 1 },
+        { minWidth: 500, cards: 1 }
+    ]}
+    items={items}
+    loadingText="Loading resources"
+    empty={
+        <Box textAlign="center" color="inherit">
+            <b>No resources</b>
+            <Box
+                padding={{ bottom: "s" }}
+                variant="p"
+                color="inherit"
+            >
+                No resources to display.
             </Box>
+            <Button
+            onClick={() => {
+                setItems(
+                    [...items, {
+                        _id:items.length,
+                        name: "slide " + (items.length+1),
+                        alt:"dfeault",
+                        description: "This is default description for slide " + (items.length+1)
+                    }]
+                )
+            }}>Create slide</Button>
+        </Box>
         }
 
         header={<Header
             actions={<Button
                 onClick={() => {
                     setItems(
-                        [{
-                            name: "testitem",
+                        [...items, {
+                            _id: items.length,
+                            name: "User "+(items.length+1),
                             alt: "test",
-                            description: "test"
+                            description: "A user"
                         }]);
                 }}>Create User
 
