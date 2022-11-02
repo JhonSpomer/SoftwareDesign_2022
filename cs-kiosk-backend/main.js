@@ -20,12 +20,12 @@ const
             type: "link",
             content: "https://webflow.com/made-in-webflow/website/Interactive-Sphere-Portfolio"
         },
-        {
-            id: "slide1",
-            name: "Slide 1",
-            type: "image",
-            content: fs.readFileSync("1.png")
-        },
+        // {
+        //     id: "slide1",
+        //     name: "Slide 1",
+        //     type: "image",
+        //     content: fs.readFileSync("1.png")
+        // },
         {
             id: "slide2",
             name: "Slide 2",
@@ -56,6 +56,22 @@ const
         console.log(req.path);
         res.setHeader("Access-Control-Allow-Origin", "*");
         next();
+    });
+
+    api.post("/authenticate.json", async (req, res) => {
+        let buffer = "";
+        req.on("data", chunk => buffer += chunk.toString());
+        req.on("close", async () => {
+            try {
+                const {username, password} = JSON.parse(buffer);
+                await db.getUser(username, password);
+                res
+                    .status(200)
+                    .send("Authenticated");
+            } catch (e) {
+                console.log("Failed to extract username and password.");
+            }
+        });
     });
 
     api.get("/slides.json", (req, res) => {
@@ -105,6 +121,7 @@ const
     });
 
     api.post("/image/:image", async (req, res) => {
+        console.log(req.params.image);
         await db.modSlide(
             stream.Readable.from(Buffer.from(req.body)),
             req.query.name,
@@ -152,6 +169,9 @@ const
     });
 
     win.loadURL("http://localhost:9000/carousel");
+
+    await db.updUser("admin", "newAdmin", "newPassword");
+    console.log(await db.getUser("newAdmin", "newPassword"));
 
     // Cleanup
 

@@ -1,14 +1,14 @@
 /*
-Last updated: 10/20/2022
-Last updated by: Jhon and Matt
-Last change: Modified to send image to server.
+Last updated: 10/27/2022
+Last updated by: Jhon
+Last change: Work on toggle for different image selection
 
 
 --BUGS--
 
 
 --TODO--
-
+Get the slide rename function to work
 
 */
 
@@ -144,10 +144,13 @@ export default function EditSlide(props) {
                                         onClick={async () => {
                                             console.log("submit");
                                             console.log(fileValue0);
-                                            await fetch(`http://localhost:9000/image/${imageName}`, {
+                                            await fetch(`http://localhost:9000/image/635b2c87c1078d59803396c8`, {
                                                 method: "POST",
                                                 mode: 'cors',
                                                 headers: {
+
+                                                //${imageName} old 
+                                                //await fetch(`http://localhost:9000/image/${imageName}' , {
                                                     "Content-Type": "application/octet-stream"
                                                 },
                                                 body: fileValue0

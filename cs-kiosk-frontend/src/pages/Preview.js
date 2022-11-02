@@ -1,12 +1,16 @@
 /*
-Last updated: 9/29/2022
-Last worked on by: Jhon
+Last updated: 10/27/2022
+Last worked on by: Jhon & Matthew
 Last added: Nothing!
 
 Display react/bootstrap carosuel to preview current kiosk display.
 
 -TODO-
-literally all of it.
+NONE
+
+--BUGS--
+
+PREVIEW IS SKEWED RIGHT
 
 */
 

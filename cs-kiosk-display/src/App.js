@@ -11,11 +11,16 @@ export default function App() {
         const slidesRes = await getSlides();
         const image = await getImage("635b2c87c1078d59803396c8");
         console.log("Image:", image);
-        slides.push({
+        slidesRes.push({
             id: "testimage",
             name: "Test Image",
             type: "image",
-            content: image
+            content: <img
+                src={`data:image/png;base64, ${window.btoa(
+                    (new Uint8Array(image))
+                    .reduce((prev, cur) => prev + String.fromCharCode(cur), "")
+                )}`}
+            />
         });
         setSlides(slidesRes);
         console.log("Slides set");
@@ -40,13 +45,7 @@ export default function App() {
                     width={"2000vw"}
                     height={"1000vh"}
                 />,
-                "image": () => <img
-                    // src={slide.content}
-                    src={`data:image/png;base64, ${window.btoa(
-                        (new Uint8Array(slide.content.data))
-                        .reduce((prev, cur) => prev + String.fromCharCode(cur), "")
-                    )}`}
-                />
+                "image": () => slide.content
             }[slide.type]()}
         </Carousel.Item>)
         : <Carousel.Item>

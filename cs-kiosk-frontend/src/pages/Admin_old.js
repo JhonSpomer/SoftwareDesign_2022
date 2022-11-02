@@ -5,14 +5,10 @@ last added: radio box toggleing.
 This page should allow user to upload files provided and place them in the carousel and database. User can toggle to the input field they desire.
 
 --NOTE--
-Currently I have this file renamed as Admin_old. I am unsure if this design is what we will stick with at this time, but its staying on the repo in case
-we end up needing to go with it.
+Currently I have this file renamed as Admin_old. It is no longer used and only remains for archive purposes.
 
 -TODO-
-drag and drop.
-make upload buttons look nice. Hide dissabled input fields.
-finish delete and upload functions.
-connect to db.
+none. depreciated.
 */
 
 import Form from "@cloudscape-design/components/form";

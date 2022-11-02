@@ -21,7 +21,7 @@ module.exports = {
                 username: UN,
                 password: PS,
             };
-            const result = await database.collection.insertOne(doc);
+            const result = await users.insertOne(doc);
             //console.log(`A document was inserted with the _id: ${result.insertedId}`);
         }
         finally {
@@ -43,8 +43,8 @@ module.exports = {
             };
             //update document with given username
             //upsert set to true - will insert given document if it does not already exixst
-            const result = await database.collection.updateOne({ username: oldUN, }, { $set: {upDoc} }, { upsert: true });
-            console.log(`A document was updated with the _id: ${result.updateId._id}`);
+            const result = await users.updateOne({ username: oldUN, }, { $set: {upDoc} }, { upsert: true });
+            console.log(`A document was updated with the _id: ${result.upsertedId}`);
         }
         finally {
             // await client.close();
@@ -56,8 +56,8 @@ module.exports = {
         await client.connect();
         try {
             //delete document with given username
-            const result = await database.collection.deleteOne({ username: _UN });
-            console.log(`A document was deleted with the _id: ${result.deleteID._id}`);
+            const result = await users.deleteOne({ username: _UN });
+            console.log(`${result.deletedCount} document(s) deleted.`);
         }
         finally {
             // await client.close();
@@ -152,10 +152,10 @@ module.exports = {
                 //console.log('A slide file was added with the id: ${result.uploadID._id}');
             }
             else {
-                //delete old slide
-                await delSlide(targetID);
+                // //delete old slide
+                // await delSlide(targetID);
                 //upload new slide
-                const result = _RS.pipe(bucket.openUploadStream(_name, { metadata: { type: _type, owner: _user, lastModifiedBy: _user, lastModifiedDate: _date, expDate: _expDate } }));
+                const result = _RS.pipe(bucket.openUploadStreamWithId(targetID, _name, { metadata: { type: _type, owner: _user, lastModifiedBy: _user, lastModifiedDate: _date, expDate: _expDate } }));
                 //console.log('A slide file was added with the _id: ${result.insertedId}');
             }
         }
@@ -169,6 +169,18 @@ module.exports = {
         await client.connect();
         try {
             return bucket.openDownloadStream(mongodb.ObjectId(_targetID));
+
+            /*
+            const image = await db.getSlide(req.params.image);
+            const buffers = [];
+            image.on("data", chunk => buffers.push(chunk));
+            image.once("end", () => {
+            const buffer = Buffer.concat(buffers);
+            res
+                .status(200)
+                .send(buffer);
+            });
+            */
         }
         finally {
             // await client.close();
@@ -176,5 +188,6 @@ module.exports = {
     }
 };
 
-
+// module.exports.checkUser('qwerty');
+// module.exports.checkUser('asdaf','zxcv');
 
