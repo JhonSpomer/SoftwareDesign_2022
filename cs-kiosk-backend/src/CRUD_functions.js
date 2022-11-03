@@ -66,7 +66,16 @@ module.exports = {
 
     getUser: async function (UN, PS) {
         await client.connect();
-        //how are we handling checking users against the user DB?
+        var user;
+        try 
+        {
+            user = users.findOne({ username:UN, password:PS }, {username:1, password:1});
+        }
+        finally 
+        {
+            return user;
+        }
+        
     },
 
     updSlide: async function (_slideName, _slideType, _user, _date, _expDate, targetID) {
@@ -112,8 +121,8 @@ module.exports = {
         await client.connect();
         try {
             //delete document with given uID
-            const result = await slides.deleteOne({ upsertedId: _targetID });
-            console.log(`${result.deletedCount} document(s) deleted.`);
+            const result = await slides.deleteOne({ _id: _targetID });
+            console.log(`${result.deletedId} document(s) deleted.`);
         }
         finally {
             // await client.close();
@@ -125,7 +134,7 @@ module.exports = {
         var slide;
         try 
         {
-            slide = slides.findOne({ username:UN, password:PS }, {username:1, password:1});
+            slide = slides.findOne({ _id:targetID }, {_slideName:1, _slideType:1, _user:1, _date:1, _expDate:1, _id:1 });
         }
         finally 
         {
