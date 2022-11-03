@@ -8,7 +8,8 @@ const uri = buffer.toString();
 const client = new mongodb.MongoClient(uri);
 const database = client.db("BulletinDisplay");
 const users = database.collection("users");
-const bucket = new mongodb.GridFSBucket(database, { bucketName: 'newSlides' });
+const slides = database.collection("slides");
+const bucket = new mongodb.GridFSBucket(database, { bucketName: 'slideFiles' });
 
 module.exports = {
     newUser: async function (UN, PS) {
@@ -42,7 +43,7 @@ module.exports = {
             };
             //update document with given username
             //upsert set to true - will insert given document if it does not already exixst
-            const result = await users.updateOne({ username: oldUN, }, { $set: upDoc }, { upsert: true });
+            const result = await users.updateOne({ username: oldUN, }, { $set: {upDoc} }, { upsert: true });
             console.log(`A document was updated with the _id: ${result.upsertedId}`);
         }
         finally {
@@ -65,8 +66,6 @@ module.exports = {
 
     getUser: async function (UN, PS) {
         await client.connect();
-        //how are we handling checking users against the user DB?
-        //return raw results from DB
         var user;
         try 
         {
@@ -76,65 +75,74 @@ module.exports = {
         {
             return user;
         }
- 
+        
     },
 
-    checkUser: async function (UN,PS)
-    {
-        /*
-        For user creation:
-        -check for record with username
-        -return T/F
-
-        For login:
-        -search for record that with matching UN and PS
-        -return T/F
-        */
-        var user;
-        try 
-        {
-            //findOne() returns null if user does not exist
-            if (PS === undefined)
-            {
-                user = await users.findOne({ username:UN },{username:1});
-                if (user===null)
+    updSlide: async function (_slideName, _slideType, _user, _date, _expDate, targetID) {
+        await client.connect();
+        try {
+            //if no existing document ID is provided, create a new slide record.
+            if (targetID === undefined) {            
+                // slide metadata document
+                const slideDoc =
                 {
-                    return false;
-                }
-                else if (user.username === UN)
-                {
-                    return true;
-                }
-                else 
-                {
-                    console.log('findOne() has returned and unexpected value: ', user)
-                }
-
+                    slide_name: _slideName,
+                    slide_type: _slideType,
+                    owner: _user,
+                    lastModifiedBy: _user,
+                    expiration_date: _expDate
+                };
+                const result = await slides.updateOne({}, {$set: {slideDoc}}, { upsert: true });
+                console.log(`A document was updated with the _id: ${result.upsertedId}`);
             }
             else
             {
-                user = await users.findOne({ username:UN, password:PS },{username:1, password:1});
-                if (user===null)
+                // slide metadata document
+                const slideDoc =
                 {
-                    return false;
-                }
-                else if (user.username === UN && user.password === PS)
-                {
-                    return true;
-                }
-                else 
-                {
-                    console.log('findOne() has returned and unexpected value: ', user)
-                }
+                    slide_name: _slideName,
+                    slide_type: _slideType,
+                    // an existing document should already have an owner.
+                    lastModifiedBy: _user,
+                    expiration_date: _expDate
+                };
+                const result = await slides.updateOne({targetID}, {$set: {slideDoc}}, {upsert: true});
+                console.log(`A document was updated with the _id: ${result.upsertedId}`);
             }
+              console.log(`A document was updated with the _id: ${result.upsertedId}`);
         }
-        finally 
-        {
-            return user;
+        finally {
+            // await client.close();
         }
     },
 
+
     delSlide: async function (_targetID) {
+        await client.connect();
+        try {
+            //delete document with given uID
+            const result = await slides.deleteOne({ _id: _targetID });
+            console.log(`${result.deletedId} document(s) deleted.`);
+        }
+        finally {
+            // await client.close();
+        }
+    },
+
+    getSlide: async function (targetID) {
+        await client.connect();
+        var slide;
+        try 
+        {
+            slide = slides.findOne({ _id:targetID }, {_slideName:1, _slideType:1, _user:1, _date:1, _expDate:1, _id:1 });
+        }
+        finally 
+        {
+            return slide;
+        }
+    },
+
+    delFile: async function (_targetID) {
         await client.connect();
         try {
             return bucket.delete(mongodb.ObjectId(_targetID));
