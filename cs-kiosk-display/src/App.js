@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import Carousel from "react-bootstrap/Carousel";
-import {getImage, getSlides} from "./utility/api";
+import {getImage, getSlides, getAllSlideData, autoUpdateLoop} from "./utility/api";
 import './App.css';
 import "./bootstrap.css";
 
@@ -10,6 +10,9 @@ export default function App() {
     async function updateSlides() {
         const slidesRes = await getSlides();
         const image = await getImage("635b2c87c1078d59803396c8");
+        await autoUpdateLoop(() => {});
+        const slidesGotten = await getAllSlideData();
+        console.log(slidesGotten);
         console.log("Image:", image);
         slidesRes.push({
             id: "testimage",
@@ -37,13 +40,14 @@ export default function App() {
     >
         {slides.length
         ? slides.map(slide => <Carousel.Item
-            interval={slide.interval || 1000}
+            interval={slide.interval || 8000}
         >
             {{
-                "link": () => <embed
+                "link": () => <iframe
                     src={slide.content}
                     width={"2000vw"}
                     height={"1000vh"}
+                    // csp={`frame-ancestors ${slide.content};`}
                 />,
                 "image": () => slide.content
             }[slide.type]()}

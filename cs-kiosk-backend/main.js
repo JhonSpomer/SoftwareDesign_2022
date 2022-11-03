@@ -1,15 +1,19 @@
 const
     path = require("path"),
     express = require("express"),
+    expressWs = require("express-ws"),
     {app, BrowserWindow, protocol, session} = require("electron"),
     fs = require("fs"),
     db = require("./src/CRUD_functions"),
     {Binary} = require("mongodb"),
-    stream = require("stream");
+    stream = require("stream"),
+    uuid = require("uuid").v4;
 
 const
     port = 9000,
     api = express();
+
+expressWs(api);
 
 const
     dummyImage = fs.readFileSync("1.png"),
@@ -30,7 +34,7 @@ const
             id: "slide2",
             name: "Slide 2",
             type: "link",
-            content: "https://example.com"
+            content: "https://www.fireeye.com/cyber-map/threat-map.html"
         }
     ],
     dummyOrder = [
@@ -41,6 +45,7 @@ const
 
 ;(async () => {
     await app.whenReady();
+    const connections = {};
 
 
     // Express API server
@@ -81,6 +86,7 @@ const
     });
 
     api.post("/slides.json", (req, res) => {
+        for (const ws of Object.values(connections)) ws.send("update");
         req.on("data", chunk => console.log(chunk.toString()));
         req.on("close", () => console.log("Closed"));
         res
@@ -95,6 +101,7 @@ const
     });
 
     api.post("/order.json", (req, res) => {
+        for (const ws of Object.values(connections)) ws.send("update");
         req.on("data", chunk => console.log(chunk.toString()));
         req.on("close", () => console.log("Closed"));
         res
@@ -121,6 +128,7 @@ const
     });
 
     api.post("/image/:image", async (req, res) => {
+        for (const ws of Object.values(connections)) ws.send("update");
         console.log(req.params.image);
         await db.modSlide(
             stream.Readable.from(Buffer.from(req.body)),
@@ -134,6 +142,7 @@ const
     });
 
     api.post("/image/new", async (req, res) => {
+        for (const ws of Object.values(connections)) ws.send("update");
         await db.modSlide(
             stream.Readable.from(Buffer.from(req.body)),
             req.query.name,
@@ -142,6 +151,21 @@ const
             req.query.date,
             req.query.expiration
         );
+    });
+
+    api.ws("/autoupdate", (ws, req) => {
+        console.log("Received websocket request");
+        const id = uuid();
+        connections[id] = ws;
+
+        ws.on("message", msg => {
+            console.log(msg);
+        });
+
+        ws.on("close", () => {
+            console.log("Closed");
+            delete connections[id];
+        });
     });
 
 
@@ -157,11 +181,18 @@ const
     // });
 
     const filter = {
-        urls: ['https://*.com/*', 'http://*.com/*'],
+        urls: [/*'https://*.com/*', 'http://*.com/*', */"https://*/*"],
     };
     session.defaultSession.webRequest.onBeforeSendHeaders(filter, (details, callback) => {
-        details.requestHeaders['Referer'] = details.url;
+        const url = new URL(details.referrer || details.url);
+        details.requestHeaders["Origin"] = url.origin;
+        details.requestHeaders["Referer"] = details.url;
         callback({ cancel: false, requestHeaders: details.requestHeaders });
+    });
+    session.defaultSession.webRequest.onHeadersReceived(filter, (details, callback) => {
+        const csp = Object.keys(details.responseHeaders).find(h => h.toLowerCase() === "content-security-policy") || "content-security-policy";
+        details.responseHeaders[csp] = "frame-ancestors *;";
+        callback({cancel: false, responseHeaders: details.responseHeaders});
     });
 
     const win = new BrowserWindow({

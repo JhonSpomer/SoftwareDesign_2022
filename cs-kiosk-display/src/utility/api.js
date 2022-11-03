@@ -14,3 +14,23 @@ export async function getImage(image) {
     console.log(res);
     return await res.arrayBuffer();
 }
+
+export async function getAllSlideData() {
+    const slides = await getSlides();
+    for (const slide of slides) if (slide.type === "image" || slide.type === "pdf") slide.content = await getImage(slide.content);
+    return slides;
+}
+
+export async function autoUpdateLoop(cb) {
+    const connection = new WebSocket(new URL("/autoupdate", `ws://${endpoint}:9000`));
+    console.log("Opening websocket");
+
+    connection.addEventListener("open", event => {
+        connection.send("Hello world!");
+    });
+
+    connection.addEventListener("message", async event => {
+        console.log(event.data);
+        if (event.data === "update") await cb(await getAllSlideData());
+    });
+}
