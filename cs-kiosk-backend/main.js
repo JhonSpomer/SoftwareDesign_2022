@@ -64,11 +64,12 @@ const
     });
 
     api.post("/authenticate.json", async (req, res) => {
-        let buffer = "";
-        req.on("data", chunk => buffer += chunk.toString());
-        req.on("close", async () => {
+        const jsonData = JSON.parse(req.body);
+        // let buffer = "";
+        // req.on("data", chunk => buffer += chunk.toString());
+        // req.on("close", async () => {
             try {
-                const {username, password} = JSON.parse(buffer);
+                const {username, password} = jsonData;
                 await db.getUser(username, password);
                 res
                     .status(200)
@@ -76,7 +77,7 @@ const
             } catch (e) {
                 console.log("Failed to extract username and password.");
             }
-        });
+        // });
     });
 
     api.get("/slides.json", (req, res) => {

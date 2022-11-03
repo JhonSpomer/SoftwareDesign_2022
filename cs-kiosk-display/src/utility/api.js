@@ -21,16 +21,26 @@ export async function getAllSlideData() {
     return slides;
 }
 
-export async function autoUpdateLoop(cb) {
+export function autoUpdateLoop(cb) {
     const connection = new WebSocket(new URL("/autoupdate", `ws://${endpoint}:9000`));
     console.log("Opening websocket");
 
-    connection.addEventListener("open", event => {
+    function onOpen() {
         connection.send("Hello world!");
-    });
+    }
 
-    connection.addEventListener("message", async event => {
+    async function onMessage(event) {
         console.log(event.data);
         if (event.data === "update") await cb(await getAllSlideData());
-    });
+    }
+
+    function onClose() {
+        connection.removeEventListener("open", onOpen);
+        connection.removeEventListener("message", onMessage);
+        connection.removeEventListener("close", onClose);
+    }
+
+    connection.addEventListener("open", onOpen);
+    connection.addEventListener("message", onMessage);
+    connection.addEventListener("close", onClose);
 }
