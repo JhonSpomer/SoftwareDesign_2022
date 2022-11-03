@@ -201,8 +201,8 @@ const
 
     win.loadURL("http://localhost:9000/carousel");
 
-    await db.updUser("admin", "newAdmin", "newPassword");
-    console.log(await db.getUser("newAdmin", "newPassword"));
+    // await db.updUser("admin", "newAdmin", "newPassword");
+    // console.log(await db.getUser("newAdmin", "newPassword"));
 
     // Cleanup
 

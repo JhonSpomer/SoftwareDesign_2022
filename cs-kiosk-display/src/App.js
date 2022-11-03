@@ -9,22 +9,22 @@ export default function App() {
         [slides, setSlides] = useState([]);
     async function updateSlides() {
         const slidesRes = await getSlides();
-        const image = await getImage("635b2c87c1078d59803396c8");
+        // const image = await getImage("635b2c87c1078d59803396c8");
         await autoUpdateLoop(() => {});
         const slidesGotten = await getAllSlideData();
         console.log(slidesGotten);
-        console.log("Image:", image);
-        slidesRes.push({
-            id: "testimage",
-            name: "Test Image",
-            type: "image",
-            content: <img
-                src={`data:image/png;base64, ${window.btoa(
-                    (new Uint8Array(image))
-                    .reduce((prev, cur) => prev + String.fromCharCode(cur), "")
-                )}`}
-            />
-        });
+        // console.log("Image:", image);
+        // slidesRes.push({
+        //     id: "testimage",
+        //     name: "Test Image",
+        //     type: "image",
+        //     content: <img
+        //         src={`data:image/png;base64, ${window.btoa(
+        //             (new Uint8Array(image))
+        //             .reduce((prev, cur) => prev + String.fromCharCode(cur), "")
+        //         )}`}
+        //     />
+        // });
         setSlides(slidesRes);
         console.log("Slides set");
     }
