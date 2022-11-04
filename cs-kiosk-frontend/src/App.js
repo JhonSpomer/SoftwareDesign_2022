@@ -1,13 +1,13 @@
 /*
-Last update: 11/1/2022 9:00 PM
+Last update: 11/3/2022 9:00 PM
 Last worked on by: Jhon
-Last added: Added code to iclude UserEdit.js
+Last added: connected to the server endpoints and backend , now checks for actual credentials.
 
 
 login page and front end, hides nav bar, with error validation.  
 
 -TODO-
-Remove Hardcoded credentials and link to database instead.
+-add real disclaimer and user documentation.
 
 --BUGS--
 -Page starts on login in the nav bar, even though it redirects to admin.
@@ -178,23 +178,7 @@ function App() {
   async function query(usrName, pssWord) {
     //later should query db, for now, it just flags todo error state.
     //check if user credentials are in database
-    /*
-      onClick={async () => {
-                                            console.log("submit");
-                                            console.log(fileValue0);
-                                            await fetch(`http://localhost:9000/image/635b2c87c1078d59803396c8`, {
-                                                method: "POST",
-                                                mode: 'cors',
-                                                headers: {
 
-                                                //${imageName} old 
-                                                //await fetch(`http://localhost:9000/image/${imageName}' , {
-                                                    "Content-Type": "application/octet-stream"
-                                                },
-                                                body: fileValue0
-                                            });
-                                        }}
-    */
 
     let jsondata = JSON.stringify({ username: usrName, password: pssWord });
     console.log(jsondata);

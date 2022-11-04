@@ -1,15 +1,14 @@
 /*
-Last updated: 11/1/2022
+Last updated: 11/03/2022
 Last updated by: Jhon
-Last change: edit and delete now work properly.
+Last change: Connecting to the actual endpoint that talks to the backend.
 
 
 --BUGS--
--navigating off the page resets the array
+-navigating off the page resets the array (NO LONGER RELEVENT?)
 
 --TODO--
 -Get the slide rename function to work
--link to database rather than test array
 */
 
 

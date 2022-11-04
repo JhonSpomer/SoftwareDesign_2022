@@ -1,14 +1,14 @@
 /*
-Last modified: 11/1/2022
+Last modified: 11/3/2022
 Last worked on by: Jhon
-last added: Modification to href to allow edit slide to navigate to preview. Deleted large block of depreciated code.
+last added: Connecting to backend and reworking of add slide button
 
 This page should allow user to upload files provided and place them in the carousel and database. 
 --NOTE--
 Admin_Old is no longer needed, but it is still in the github repo for reference.
 
 -TODO-
--Link to database, rather than dummy array data.
+-debug database connection
 
 --BUGS--
 -If user reloads page, the navbar dissapears.
@@ -153,17 +153,6 @@ export default function Admin(props) {
                             const href = `/edit/new`;
                             props.setActiveHref(href);
                             props.navigate(href);
-                        /*
-                                                
-                                                setItems(
-                                                    [...items, {
-                                                        _id:items.length,
-                                                        name: "slide " + (items.length+1),
-                                                        alt:"dfeault",
-                                                        description: "This is default description for slide " + (items.length+1)
-                                                    }]
-                                                )
-                                                */
                                                 
                     }
                     }>Create slide</Button>
