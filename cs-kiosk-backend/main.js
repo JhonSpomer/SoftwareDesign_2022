@@ -114,7 +114,7 @@ const
         req.on("close", async () => {
             console.log("Closed");
             const slide = JSON.parse(buffer);
-            const id = await db.updSlide(slide.name, slide.type, undefined, undefined, undefined, req.params.id);
+            const id = await db.updSlide(slide.name, slide.type, undefined, undefined, undefined, slide.content, req.params.id);
             for (const ws of Object.values(connections)) ws.send("update");
             res
                 .status(200)
