@@ -24,11 +24,7 @@ module.exports = {
             };
             const result = await users.insertOne(doc);
             //console.log(`A document was inserted with the _id: ${result.insertedId}`);
-<<<<<<< HEAD
             return result.insertedId.toHexString();
-=======
-            return result.insertedId;
->>>>>>> 916daeb (added ID returns in all functions)
         }
         finally {
             // await client.close();
@@ -141,6 +137,7 @@ module.exports = {
                 };
                 const result = await slides.updateOne({_id:targetID}, { $set: slideDoc  }, { upsert: true });
                 console.log(`A document was updated with the _id: ${result.upsertedId}`);
+                return result.upsertedId;
             }
             else {
                 // slide metadata document
@@ -155,9 +152,10 @@ module.exports = {
                 };
                 const result = await slides.updateOne({ _id:targetID }, { $set: slideDoc }, { upsert: true });
                 console.log(`A document was updated with the _id: ${result.upsertedId}`);
+                return result.upsertedId;
             }
            //console.log(`A document was updated with the _id: ${result.upsertedId}`);
-           return result.upsertedId;
+           
         }
         finally {
             // await client.close();
@@ -179,7 +177,7 @@ module.exports = {
 
     getSlide: async function (targetID) {
         await client.connect();
-        var slide;
+        let slide;
         try {
             slide = slides.findOne({ _id: targetID }, { _slideName: 1, _slideType: 1, _user: 1, _date: 1, _expDate: 1, _id: 1 });
         }
