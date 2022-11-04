@@ -156,7 +156,7 @@ const
         for (const ws of Object.values(connections)) ws.send("update");
     });
 
-    api.get("/image/:image", async (req, res) => {
+    api.get("/image/:image([^n][^e][^w])", async (req, res) => {
         res.setHeader("Content-Type", "application/octet-stream");
         const image = await db.getSlide(req.params.image);
         const buffers = [];
@@ -169,7 +169,7 @@ const
         });
     });
 
-    api.post("/image/:image", async (req, res) => {
+    api.post("/image/:image([^n][^e][^w])", async (req, res) => {
         console.log(req.params.image);
         await db.modSlide(
             stream.Readable.from(Buffer.from(req.body)),
