@@ -71,7 +71,7 @@ export default function EditSlide(props) {
                             let jsonslide_img = JSON.stringify({name: SlideName, type: slideType, content: IDvalue});
                             console.log(jsonslide_img);
 
-                        await fetch(`http://localhost:9000/slide.json`, {
+                        const res2 = await fetch(`http://localhost:9000/slide.json`, {
                             method: "POST",
                             mode: 'cors',
                             headers: {
@@ -80,6 +80,8 @@ export default function EditSlide(props) {
                             },
                             body: jsonslide_img
                         });
+                        const IDTest = await res2.text();
+                        console.log(IDTest);
                         }
 
 
