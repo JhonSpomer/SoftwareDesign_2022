@@ -86,9 +86,11 @@ const
     });
 
     api.post("/slides.json", (req, res) => {
-        for (const ws of Object.values(connections)) ws.send("update");
         req.on("data", chunk => console.log(chunk.toString()));
-        req.on("close", () => console.log("Closed"));
+        req.on("close", () => {
+            console.log("Closed");
+            for (const ws of Object.values(connections)) ws.send("update");
+        });
         res
             .status(200)
             .send("Done");
@@ -107,7 +109,19 @@ const
         }
     });
 
-    api.post("/slide.json", (req, res) => {});
+    api.post("/slide.json", (req, res) => {
+        let buffer = "";
+        req.on("data", chunk => buffer += chunk.toString());
+        req.on("close", async () => {
+            console.log("Closed");
+            const slide = JSON.parse(buffer);
+            const id = await db.updSlide(slide.name, slide.type, undefined, undefined, undefined, req.params.id);
+            for (const ws of Object.values(connections)) ws.send("update");
+            res
+                .status(200)
+                .send(id);
+        });
+    });
 
     api.get("/order.json", (req, res) => {
         res
@@ -116,9 +130,11 @@ const
     });
 
     api.post("/order.json", (req, res) => {
-        for (const ws of Object.values(connections)) ws.send("update");
         req.on("data", chunk => console.log(chunk.toString()));
-        req.on("close", () => console.log("Closed"));
+        req.on("close", () => {
+            console.log("Closed");
+            for (const ws of Object.values(connections)) ws.send("update");
+        });
         res
             .status(200)
             .send("Done");
@@ -143,7 +159,6 @@ const
     });
 
     api.post("/image/:image", async (req, res) => {
-        for (const ws of Object.values(connections)) ws.send("update");
         console.log(req.params.image);
         await db.modSlide(
             stream.Readable.from(Buffer.from(req.body)),
@@ -154,10 +169,10 @@ const
             req.query.expiration || "",
             req.params.image
         );
+        for (const ws of Object.values(connections)) ws.send("update");
     });
 
     api.post("/image/new", async (req, res) => {
-        for (const ws of Object.values(connections)) ws.send("update");
         await db.modSlide(
             stream.Readable.from(Buffer.from(req.body)),
             req.query.name,
@@ -166,6 +181,7 @@ const
             req.query.date,
             req.query.expiration
         );
+        for (const ws of Object.values(connections)) ws.send("update");
     });
 
     api.ws("/autoupdate", (ws, req) => {
