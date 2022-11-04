@@ -192,7 +192,7 @@ module.exports = {
     },
 
     updateSlideOrder: async function (idOrder, targetID) {
-        const upDoc{
+        const upDoc = {
             slideOrder: idOrder
         }
         const result =await config.updateOne({ targetID }, { $set: { upDoc } }, { upsert: true });
