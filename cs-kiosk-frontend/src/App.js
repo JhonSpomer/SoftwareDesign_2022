@@ -52,7 +52,8 @@ function App() {
 
   useEffect(() => {
     console.log(location.pathname)
-    if (location.pathname === "/") {
+    if (location.pathname === "/") 
+    {
       setNavValue(true);
       setToolsValue(true);
     }
@@ -199,6 +200,16 @@ function App() {
         navigate("/admin");
       }
 
+    //reset navbar access
+    //placeholder var checking.
+    if (usrName === "susan" && pssWord === "admin") 
+    {
+      setNavValue(false);
+      navigate("/admin");
+    }
+    else 
+    {
+      setErrorValue("INVALID CREDENTIALS");
     }
     console.log("done");
 
