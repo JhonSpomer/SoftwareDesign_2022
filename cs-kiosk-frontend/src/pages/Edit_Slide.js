@@ -47,6 +47,49 @@ export default function EditSlide(props) {
                 if (location === 'http://localhost:3000/edit/new')
                 {
                     console.log("new slide");
+                    if(slideType === 'link')
+                    {
+                        let jsonslide_link = JSON.stringify({name: SlideName, type: slideType, content: urlValue1 });
+                        console.log(jsonslide_link);
+                    }
+                    else if (slideType === 'image')
+                    {
+
+
+                        const res = await fetch(`http://localhost:9000/image/new`, {
+                            method: "POST",
+                            mode: 'cors',
+                            headers: {
+
+                                "Content-Type": "application/octet-stream"
+                            },
+                            body: fileValue0
+                        });
+                        const IDvalue = await res.text();
+                        if (res.ok)
+                        {
+                            let jsonslide_img = JSON.stringify({name: SlideName, type: slideType, content: IDvalue});
+                            console.log(jsonslide_img);
+
+                        await fetch(`http://localhost:9000/slide.json`, {
+                            method: "POST",
+                            mode: 'cors',
+                            headers: {
+
+                                "Content-Type": "text/plain"
+                            },
+                            body: jsonslide_img
+                        });
+                        }
+
+
+                    }
+                    else if (slideType === 'pdf')
+                    {
+                        let jsonslide_pdf = JSON.stringify({name: SlideName, type: slideType, content: PDFValue });
+                        console.log(jsonslide_pdf);
+                    }
+                    
                 }else{
                     console.log("edit slide");
                 }
@@ -185,7 +228,7 @@ export default function EditSlide(props) {
                                 onClick={async () => {
                                     console.log("url submit!");
                                     console.log(urlValue1)
-                                    setUrlValue1("");
+                                    //setUrlValue1("");
 
                                     //hit db here
 
