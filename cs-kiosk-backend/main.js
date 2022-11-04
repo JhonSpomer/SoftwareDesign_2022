@@ -16,7 +16,6 @@ const
 expressWs(api);
 
 const
-    dummyImage = fs.readFileSync("1.png"),
     dummySlides = [
         {
             id: "slide0",
@@ -212,13 +211,13 @@ const
     // });
 
     const filter = {
-        urls: [/*'https://*.com/*', 'http://*.com/*', */"https://*/*"],
+        urls: ["https://*/*"],
     };
     session.defaultSession.webRequest.onBeforeSendHeaders(filter, (details, callback) => {
         const url = new URL(details.referrer || details.url);
         details.requestHeaders["Origin"] = url.origin;
         details.requestHeaders["Referer"] = details.url;
-        callback({ cancel: false, requestHeaders: details.requestHeaders });
+        callback({cancel: false, requestHeaders: details.requestHeaders});
     });
     session.defaultSession.webRequest.onHeadersReceived(filter, (details, callback) => {
         const csp = Object.keys(details.responseHeaders).find(h => h.toLowerCase() === "content-security-policy") || "content-security-policy";
