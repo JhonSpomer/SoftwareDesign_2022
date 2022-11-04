@@ -32,7 +32,12 @@ export default function App() {
                     height={"1000vh"}
                     // csp={`frame-ancestors ${slide.content};`}
                 />,
-                "image": () => slide.content
+                "image": () => <img
+                    src={`data:image/png;base64, ${window.btoa(
+                        (new Uint8Array(slide.content.data))
+                        .reduce((prev, cur) => prev + String.fromCharCode(cur), "")
+                    )}`}
+                />
             }[slide.type]()}
         </Carousel.Item>)
         : <Carousel.Item>

@@ -82,6 +82,7 @@ const
         const
             order = await db.getSlideOrder(),
             slides = [];
+        console.log(order);
         for (const id of order) slides.push(await db.getSlide(id));
         console.log(slides);
         res

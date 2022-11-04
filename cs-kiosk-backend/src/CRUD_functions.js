@@ -102,8 +102,8 @@ module.exports = {
                 // slide metadata document
                 const slideDoc =
                 {
-                    slide_name: _slideName,
-                    slide_type: _slideType,
+                    name: _slideName,
+                    type: _slideType,
                     // an existing document should already have an owner.
                     lastModifiedBy: _user,
                     expiration_date: _expDate,
@@ -138,10 +138,10 @@ module.exports = {
         await client.connect();
         let slide;
         try {
-            slide = slides.findOne({ _id: targetID }, { _slideName: 1, _slideType: 1, _user: 1, _date: 1, _expDate: 1, _id: 1 });
+            slide = await slides.findOne({ _id: mongodb.ObjectId(targetID) });
+            return slide;
         }
         finally {
-            return slide;
         }
     },
 
