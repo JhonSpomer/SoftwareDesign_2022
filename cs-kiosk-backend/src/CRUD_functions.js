@@ -203,13 +203,18 @@ module.exports = {
         return result.insertedId.toHexString();
     },
 
-    modSlideOrder: async function (idOrder, targetID) {
+    modSlideOrder: async function (idOrder) {
         const upDoc = {
             slideOrder: idOrder
         }
-        const result =await config.updateOne({ _id:targetID }, { $set: upDoc }, { upsert: true });
+        const result =await config.updateOne({ name: "carousel_config" }, { $set: upDoc }, { upsert: true });
         return result.upsertedId.toHexString();
     },
+
+    getSlideOrder: async function () {
+        const result = await config.findOne({name: "carousel_config"});
+        return result;
+    }
 };
 
 // module.exports.checkUser('qwerty');
