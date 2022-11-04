@@ -148,7 +148,7 @@ const
 
     api.post("/image/new", async (req, res) => {
         console.log("Creating new image");
-        await db.modSlide(
+        await db.modFile(
             stream.Readable.from(Buffer.from(req.body)),
             req.query.name,
             "image",
@@ -161,7 +161,7 @@ const
 
     api.get("/image/:image([^n][^e][^w])", async (req, res) => {
         res.setHeader("Content-Type", "application/octet-stream");
-        const image = await db.getSlide(req.params.image);
+        const image = await db.getFile(req.params.image);
         const buffers = [];
         image.on("data", chunk => buffers.push(chunk));
         image.once("end", () => {
@@ -174,7 +174,7 @@ const
 
     api.post("/image/:image([^n][^e][^w])", async (req, res) => {
         console.log(req.params.image);
-        await db.modSlide(
+        await db.modFile(
             stream.Readable.from(Buffer.from(req.body)),
             req.query.name,
             "image",
