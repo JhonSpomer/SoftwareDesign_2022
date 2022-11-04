@@ -24,7 +24,7 @@ module.exports = {
             };
             const result = await users.insertOne(doc);
             //console.log(`A document was inserted with the _id: ${result.insertedId}`);
-            return result.insertedId;
+            return result.insertedId.toHexString();
         }
         finally {
             // await client.close();
@@ -47,7 +47,7 @@ module.exports = {
             //upsert set to true - will insert given document if it does not already exixst
             const result = await users.updateOne({ username: oldUN, }, { $set: upDoc }, { upsert: true });
             //console.log(`A document was updated with the _id: ${result.upsertedId}`);
-            return result.upsertedId;
+            return result.upsertedId.toHexString();
         }
         finally {
             // await client.close();
@@ -96,7 +96,7 @@ module.exports = {
                 };
                 const result = await slides.updateOne({_id:targetID}, { $set: slideDoc  }, { upsert: true });
                 console.log(`A document was updated with the _id: ${result.upsertedId}`);
-                return result.upsertedId;
+                return result.upsertedId.toHexString();
             }
             else {
                 // slide metadata document
@@ -111,7 +111,7 @@ module.exports = {
                 };
                 const result = await slides.updateOne({ _id:targetID }, { $set: slideDoc }, { upsert: true });
                 console.log(`A document was updated with the _id: ${result.upsertedId}`);
-                return result.upsertedId;
+                return result.upsertedId.toHexString();
             }
            //console.log(`A document was updated with the _id: ${result.upsertedId}`);
            
@@ -163,7 +163,7 @@ module.exports = {
                 const stream = bucket.openUploadStream(_name, { metadata: { type: _type, owner: _user, lastModifiedBy: _user, lastModifiedDate: _date, expDate: _expDate } });
                 const result = _RS.pipe(stream);
                 //console.log('A slide file was added with the id: ${result.uploadID._id}');
-                return stream.id;
+                return stream.id.toHexString();
             }
             else {
                 // //delete old slide
@@ -172,7 +172,7 @@ module.exports = {
                 const stream = bucket.openUploadStreamWithId(targetID, _name, { metadata: { type: _type, owner: _user, lastModifiedBy: _user, lastModifiedDate: _date, expDate: _expDate } });
                 const result = _RS.pipe(stream);
                 //console.log('A slide file was added with the _id: ${result.insertedId}');
-                return stream.id;
+                return stream.id.toHexString();
             }
             
         }
@@ -200,7 +200,7 @@ module.exports = {
 
     newConfigFile: async function (newDoc) {
         const result = await config.insertOne(newDoc);
-        return result.insertedId;
+        return result.insertedId.toHexString();
     },
 
     modSlideOrder: async function (idOrder, targetID) {
@@ -208,7 +208,7 @@ module.exports = {
             slideOrder: idOrder
         }
         const result =await config.updateOne({ _id:targetID }, { $set: upDoc }, { upsert: true });
-        return result.upsertedId;
+        return result.upsertedId.toHexString();
     },
 };
 
