@@ -31,7 +31,10 @@ export function autoUpdateLoop(cb) {
 
     async function onMessage(event) {
         console.log(event.data);
-        if (event.data === "update") await cb(await getAllSlideData());
+        if (event.data === "update") {
+            console.log("Updating slides");
+            await cb(await getAllSlideData());
+        }
     }
 
     function onClose() {
