@@ -83,7 +83,7 @@ module.exports = {
         await client.connect();
         try {
             //if no existing document ID is provided, create a new slide record.
-            if (targetID === undefined) {
+            if (!targetID) {
                 // slide metadata document
                 const slideDoc =
                 {
@@ -213,7 +213,7 @@ module.exports = {
 
     getSlideOrder: async function () {
         const result = await config.findOne({name: "carousel_config"});
-        return result;
+        return result.slideOrder;
     }
 };
 

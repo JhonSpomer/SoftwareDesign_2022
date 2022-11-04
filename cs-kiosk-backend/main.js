@@ -78,10 +78,15 @@ const
         });
     });
 
-    api.get("/slides.json", (req, res) => {
+    api.get("/slides.json", async (req, res) => {
+        const
+            order = await db.getSlideOrder(),
+            slides = [];
+        for (const id of order) slides.push(await db.getSlide(id));
+        console.log(slides);
         res
             .status(200)
-            .send(JSON.stringify(dummySlides));
+            .send(JSON.stringify(slides));
     });
 
     // api.post("/slides.json", (req, res) => {
