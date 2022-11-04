@@ -44,7 +44,7 @@ module.exports = {
             };
             //update document with given username
             //upsert set to true - will insert given document if it does not already exixst
-            const result = await users.updateOne({ username: oldUN, }, { $set: { upDoc } }, { upsert: true });
+            const result = await users.updateOne({ username: oldUN, }, { $set: upDoc }, { upsert: true });
             console.log(`A document was updated with the _id: ${result.upsertedId}`);
         }
         finally {
@@ -91,7 +91,7 @@ module.exports = {
                     lastModifiedBy: _user,
                     expiration_date: _expDate
                 };
-                const result = await slides.updateOne({}, { $set: { slideDoc } }, { upsert: true });
+                const result = await slides.updateOne({_id:targetID}, { $set: slideDoc  }, { upsert: true });
                 console.log(`A document was updated with the _id: ${result.upsertedId}`);
             }
             else {
@@ -104,7 +104,7 @@ module.exports = {
                     lastModifiedBy: _user,
                     expiration_date: _expDate
                 };
-                const result = await slides.updateOne({ targetID }, { $set: { slideDoc } }, { upsert: true });
+                const result = await slides.updateOne({ _id:targetID }, { $set: slideDoc }, { upsert: true });
                 console.log(`A document was updated with the _id: ${result.upsertedId}`);
             }
             console.log(`A document was updated with the _id: ${result.upsertedId}`);
@@ -195,7 +195,7 @@ module.exports = {
         const upDoc = {
             slideOrder: idOrder
         }
-        const result =await config.updateOne({ targetID }, { $set: { upDoc } }, { upsert: true });
+        const result =await config.updateOne({ _id:targetID }, { $set: upDoc }, { upsert: true });
         return result.upsertedId;
     },
 };
