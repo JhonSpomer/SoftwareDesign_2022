@@ -84,16 +84,16 @@ const
             .send(JSON.stringify(dummySlides));
     });
 
-    api.post("/slides.json", (req, res) => {
-        req.on("data", chunk => console.log(chunk.toString()));
-        req.on("close", () => {
-            console.log("Closed");
-            for (const ws of Object.values(connections)) ws.send("update");
-        });
-        res
-            .status(200)
-            .send("Done");
-    });
+    // api.post("/slides.json", (req, res) => {
+    //     req.on("data", chunk => console.log(chunk.toString()));
+    //     req.on("close", () => {
+    //         console.log("Closed");
+    //         for (const ws of Object.values(connections)) ws.send("update");
+    //     });
+    //     res
+    //         .status(200)
+    //         .send("Done");
+    // });
 
     api.get("/slide.json", async (req, res) => {
         const slide = await db.getSlide(req.params.slide);
