@@ -76,7 +76,6 @@ module.exports = {
         finally {
             return user;
         }
-
     },
 
     modSlide: async function (_slideName, _slideType, _user, _date, _expDate, _content, targetID) {
@@ -125,7 +124,7 @@ module.exports = {
         await client.connect();
         try {
             //if no existing document ID is provided, create a new slide record.
-            if (targetID === undefined) {            
+            if (targetID === undefined) {
                 // slide metadata document
                 const slideDoc =
                 {
@@ -135,11 +134,10 @@ module.exports = {
                     lastModifiedBy: _user,
                     expiration_date: _expDate
                 };
-                const result = await slides.updateOne({}, {$set: {slideDoc}}, { upsert: true });
+                const result = await slides.updateOne({}, { $set: { slideDoc } }, { upsert: true });
                 console.log(`A document was updated with the _id: ${result.upsertedId}`);
             }
-            else
-            {
+            else {
                 // slide metadata document
                 const slideDoc =
                 {
@@ -149,10 +147,10 @@ module.exports = {
                     lastModifiedBy: _user,
                     expiration_date: _expDate
                 };
-                const result = await slides.updateOne({targetID}, {$set: {slideDoc}}, {upsert: true});
+                const result = await slides.updateOne({ targetID }, { $set: { slideDoc } }, { upsert: true });
                 console.log(`A document was updated with the _id: ${result.upsertedId}`);
             }
-              console.log(`A document was updated with the _id: ${result.upsertedId}`);
+            console.log(`A document was updated with the _id: ${result.upsertedId}`);
         }
         finally {
             // await client.close();
@@ -175,12 +173,10 @@ module.exports = {
     getSlide: async function (targetID) {
         await client.connect();
         var slide;
-        try 
-        {
-            slide = slides.findOne({ _id:targetID }, {_slideName:1, _slideType:1, _user:1, _date:1, _expDate:1, _id:1 });
+        try {
+            slide = slides.findOne({ _id: targetID }, { _slideName: 1, _slideType: 1, _user: 1, _date: 1, _expDate: 1, _id: 1 });
         }
-        finally 
-        {
+        finally {
             return slide;
         }
     },
@@ -248,7 +244,7 @@ module.exports = {
     getFile: async function (_targetID) {
         await client.connect();
         try {
-            const file = await bucket.openDownloadStream(mongodb.ObjectId(_targetID));
+            const file = bucket.openDownloadStream(mongodb.ObjectId(_targetID));
             const buffers = [];
             file.on("data", chunk => buffers.push(chunk));
             file.once("end", () => {
