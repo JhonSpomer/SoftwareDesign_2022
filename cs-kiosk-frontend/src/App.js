@@ -175,25 +175,41 @@ function App() {
     />
   );
 
-  function query(usrName, pssWord) {
+  async function query(usrName, pssWord) {
     //later should query db, for now, it just flags todo error state.
     //check if user credentials are in database
+    /*
+      onClick={async () => {
+                                            console.log("submit");
+                                            console.log(fileValue0);
+                                            await fetch(`http://localhost:9000/image/635b2c87c1078d59803396c8`, {
+                                                method: "POST",
+                                                mode: 'cors',
+                                                headers: {
 
-    //TODO
+                                                //${imageName} old 
+                                                //await fetch(`http://localhost:9000/image/${imageName}' , {
+                                                    "Content-Type": "application/octet-stream"
+                                                },
+                                                body: fileValue0
+                                            });
+                                        }}
+    */
 
-
-    //reset navbar access
-    //placeholder var checking.
-    if (usrName === "susan" && pssWord === "admin") {
-      setNavValue(false);
-      navigate("/admin");
-    }
-    else {
-      setErrorValue("INVALID CREDENTIALS");
-    }
+    let jsondata = JSON.stringify({ username: usrName, password: pssWord });
+    console.log(jsondata);
+    const value = await fetch('http://localhost:9000/authenticate.json', {
+      method: "POST",
+      mode: 'cors',
+      headers: {
+        "Content-Type": "text/plain"
+      },
+      body: jsondata
+    })
+    console.log(value);
+    setNavValue(false);
+    navigate("/admin");
   }
-
-
 }
 
 
