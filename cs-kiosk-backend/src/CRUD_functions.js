@@ -9,6 +9,7 @@ const client = new mongodb.MongoClient(uri);
 const database = client.db("BulletinDisplay");
 const users = database.collection("users");
 const slides = database.collection("slides");
+const config = database.collection("Config_data");
 const bucket = new mongodb.GridFSBucket(database, { bucketName: 'slideFiles' });
 
 module.exports = {
@@ -43,7 +44,7 @@ module.exports = {
             };
             //update document with given username
             //upsert set to true - will insert given document if it does not already exixst
-            const result = await users.updateOne({ username: oldUN, }, { $set: {upDoc} }, { upsert: true });
+            const result = await users.updateOne({ username: oldUN, }, { $set: { upDoc } }, { upsert: true });
             console.log(`A document was updated with the _id: ${result.upsertedId}`);
         }
         finally {
@@ -67,22 +68,20 @@ module.exports = {
     getUser: async function (UN, PS) {
         await client.connect();
         var user;
-        try 
-        {
-            user = users.findOne({ username:UN, password:PS }, {username:1, password:1});
+        try {
+            user = users.findOne({ username: UN, password: PS }, { username: 1, password: 1 });
         }
-        finally 
-        {
+        finally {
             return user;
         }
-        
+
     },
 
     updSlide: async function (_slideName, _slideType, _user, _date, _expDate, targetID) {
         await client.connect();
         try {
             //if no existing document ID is provided, create a new slide record.
-            if (targetID === undefined) {            
+            if (targetID === undefined) {
                 // slide metadata document
                 const slideDoc =
                 {
@@ -92,11 +91,10 @@ module.exports = {
                     lastModifiedBy: _user,
                     expiration_date: _expDate
                 };
-                const result = await slides.updateOne({}, {$set: {slideDoc}}, { upsert: true });
+                const result = await slides.updateOne({}, { $set: { slideDoc } }, { upsert: true });
                 console.log(`A document was updated with the _id: ${result.upsertedId}`);
             }
-            else
-            {
+            else {
                 // slide metadata document
                 const slideDoc =
                 {
@@ -106,10 +104,10 @@ module.exports = {
                     lastModifiedBy: _user,
                     expiration_date: _expDate
                 };
-                const result = await slides.updateOne({targetID}, {$set: {slideDoc}}, {upsert: true});
+                const result = await slides.updateOne({ targetID }, { $set: { slideDoc } }, { upsert: true });
                 console.log(`A document was updated with the _id: ${result.upsertedId}`);
             }
-              console.log(`A document was updated with the _id: ${result.upsertedId}`);
+            console.log(`A document was updated with the _id: ${result.upsertedId}`);
         }
         finally {
             // await client.close();
@@ -132,12 +130,10 @@ module.exports = {
     getSlide: async function (targetID) {
         await client.connect();
         var slide;
-        try 
-        {
-            slide = slides.findOne({ _id:targetID }, {_slideName:1, _slideType:1, _user:1, _date:1, _expDate:1, _id:1 });
+        try {
+            slide = slides.findOne({ _id: targetID }, { _slideName: 1, _slideType: 1, _user: 1, _date: 1, _expDate: 1, _id: 1 });
         }
-        finally 
-        {
+        finally {
             return slide;
         }
     },
@@ -153,7 +149,7 @@ module.exports = {
     },
 
 
-    modSlide: async function (_RS, _name, _type, _user, _date, _expDate, targetID) {
+    modFile: async function (_RS, _name, _type, _user, _date, _expDate, targetID) {
         await client.connect();
         try {
             if (targetID === undefined) {
@@ -162,7 +158,7 @@ module.exports = {
             }
             else {
                 // //delete old slide
-                // await delSlide(targetID);
+                await delSlide(targetID);
                 //upload new slide
                 const result = _RS.pipe(bucket.openUploadStreamWithId(targetID, _name, { metadata: { type: _type, owner: _user, lastModifiedBy: _user, lastModifiedDate: _date, expDate: _expDate } }));
                 //console.log('A slide file was added with the _id: ${result.insertedId}');
@@ -174,27 +170,34 @@ module.exports = {
     },
 
 
-    getSlide: async function (_targetID) {
+    getFile: async function (_targetID) {
         await client.connect();
         try {
-            return bucket.openDownloadStream(mongodb.ObjectId(_targetID));
-
-            /*
-            const image = await db.getSlide(req.params.image);
+            const file = bucket.openDownloadStream(mongodb.ObjectId(_targetID));
             const buffers = [];
-            image.on("data", chunk => buffers.push(chunk));
-            image.once("end", () => {
-            const buffer = Buffer.concat(buffers);
-            res
-                .status(200)
-                .send(buffer);
+            file.on("data", chunk => buffers.push(chunk));
+            file.once("end", () => {
+                const buffer = Buffer.concat(buffers);
             });
-            */
+            return buffer;        
         }
         finally {
             // await client.close();
         }
-    }
+    },
+
+    newConfigFile: async function (newDoc) {
+        const result = await config.insertOne(newDoc);
+        return result.insertedId;
+    },
+
+    updateSlideOrder: async function (idOrder, targetID) {
+        const upDoc{
+            slideOrder: idOrder
+        }
+        const result =await config.updateOne({ targetID }, { $set: { upDoc } }, { upsert: true });
+        return result.upsertedId;
+    },
 };
 
 // module.exports.checkUser('qwerty');
