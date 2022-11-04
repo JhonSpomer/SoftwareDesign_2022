@@ -56,6 +56,7 @@ export default function EditSlide(props) {
                     {
 
 
+                        console.log("image HERE");
                         const res = await fetch(`http://localhost:9000/image/new`, {
                             method: "POST",
                             mode: 'cors',
@@ -65,12 +66,14 @@ export default function EditSlide(props) {
                             },
                             body: fileValue0
                         });
+                        console.log(res);
                         const IDvalue = await res.text();
                         if (res.ok)
                         {
                             let jsonslide_img = JSON.stringify({name: SlideName, type: slideType, content: IDvalue});
                             console.log(jsonslide_img);
 
+                            console.log("HERE");
                         const res2 = await fetch(`http://localhost:9000/slide.json`, {
                             method: "POST",
                             mode: 'cors',
@@ -81,7 +84,7 @@ export default function EditSlide(props) {
                             body: jsonslide_img
                         });
                         const IDTest = await res2.text();
-                        console.log(IDTest);
+                        console.log(IDTest)
                         }
 
 
@@ -194,7 +197,7 @@ export default function EditSlide(props) {
                                             // setFileValue0(event.target.files[0]);
                                         }}
                                     />
-                                    <Button
+                                    {/* <Button
                                         onClick={async () => {
                                             console.log("submit");
                                             console.log(fileValue0);
@@ -209,7 +212,7 @@ export default function EditSlide(props) {
                                                 },
                                                 body: fileValue0
                                             });
-                                        }}>upload</Button>
+                                        }}>upload</Button> */}
                                 </FormField>
                             </SpaceBetween>
                         </Container>
