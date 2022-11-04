@@ -124,16 +124,20 @@ const
         });
     });
 
-    api.get("/order.json", (req, res) => {
+    api.get("/order.json", async (req, res) => {
+        const order = await db.getSlideOrder();
         res
             .status(200)
-            .send(JSON.stringify(dummyOrder));
+            .send(JSON.stringify(order));
     });
 
     api.post("/order.json", (req, res) => {
-        req.on("data", chunk => console.log(chunk.toString()));
-        req.on("close", () => {
+        let buffer = "";
+        req.on("data", chunk => buffer += chunk.toString());
+        req.on("close", async () => {
             console.log("Closed");
+            console.log(buffer);
+            await db.modSlideOrder(JSON.parse(buffer));
             for (const ws of Object.values(connections)) ws.send("update");
         });
         res
