@@ -145,6 +145,13 @@ module.exports = {
         }
     },
 
+    getAllSlides: async function(){
+        await client.connect();
+        const rawObj = await slides.find();
+        rawObj.rewind();
+        return slides.toArray();
+    },
+
     delFile: async function (_targetID) {
         await client.connect();
         try {
