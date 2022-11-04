@@ -198,17 +198,26 @@ function App() {
 
     let jsondata = JSON.stringify({ username: usrName, password: pssWord });
     console.log(jsondata);
-    const value = await fetch('http://localhost:9000/authenticate.json', {
+    const res = await fetch('http://localhost:9000/authenticate.json', {
       method: "POST",
       mode: 'cors',
       headers: {
         "Content-Type": "text/plain"
       },
       body: jsondata
-    })
-    console.log(value);
-    setNavValue(false);
-    navigate("/admin");
+    });
+    if (res.ok) {
+      const value = await res.text();
+      if (value === 'authenticated')
+      {
+        console.log(value);
+        setNavValue(false);
+        navigate("/admin");
+      }
+
+    }
+    console.log("done");
+
   }
 }
 
