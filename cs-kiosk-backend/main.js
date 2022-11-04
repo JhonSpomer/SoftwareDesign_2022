@@ -147,6 +147,7 @@ const
     });
 
     api.post("/image/new", async (req, res) => {
+        console.log("Creating new image");
         await db.modSlide(
             stream.Readable.from(Buffer.from(req.body)),
             req.query.name,
