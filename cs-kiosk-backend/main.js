@@ -64,6 +64,7 @@ const
     });
 
     api.post("/authenticate.json", async (req, res) => {
+        console.log(req.body);
         const jsonData = JSON.parse(req.body);
         // let buffer = "";
         // req.on("data", chunk => buffer += chunk.toString());
