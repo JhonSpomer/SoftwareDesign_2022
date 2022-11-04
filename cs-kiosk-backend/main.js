@@ -109,6 +109,7 @@ const
     });
 
     api.post("/slide.json", (req, res) => {
+        console.log("Updating a slide");
         let buffer = "";
         req.on("data", chunk => buffer += chunk.toString());
         req.on("close", async () => {
