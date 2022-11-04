@@ -31,7 +31,7 @@ module.exports = {
         }
     },
 
-    updUser: async function (oldUN, newUN, newPS) {
+    modUser: async function (oldUN, newUN, newPS) {
         await client.connect();
         try {
             if (newUN === undefined) {
@@ -203,7 +203,7 @@ module.exports = {
         return result.insertedId;
     },
 
-    updateSlideOrder: async function (idOrder, targetID) {
+    modSlideOrder: async function (idOrder, targetID) {
         const upDoc = {
             slideOrder: idOrder
         }
