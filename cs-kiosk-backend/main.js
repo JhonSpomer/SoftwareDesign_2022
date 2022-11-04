@@ -144,6 +144,18 @@ const
         next();
     });
 
+    api.post("/image/new", async (req, res) => {
+        await db.modSlide(
+            stream.Readable.from(Buffer.from(req.body)),
+            req.query.name,
+            "image",
+            req.query.user,
+            req.query.date,
+            req.query.expiration
+        );
+        for (const ws of Object.values(connections)) ws.send("update");
+    });
+
     api.get("/image/:image", async (req, res) => {
         res.setHeader("Content-Type", "application/octet-stream");
         const image = await db.getSlide(req.params.image);
@@ -171,17 +183,6 @@ const
         for (const ws of Object.values(connections)) ws.send("update");
     });
 
-    api.post("/image/new", async (req, res) => {
-        await db.modSlide(
-            stream.Readable.from(Buffer.from(req.body)),
-            req.query.name,
-            "image",
-            req.query.user,
-            req.query.date,
-            req.query.expiration
-        );
-        for (const ws of Object.values(connections)) ws.send("update");
-    });
 
     api.ws("/autoupdate", (ws, req) => {
         console.log("Received websocket request");
