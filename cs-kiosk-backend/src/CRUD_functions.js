@@ -134,7 +134,7 @@ module.exports = {
                     lastModifiedBy: _user,
                     expiration_date: _expDate
                 };
-                const result = await slides.updateOne({}, { $set: { slideDoc } }, { upsert: true });
+                const result = await slides.updateOne({_id:targetID}, { $set: slideDoc  }, { upsert: true });
                 console.log(`A document was updated with the _id: ${result.upsertedId}`);
             }
             else {
@@ -147,7 +147,7 @@ module.exports = {
                     lastModifiedBy: _user,
                     expiration_date: _expDate
                 };
-                const result = await slides.updateOne({ targetID }, { $set: { slideDoc } }, { upsert: true });
+                const result = await slides.updateOne({ _id:targetID }, { $set: slideDoc }, { upsert: true });
                 console.log(`A document was updated with the _id: ${result.upsertedId}`);
             }
             console.log(`A document was updated with the _id: ${result.upsertedId}`);
