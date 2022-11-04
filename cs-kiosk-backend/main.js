@@ -94,6 +94,21 @@ const
             .send("Done");
     });
 
+    api.get("/slide.json", async (req, res) => {
+        const slide = await db.getSlide(req.params.slide);
+        if (slide) {
+            res
+                .status(200)
+                .send(JSON.stringify(slide));
+        } else {
+            res
+                .status(404)
+                .send("nonexistant");
+        }
+    });
+
+    api.post("/slide.json", (req, res) => {});
+
     api.get("/order.json", (req, res) => {
         res
             .status(200)
