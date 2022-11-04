@@ -94,7 +94,7 @@ module.exports = {
                     expiration_date: _expDate,
                     content: _content
                 };
-                const result = await slides.insertOne({ $set: slideDoc  }, { upsert: true });
+                const result = await slides.insertOne(slideDoc, { upsert: true });
                 console.log(`A document was updated with the _id: ${result.upsertedId}`);
                 return result.upsertedId.toHexString();
             }
@@ -143,13 +143,6 @@ module.exports = {
         finally {
             return slide;
         }
-    },
-
-    getAllSlides: async function(){
-        await client.connect();
-        const rawObj = await slides.find();
-        rawObj.rewind();
-        return slides.toArray();
     },
 
     delFile: async function (_targetID) {
