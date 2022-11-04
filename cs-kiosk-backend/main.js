@@ -64,7 +64,6 @@ const
     });
 
     api.post("/authenticate.json", async (req, res) => {
-        // const jsonData = JSON.parse(req.body);
         let buffer = "";
         req.on("data", chunk => buffer += chunk.toString());
         req.on("close", async () => {
@@ -73,7 +72,7 @@ const
                 await db.getUser(username, password);
                 res
                     .status(200)
-                    .send("Authenticated");
+                    .send("authenticated");
             } catch (e) {
                 console.log("Failed to extract username and password.");
             }
