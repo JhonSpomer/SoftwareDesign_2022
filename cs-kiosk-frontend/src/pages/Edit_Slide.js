@@ -43,7 +43,16 @@ export default function EditSlide(props) {
             console.log("final submit!");
             const href = `/preview`;
             props.setActiveHref(href);
+            let location = window.location.href;
+                if (location === 'http://localhost:3000/edit/new')
+                {
+                    console.log("new slide");
+                }else{
+                    console.log("edit slide");
+                }
+            
             props.navigate(href);
+
 
         }}
         i18nStrings={{
@@ -57,7 +66,7 @@ export default function EditSlide(props) {
             cancelButton: "Cancel",
             previousButton: "Previous",
             nextButton: "Next",
-            submitButton: "View Preview",
+            submitButton: "Submit and View",
             optional: "optional"
         }}
         onNavigate={event => {

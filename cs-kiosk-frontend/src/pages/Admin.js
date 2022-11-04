@@ -74,108 +74,127 @@ export default function Admin(props) {
     const slides = getSlides();
     const which = false;
 
-    return  <Cards
-            ariaLabels={{
-                itemSelectionLabel: (e, t) => `select ${t.name}`,
-                selectionGroupLabel: "Item selection"
-            }}
-            cardDefinition={{
-                header: item => (
-                    <Link fontSize="heading-m">{item.name}</Link>
-                ),
-                sections: [
-                    {
-                        id: "description",
-                        header: "Description",
-                        content: item => item.description
-                    },
-                    {
-                        id: "type",
-                        header: "Type",
-                        content: item => <SpaceBetween
-                            direction="horizontal"
-                            size="m"
-                        >
-                            <Button
-                                onClick={async event => {
-                                    event.preventDefault();
-                                    const href = `/edit/${item._id}`;
-                                    props.setActiveHref(href);
-                                    props.navigate(href);
-                                    // console.log("add");
-                                    // const data = await (await fetch('http://localhost:9000/slides.json', {
-                                    //     mode: 'cors'
-                                    // })).json();
-                                    // console.log(data);
-                                }
-                                }
-                            >
-                                Edit slide
-                            </Button>
-                            <Button
-                                onClick={() => {
-                                    console.log("del");
-                                    setItems(items.filter(i => i.name !== item.name));
-                                }}
-                            >
-                                Delete slide
-                            </Button>
-                        </SpaceBetween>
-                    },
-                    {
-                        id: "size",
-                        header: "Size",
-                        content: item => item.size
-                    }
-                ]
-            }}
-            cardsPerRow={[
-                { cards: 1 },
-                { minWidth: 500, cards: 1 }
-            ]}
-            items={items}
-            loadingText="Loading resources"
-            empty={
-                <Box textAlign="center" color="inherit">
-                    <b>No resources</b>
-                    <Box
-                        padding={{ bottom: "s" }}
-                        variant="p"
-                        color="inherit"
+    return <Cards
+        ariaLabels={{
+            itemSelectionLabel: (e, t) => `select ${t.name}`,
+            selectionGroupLabel: "Item selection"
+        }}
+        cardDefinition={{
+            header: item => (
+                <Link fontSize="heading-m">{item.name}</Link>
+            ),
+            sections: [
+                {
+                    id: "description",
+                    header: "Description",
+                    content: item => item.description
+                },
+                {
+                    id: "type",
+                    header: "Type",
+                    content: item => <SpaceBetween
+                        direction="horizontal"
+                        size="m"
                     >
-                        No resources to display.
-                    </Box>
-                    <Button
-                    onClick={() => {
-                        setItems(
-                            [...items, {
-                                _id:items.length,
-                                name: "slide " + (items.length+1),
-                                alt:"dfeault",
-                                description: "This is default description for slide " + (items.length+1)
-                            }]
-                        )
-                    }}>Create slide</Button>
+                        <Button
+                            onClick={async event => {
+                                event.preventDefault();
+                                const href = `/edit/${item._id}`;
+                                props.setActiveHref(href);
+                                props.navigate(href);
+                                // console.log("add");
+                                // const data = await (await fetch('http://localhost:9000/slides.json', {
+                                //     mode: 'cors'
+                                // })).json();
+                                // console.log(data);
+                            }
+                            }
+                        >
+                            Edit slide
+                        </Button>
+                        <Button
+                            onClick={() => {
+                                console.log("del");
+                                setItems(items.filter(i => i.name !== item.name));
+                            }}
+                        >
+                            Delete slide
+                        </Button>
+                    </SpaceBetween>
+                },
+                {
+                    id: "size",
+                    header: "Size",
+                    content: item => item.size
+                }
+            ]
+        }}
+        cardsPerRow={[
+            { cards: 1 },
+            { minWidth: 500, cards: 1 }
+        ]}
+        items={items}
+        loadingText="Loading resources"
+        empty={
+            <Box textAlign="center" color="inherit">
+                <b>No resources</b>
+                <Box
+                    padding={{ bottom: "s" }}
+                    variant="p"
+                    color="inherit"
+                >
+                    No resources to display.
                 </Box>
-            }
-            header={<Header
-                actions={<Button
-                    onClick={() => {
-                        
-                        setItems(
-                            [... items, {
-                                _id: items.length,
-                                name: "slide " + (items.length+1),
-                                alt: "default",
-                                description: "This is default description for slide " + (items.length+1)
-                            }]);
-                            
-                    }}>Create Slide
-                </Button>}
-            >
-                Current Slides
-            </Header>}
-        />;
+                <Button
+
+                        onClick={async event => {
+                            event.preventDefault();
+                            console.log("new slide");
+                            const href = `/edit/new`;
+                            props.setActiveHref(href);
+                            props.navigate(href);
+                        /*
+                                                
+                                                setItems(
+                                                    [...items, {
+                                                        _id:items.length,
+                                                        name: "slide " + (items.length+1),
+                                                        alt:"dfeault",
+                                                        description: "This is default description for slide " + (items.length+1)
+                                                    }]
+                                                )
+                                                */
+                                                
+                    }
+                    }>Create slide</Button>
+            </Box>
+        }
+        header={<Header
+            actions={<Button
+                onClick={async event => {
+                    event.preventDefault();
+                    console.log("new slide");
+                    const href = `/edit/new`;
+                    props.setActiveHref(href);
+                    props.navigate(href);
+                /*
+                                        
+                                        setItems(
+                                            [...items, {
+                                                _id:items.length,
+                                                name: "slide " + (items.length+1),
+                                                alt:"dfeault",
+                                                description: "This is default description for slide " + (items.length+1)
+                                            }]
+                                        )
+                                        */
+                                        
+            }}>Create Slide
+            </Button>}
+        >
+            Current Slides
+        </Header>}
+    />;
 }
 
 function deleteSlide() {
