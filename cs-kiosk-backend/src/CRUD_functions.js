@@ -24,6 +24,7 @@ module.exports = {
             };
             const result = await users.insertOne(doc);
             //console.log(`A document was inserted with the _id: ${result.insertedId}`);
+            return result.insertedId;
         }
         finally {
             // await client.close();
@@ -45,7 +46,8 @@ module.exports = {
             //update document with given username
             //upsert set to true - will insert given document if it does not already exixst
             const result = await users.updateOne({ username: oldUN, }, { $set: upDoc }, { upsert: true });
-            console.log(`A document was updated with the _id: ${result.upsertedId}`);
+            //console.log(`A document was updated with the _id: ${result.upsertedId}`);
+            return result.upsertedId;
         }
         finally {
             // await client.close();
@@ -58,7 +60,7 @@ module.exports = {
         try {
             //delete document with given username
             const result = await users.deleteOne({ username: _UN });
-            console.log(`${result.deletedCount} document(s) deleted.`);
+            //console.log(`${result.deletedCount} document(s) deleted.`);
         }
         finally {
             // await client.close();
@@ -77,7 +79,7 @@ module.exports = {
 
     },
 
-    updSlide: async function (_slideName, _slideType, _user, _date, _expDate, targetID) {
+    modSlide: async function (_slideName, _slideType, _user, _date, _expDate, _content, targetID) {
         await client.connect();
         try {
             //if no existing document ID is provided, create a new slide record.
@@ -89,7 +91,8 @@ module.exports = {
                     slide_type: _slideType,
                     owner: _user,
                     lastModifiedBy: _user,
-                    expiration_date: _expDate
+                    expiration_date: _expDate,
+                    content: _content
                 };
                 const result = await slides.updateOne({_id:targetID}, { $set: slideDoc  }, { upsert: true });
                 console.log(`A document was updated with the _id: ${result.upsertedId}`);
@@ -102,12 +105,14 @@ module.exports = {
                     slide_type: _slideType,
                     // an existing document should already have an owner.
                     lastModifiedBy: _user,
-                    expiration_date: _expDate
+                    expiration_date: _expDate,
+                    content: _content
                 };
                 const result = await slides.updateOne({ _id:targetID }, { $set: slideDoc }, { upsert: true });
                 console.log(`A document was updated with the _id: ${result.upsertedId}`);
             }
-            console.log(`A document was updated with the _id: ${result.upsertedId}`);
+           //console.log(`A document was updated with the _id: ${result.upsertedId}`);
+           return result.upsertedId;
         }
         finally {
             // await client.close();
@@ -153,16 +158,19 @@ module.exports = {
         await client.connect();
         try {
             if (targetID === undefined) {
-                const result = _RS.pipe(bucket.openUploadStream(_name, { metadata: { type: _type, owner: _user, lastModifiedBy: _user, lastModifiedDate: _date, expDate: _expDate } }));
+                const stream = bucket.openUploadStream(_name, { metadata: { type: _type, owner: _user, lastModifiedBy: _user, lastModifiedDate: _date, expDate: _expDate } });
+                const result = _RS.pipe(stream);
                 //console.log('A slide file was added with the id: ${result.uploadID._id}');
             }
             else {
                 // //delete old slide
                 await delSlide(targetID);
                 //upload new slide
-                const result = _RS.pipe(bucket.openUploadStreamWithId(targetID, _name, { metadata: { type: _type, owner: _user, lastModifiedBy: _user, lastModifiedDate: _date, expDate: _expDate } }));
+                const stream = bucket.openUploadStreamWithId(targetID, _name, { metadata: { type: _type, owner: _user, lastModifiedBy: _user, lastModifiedDate: _date, expDate: _expDate } });
+                const result = _RS.pipe(stream);
                 //console.log('A slide file was added with the _id: ${result.insertedId}');
             }
+            return stream.id;
         }
         finally {
             // await client.close();
@@ -202,4 +210,12 @@ module.exports = {
 
 // module.exports.checkUser('qwerty');
 // module.exports.checkUser('asdaf','zxcv');
+// const carousel = {
+//     name: 'Carousel',
+//     slideOrder: undefined,
+//     slideCount: undefined,
+//     lastModifiedDate: undefined,
+//     lastModifiedBy: undefined
+// }
+// module.exports.newConfigFile(carousel);
 
