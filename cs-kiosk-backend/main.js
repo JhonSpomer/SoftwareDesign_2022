@@ -148,7 +148,7 @@ const
 
     api.post("/image/new", async (req, res) => {
         console.log("Creating new image");
-        await db.modFile(
+        const id = await db.modFile(
             stream.Readable.from(Buffer.from(req.body)),
             req.query.name,
             "image",
@@ -157,6 +157,9 @@ const
             req.query.expiration
         );
         for (const ws of Object.values(connections)) ws.send("update");
+        res
+            .status(200)
+            .send(id);
     });
 
     api.get("/image/:image([^n][^e][^w])", async (req, res) => {
@@ -174,7 +177,7 @@ const
 
     api.post("/image/:image([^n][^e][^w])", async (req, res) => {
         console.log(req.params.image);
-        await db.modFile(
+        const id = await db.modFile(
             stream.Readable.from(Buffer.from(req.body)),
             req.query.name,
             "image",
@@ -184,6 +187,9 @@ const
             req.params.image
         );
         for (const ws of Object.values(connections)) ws.send("update");
+        res
+            .status(200)
+            .send(id);
     });
 
 
