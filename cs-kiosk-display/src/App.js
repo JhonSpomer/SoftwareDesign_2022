@@ -33,7 +33,7 @@ export default function App() {
                     // csp={`frame-ancestors ${slide.content};`}
                 />,
                 "image": () => <img
-                    src={`data:image/png;base64, ${window.btoa(
+                    src={`data:image/jpg;base64, ${window.btoa(
                         (new Uint8Array(slide.content.data))
                         .reduce((prev, cur) => prev + String.fromCharCode(cur), "")
                     )}`}
