@@ -17,6 +17,7 @@ export async function getImage(image) {
 
 export async function getAllSlideData() {
     const slides = await getSlides();
+    console.log(slides);
     for (const slide of slides) if (slide.type === "image" || slide.type === "pdf") slide.content = await getImage(slide.content);
     console.log(slides);
     return slides;
