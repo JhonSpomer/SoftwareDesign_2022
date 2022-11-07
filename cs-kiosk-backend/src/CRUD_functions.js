@@ -147,7 +147,6 @@ module.exports = {
         try {
             if (targetID === undefined) {
                 const stream = bucket.openUploadStream(_name, { metadata: { type: _type, owner: _user, lastModifiedBy: _user, lastModifiedDate: _date, expDate: _expDate } });
-                const result = _RS.pipe(stream);
                 const result = await _RS.pipe(stream);
                 //console.log('A slide file was added with the id: ${result.uploadID._id}');
                 return stream.id.toHexString();
@@ -157,7 +156,6 @@ module.exports = {
                 await delSlide(targetID);
                 //upload new slide
                 const stream = bucket.openUploadStreamWithId(targetID, _name, { metadata: { type: _type, owner: _user, lastModifiedBy: _user, lastModifiedDate: _date, expDate: _expDate } });
-                const result = _RS.pipe(stream);
                 const result = await _RS.pipe(stream);
                 //console.log('A slide file was added with the _id: ${result.insertedId}');
                 return stream.id.toHexString();
@@ -171,7 +169,6 @@ module.exports = {
     getFile: async function (_targetID) {
         await client.connect();
         try {
-            const file = bucket.openDownloadStream(mongodb.ObjectId(_targetID));
             const file = await bucket.openDownloadStream(mongodb.ObjectId(_targetID));
             const buffers = [];
             file.on("data", chunk => buffers.push(chunk));
@@ -184,6 +181,14 @@ module.exports = {
             // await client.close();
         }
     },
+
+    getAllSlides: async function(){
+        await client.connect();
+        const rawObj = await slides.find();
+        rawObj.rewind();
+        return slides.toArray();
+    },
+
     newConfigFile: async function (newDoc) {
         const result = await config.insertOne(newDoc);
         return result.insertedId.toHexString();
