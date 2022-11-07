@@ -176,6 +176,7 @@ const
         res.setHeader("Content-Type", "application/octet-stream");
         console.log("Here", req.params.id);
         const image = await db.getFile(req.params.id);
+        console.log(image);
         res
             .status(200)
             .send(image);
