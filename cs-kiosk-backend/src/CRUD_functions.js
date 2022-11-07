@@ -171,13 +171,15 @@ module.exports = {
     getFile: async function (_targetID) {
         await client.connect();
         try {
-            const file = await bucket.openDownloadStream(mongodb.ObjectId(_targetID));
-            const buffers = [];
-            file.on("data", chunk => buffers.push(chunk));
-            file.once("end", () => {
-                const buffer = Buffer.concat(buffers);
+            return await new Promise((resolve, reject) => {
+                const file = bucket.openDownloadStream(mongodb.ObjectId(_targetID));
+                const buffers = [];
+                file.on("data", chunk => buffers.push(chunk));
+                file.once("end", () => {
+                    resolve(Buffer.concat(buffers));
+                });
+                file.once("error", reject);
             });
-            return buffer;        
         }
         finally {
             // await client.close();
