@@ -172,9 +172,10 @@ const
             .send(id);
     });
 
-    api.get("/image/:image([^n][^e][^w])", async (req, res) => {
+    api.get("/image/:id", async (req, res) => {
         res.setHeader("Content-Type", "application/octet-stream");
-        const image = await db.getFile(req.params.image);
+        console.log("Here", req.params.id);
+        const image = await db.getFile(req.params.id);
         const buffers = [];
         image.on("data", chunk => buffers.push(chunk));
         image.once("end", () => {
@@ -185,7 +186,7 @@ const
         });
     });
 
-    api.post("/image/:image([^n][^e][^w])", async (req, res) => {
+    api.post("/image/:id", async (req, res) => {
         console.log(req.params.image);
         const id = await db.modFile(
             stream.Readable.from(Buffer.from(req.body)),
@@ -194,7 +195,7 @@ const
             req.query.user,
             req.query.date,
             req.query.expiration || "",
-            req.params.image
+            req.params.id
         );
         for (const ws of Object.values(connections)) ws.send("update");
         res

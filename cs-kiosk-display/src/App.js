@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
 import Carousel from "react-bootstrap/Carousel";
 import {getImage, getSlides, getAllSlideData, autoUpdateLoop} from "./utility/api";
+import {ImgFromArrayBuffer} from "./utility/utils";
 import './App.css';
 import "./bootstrap.css";
 
@@ -32,11 +33,9 @@ export default function App() {
                     height={"1000vh"}
                     // csp={`frame-ancestors ${slide.content};`}
                 />,
-                "image": () => <img
-                    src={`data:image/jpg;base64, ${window.btoa(
-                        (new Uint8Array(slide.content.data))
-                        .reduce((prev, cur) => prev + String.fromCharCode(cur), "")
-                    )}`}
+                "image": () => <ImgFromArrayBuffer
+                    arrayBuffer={slide.content}
+                    mimeType={slide.mimeType || "image/jpeg"}
                 />
             }[slide.type]()}
         </Carousel.Item>)
