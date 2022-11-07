@@ -49,6 +49,9 @@ export default function EditSlide(props) {
 
                     if(slideType === 'link')
                     {
+                        //
+                        //====================================LINK=======================================================
+                        //
                         let jsonslide_link = JSON.stringify({name: SlideName, type: slideType, content: urlValue1 });
                         const res = await fetch(`http://localhost:9000/slide.json`, {
                             method: "POST",
@@ -65,7 +68,9 @@ export default function EditSlide(props) {
                     }
                     else if (slideType === 'image')
                     {
-
+                        //
+                        //==============================IMAGE=============================================
+                        //
 
                         console.log("image HERE");
                         const res = await fetch(`http://localhost:9000/image/new`, {
@@ -75,7 +80,7 @@ export default function EditSlide(props) {
 
                                 "Content-Type": "application/octet-stream"
                             },
-                            body: fileValue0
+                            body: await fileValue0.arrayBuffer()
                         });
                         console.log(res);
                         const IDvalue = await res.text();
@@ -98,11 +103,12 @@ export default function EditSlide(props) {
                         const IDTest = await res2.text();
                         console.log(IDTest)
                         }
-
-
                     }
                     else if (slideType === 'pdf')
                     {
+                        //
+                        // ==========================PDF========================================
+                        //
                        let jsonslide_pdf = JSON.stringify({name: SlideName, type: slideType, fileName: PDFName, content: PDFValue });
 
                         const res = await fetch(`http://localhost:9000/pdf/new`, {
