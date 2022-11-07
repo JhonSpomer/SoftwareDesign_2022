@@ -132,6 +132,7 @@ const
 
     api.get("/order.json", async (req, res) => {
         const order = await db.getSlideOrder();
+        console.log("Header set");
         res.setHeader("Content-Type", "application/json");
         res
             .status(200)
