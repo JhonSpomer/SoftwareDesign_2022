@@ -71,7 +71,7 @@ module.exports = {
             return user;
         }
     },
-    modSlide: async function (_slideName, _slideType, _user, _date, _expDate, _content, targetID) {
+    modSlide: async function (_slideName, _slideType, _user, _date, _expDate, _content, _fileExt, targetID) {
         await client.connect();
         try {
             //if no existing document ID is provided, create a new slide record.
@@ -84,7 +84,8 @@ module.exports = {
                     owner: _user,
                     lastModifiedBy: _user,
                     expiration_date: _expDate,
-                    content: _content
+                    content: _content,
+                    fileExt: _fileExt
                 };
                 const result = await slides.insertOne(slideDoc, { upsert: true });
                 console.log(`A document was updated with the _id: ${result.upsertedId}`);
@@ -99,7 +100,8 @@ module.exports = {
                     // an existing document should already have an owner.
                     lastModifiedBy: _user,
                     expiration_date: _expDate,
-                    content: _content
+                    content: _content,
+                    fileExt: _fileExt
                 };
                 const result = await slides.updateOne({ _id:targetID }, { $set: slideDoc }, { upsert: true });
                 console.log(`A document was updated with the _id: ${result.upsertedId}`);
@@ -127,7 +129,7 @@ module.exports = {
         await client.connect();
         let slide;
         try {
-            slide = slides.findOne({ _id: targetID }, { _slideName: 1, _slideType: 1, _user: 1, _date: 1, _expDate: 1, _id: 1 });
+            slide = slides.findOne({ _id: targetID }, { _slideName: 1, _slideType: 1, _user: 1, _date: 1, _expDate: 1, _id: 1 , fileExt: 1 });
         }
         finally {
             return slide;
@@ -142,11 +144,11 @@ module.exports = {
             // await client.close();
         }
     },
-    modFile: async function (_RS, _name, _type, _user, _date, _expDate, targetID) {
+    modFile: async function (_RS, _name, _type, _user, _date, _expDate, _fileExt, targetID) {
         await client.connect();
         try {
             if (targetID === undefined) {
-                const stream = bucket.openUploadStream(_name, { metadata: { type: _type, owner: _user, lastModifiedBy: _user, lastModifiedDate: _date, expDate: _expDate } });
+                const stream = bucket.openUploadStream(_name, { metadata: { type: _type, owner: _user, lastModifiedBy: _user, lastModifiedDate: _date, expDate: _expDate, fileExt: _fileExt } });
                 const result = await _RS.pipe(stream);
                 //console.log('A slide file was added with the id: ${result.uploadID._id}');
                 return stream.id.toHexString();
@@ -155,7 +157,7 @@ module.exports = {
                 // //delete old slide
                 await delSlide(targetID);
                 //upload new slide
-                const stream = bucket.openUploadStreamWithId(targetID, _name, { metadata: { type: _type, owner: _user, lastModifiedBy: _user, lastModifiedDate: _date, expDate: _expDate } });
+                const stream = bucket.openUploadStreamWithId(targetID, _name, { metadata: { type: _type, owner: _user, lastModifiedBy: _user, lastModifiedDate: _date, expDate: _expDate, fileExt: _fileExt } });
                 const result = await _RS.pipe(stream);
                 //console.log('A slide file was added with the _id: ${result.insertedId}');
                 return stream.id.toHexString();
