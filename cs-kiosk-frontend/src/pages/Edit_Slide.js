@@ -43,55 +43,51 @@ export default function EditSlide(props) {
             const href = `/preview`;
             props.setActiveHref(href);
             let location = window.location.href;
-                if (location === 'http://localhost:3000/edit/new')
-                {
-                    console.log("new slide");
+            if (location === 'http://localhost:3000/edit/new') {
+                console.log("new slide");
 
-                    if(slideType === 'link')
-                    {
-                        //
-                        //====================================LINK=======================================================
-                        //
-                        let jsonslide_link = JSON.stringify({name: SlideName, type: slideType, content: urlValue1 });
-                        const res = await fetch(`http://localhost:9000/slide.json`, {
-                            method: "POST",
-                            mode: 'cors',
-                            headers: {
+                if (slideType === 'link') {
+                    //
+                    //====================================LINK=======================================================
+                    //
+                    let jsonslide_link = JSON.stringify({ name: SlideName, type: slideType, content: urlValue1 });
+                    const res = await fetch(`http://localhost:9000/slide.json`, {
+                        method: "POST",
+                        mode: 'cors',
+                        headers: {
 
-                                "Content-Type": "text/plain"
-                            },
-                            body: jsonslide_link
-                        });
-                        console.log(jsonslide_link);
+                            "Content-Type": "text/plain"
+                        },
+                        body: jsonslide_link
+                    });
+                    console.log(jsonslide_link);
 
 
-                    }
-                    else if (slideType === 'image')
-                    {
-                        //
-                        //==============================IMAGE=============================================
-                        //
+                }
+                else if (slideType === 'image') {
+                    //
+                    //==============================IMAGE=============================================
+                    //
 
-                        console.log("image HERE");
-                        console.log("File:", fileValue0);
-                        const res = await fetch(`http://localhost:9000/image/new`, {
-                            method: "POST",
-                            mode: 'cors',
-                            headers: {
+                    console.log("image HERE");
+                    console.log("File:", fileValue0);
+                    const res = await fetch(`http://localhost:9000/image/new`, {
+                        method: "POST",
+                        mode: 'cors',
+                        headers: {
 
-                                "Content-Type": "application/octet-stream"
-                            },
-                            body: fileValue0
-                        });
-                        console.log(res);
-                        const IDvalue = await res.text();
-                        if (res.ok)
-                        {
-                            
-                            let jsonslide_img = JSON.stringify({name: SlideName, type: slideType, fileName: imageName, content: IDvalue});
-                            console.log(jsonslide_img);
+                            "Content-Type": "application/octet-stream"
+                        },
+                        body: fileValue0
+                    });
+                    console.log(res);
+                    const IDvalue = await res.text();
+                    if (res.ok) {
 
-                            console.log("HERE");
+                        let jsonslide_img = JSON.stringify({ name: SlideName, type: slideType, fileName: imageName, content: IDvalue });
+                        console.log(jsonslide_img);
+
+                        console.log("HERE");
                         const res2 = await fetch(`http://localhost:9000/slide.json`, {
                             method: "POST",
                             mode: 'cors',
@@ -103,32 +99,31 @@ export default function EditSlide(props) {
                         });
                         const IDTest = await res2.text();
                         console.log(IDTest)
-                        }
+                        console.log("res2: " + res2);
                     }
-                    else if (slideType === 'pdf')
-                    {
-                        //
-                        // ==========================PDF========================================
-                        //
-                       let jsonslide_pdf = JSON.stringify({name: SlideName, type: slideType, fileName: PDFName, content: PDFValue });
+                }
+                else if (slideType === 'pdf') {
+                    //
+                    // ==========================PDF========================================
+                    //
+                    let jsonslide_pdf = JSON.stringify({ name: SlideName, type: slideType, fileName: PDFName, content: PDFValue });
 
-                        const res = await fetch(`http://localhost:9000/pdf/new`, {
-                            method: "POST",
-                            mode: 'cors',
-                            headers: {
+                    const res = await fetch(`http://localhost:9000/pdf/new`, {
+                        method: "POST",
+                        mode: 'cors',
+                        headers: {
 
-                                "Content-Type": "application/octet-stream"
-                            },
-                            body: PDFValue
-                        });
-                        console.log(res);
-                        const IDvalue = await res.text();
-                        if (res.ok)
-                        {
-                           // let jsonslide_pdf = JSON.stringify({name: SlideName, type: slideType, fileName: PDFName, content: IDvalue});
-                            console.log(jsonslide_pdf);
+                            "Content-Type": "application/octet-stream"
+                        },
+                        body: PDFValue
+                    });
+                    console.log(res);
+                    const IDvalue = await res.text();
+                    if (res.ok) {
+                        // let jsonslide_pdf = JSON.stringify({name: SlideName, type: slideType, fileName: PDFName, content: IDvalue});
+                        console.log(jsonslide_pdf);
 
-                            console.log("HERE");
+                        console.log("HERE");
                         const res2 = await fetch(`http://localhost:9000/slide.json`, {
                             method: "POST",
                             mode: 'cors',
@@ -140,14 +135,14 @@ export default function EditSlide(props) {
                         });
                         const IDTest = await res2.text();
                         console.log(IDTest)
-                        }
-                        console.log(jsonslide_pdf);
                     }
-                    
-                }else{
-                    console.log("edit slide");
+                    console.log(jsonslide_pdf);
                 }
-            
+
+            } else {
+                console.log("edit slide");
+            }
+
             props.navigate(href);
 
 
@@ -203,19 +198,19 @@ export default function EditSlide(props) {
                 title: "Enter a slide name",
                 description: "Choose a name for your slide for easy reference.",
                 content: <Container><Input
-                value={SlideName}
-                onChange={event => setSlideName(event.detail.value)}></Input>
-                <Button
-                onClick={async () => {
-                    console.log("name submit!");
-                    console.log(SlideName)
-                    //setSlideName(event.detail.value)
-                    //setUrlValue1("");
+                    value={SlideName}
+                    onChange={event => setSlideName(event.detail.value)}></Input>
+                    <Button
+                        onClick={async () => {
+                            console.log("name submit!");
+                            console.log(SlideName)
+                            //setSlideName(event.detail.value)
+                            //setUrlValue1("");
 
-                    //hit db here
+                            //hit db here
 
-                }
-                }>submit</Button></Container>
+                        }
+                        }>submit</Button></Container>
             },
             {
                 title: "Choose a file",

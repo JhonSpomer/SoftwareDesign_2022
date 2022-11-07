@@ -44,7 +44,8 @@ function App() {
     [toolsHide, setToolsValue] = React.useState(true),
     navigate = useNavigate(),
     location = useLocation(),
-    [checked, setChecked] = React.useState(false);
+    [checked, setChecked] = React.useState(false),
+    [order, setOrder] = useState([]);
 
   useEffect(() => {
     console.log(location.pathname)
@@ -54,6 +55,19 @@ function App() {
     }
   }, [location]);
 
+  
+  async function loadOrder() {
+    const newOrder = await fetch(window.location.origin + "/order.json", {
+      method: "GET"
+    });
+
+    console.log(newOrder);
+    console.log(await newOrder.json())
+    setOrder(await newOrder.json());
+  }
+  useEffect(() => {
+    loadOrder();
+  }, []);
 
   return (
     <Applayout
