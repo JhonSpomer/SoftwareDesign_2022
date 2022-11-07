@@ -46,10 +46,22 @@ export default function EditSlide(props) {
                 if (location === 'http://localhost:3000/edit/new')
                 {
                     console.log("new slide");
+
                     if(slideType === 'link')
                     {
                         let jsonslide_link = JSON.stringify({name: SlideName, type: slideType, content: urlValue1 });
+                        const res = await fetch(`http://localhost:9000/slide.json`, {
+                            method: "POST",
+                            mode: 'cors',
+                            headers: {
+
+                                "Content-Type": "text/plain"
+                            },
+                            body: jsonslide_link
+                        });
                         console.log(jsonslide_link);
+
+
                     }
                     else if (slideType === 'image')
                     {
@@ -69,7 +81,8 @@ export default function EditSlide(props) {
                         const IDvalue = await res.text();
                         if (res.ok)
                         {
-                            let jsonslide_img = JSON.stringify({name: SlideName, type: slideType, content: IDvalue});
+                            console.log(fileValue0);
+                            let jsonslide_img = JSON.stringify({name: SlideName, type: slideType, fileName: imageName, content: IDvalue});
                             console.log(jsonslide_img);
 
                             console.log("HERE");
@@ -90,7 +103,37 @@ export default function EditSlide(props) {
                     }
                     else if (slideType === 'pdf')
                     {
-                        let jsonslide_pdf = JSON.stringify({name: SlideName, type: slideType, content: PDFValue });
+                       let jsonslide_pdf = JSON.stringify({name: SlideName, type: slideType, fileName: PDFName, content: PDFValue });
+
+                        const res = await fetch(`http://localhost:9000/pdf/new`, {
+                            method: "POST",
+                            mode: 'cors',
+                            headers: {
+
+                                "Content-Type": "application/octet-stream"
+                            },
+                            body: PDFValue
+                        });
+                        console.log(res);
+                        const IDvalue = await res.text();
+                        if (res.ok)
+                        {
+                           // let jsonslide_pdf = JSON.stringify({name: SlideName, type: slideType, fileName: PDFName, content: IDvalue});
+                            console.log(jsonslide_pdf);
+
+                            console.log("HERE");
+                        const res2 = await fetch(`http://localhost:9000/slide.json`, {
+                            method: "POST",
+                            mode: 'cors',
+                            headers: {
+
+                                "Content-Type": "text/plain"
+                            },
+                            body: jsonslide_pdf
+                        });
+                        const IDTest = await res2.text();
+                        console.log(IDTest)
+                        }
                         console.log(jsonslide_pdf);
                     }
                     
