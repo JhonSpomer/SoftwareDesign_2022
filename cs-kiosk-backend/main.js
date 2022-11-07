@@ -190,7 +190,8 @@ const
             "image",
             req.query.user,
             req.query.date,
-            req.query.expiration || "",
+            req.query.exp || "",
+            req.query.ext,
             req.params.id
         );
         for (const ws of Object.values(connections)) ws.send("update");
