@@ -79,8 +79,8 @@ module.exports = {
                 // slide metadata document
                 const slideDoc =
                 {
-                    slide_name: _slideName,
-                    slide_type: _slideType,
+                    name: _slideName,
+                    type: _slideType,
                     owner: _user,
                     lastModifiedBy: _user,
                     expiration_date: _expDate,
