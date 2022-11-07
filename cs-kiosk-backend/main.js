@@ -122,7 +122,7 @@ const
             console.log("Closed");
             const slide = JSON.parse(buffer);
             console.log(slide);
-            const id = await db.modSlide(slide.name, slide.type, undefined, undefined, undefined, slide.content, req.params.id);
+            const id = await db.modSlide(slide.name, slide.type, undefined, undefined, undefined, slide.content, undefined, req.params.id);
             for (const ws of Object.values(connections)) ws.send("update");
             res
                 .status(200)
