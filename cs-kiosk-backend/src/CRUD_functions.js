@@ -73,6 +73,7 @@ module.exports = {
     },
     modSlide: async function (_slideName, _slideType, _user, _date, _expDate, _content, _fileExt, targetID) {
         await client.connect();
+        console.log(targetID);
         try {
             //if no existing document ID is provided, create a new slide record.
             if (!targetID) {
@@ -88,15 +89,15 @@ module.exports = {
                     fileExt: _fileExt
                 };
                 const result = await slides.insertOne(slideDoc, { upsert: true });
-                console.log(`A document was updated with the _id: ${result.upsertedId}`);
+                console.log(`A document was created with the _id: ${result.upsertedId}`);
                 return result.upsertedId.toHexString();
             }
             else {
                 // slide metadata document
                 const slideDoc =
                 {
-                    slide_name: _slideName,
-                    slide_type: _slideType,
+                    name: _slideName,
+                    type: _slideType,
                     // an existing document should already have an owner.
                     lastModifiedBy: _user,
                     expiration_date: _expDate,
