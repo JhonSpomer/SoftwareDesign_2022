@@ -2,13 +2,9 @@
 Last update: 11/3/2022 9:00 PM
 Last worked on by: Jhon
 Last added: connected to the server endpoints and backend , now checks for actual credentials.
-
-
 login page and front end, hides nav bar, with error validation.  
-
 -TODO-
 -add real disclaimer and user documentation.
-
 --BUGS--
 -Page starts on login in the nav bar, even though it redirects to admin.
 -Can skip login page by direct path in navbar.
@@ -52,8 +48,7 @@ function App() {
 
   useEffect(() => {
     console.log(location.pathname)
-    if (location.pathname === "/") 
-    {
+    if (location.pathname === "/") {
       setNavValue(true);
       setToolsValue(true);
     }
@@ -200,16 +195,6 @@ function App() {
         navigate("/admin");
       }
 
-    //reset navbar access
-    //placeholder var checking.
-    if (usrName === "susan" && pssWord === "admin") 
-    {
-      setNavValue(false);
-      navigate("/admin");
-    }
-    else 
-    {
-      setErrorValue("INVALID CREDENTIALS");
     }
     console.log("done");
 
