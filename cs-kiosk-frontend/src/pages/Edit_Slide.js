@@ -73,6 +73,7 @@ export default function EditSlide(props) {
                         //
 
                         console.log("image HERE");
+                        console.log(fileValue0);
                         const res = await fetch(`http://localhost:9000/image/new`, {
                             method: "POST",
                             mode: 'cors',
@@ -80,13 +81,13 @@ export default function EditSlide(props) {
 
                                 "Content-Type": "application/octet-stream"
                             },
-                            body: await fileValue0.arrayBuffer()
+                            body: fileValue0
                         });
                         console.log(res);
                         const IDvalue = await res.text();
                         if (res.ok)
                         {
-                            console.log(fileValue0);
+                            
                             let jsonslide_img = JSON.stringify({name: SlideName, type: slideType, fileName: imageName, content: IDvalue});
                             console.log(jsonslide_img);
 
