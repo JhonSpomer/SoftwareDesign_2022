@@ -176,14 +176,9 @@ const
         res.setHeader("Content-Type", "application/octet-stream");
         console.log("Here", req.params.id);
         const image = await db.getFile(req.params.id);
-        const buffers = [];
-        image.on("data", chunk => buffers.push(chunk));
-        image.once("end", () => {
-            const buffer = Buffer.concat(buffers);
-            res
-                .status(200)
-                .send(buffer);
-        });
+        res
+            .status(200)
+            .send(image);
     });
 
     api.post("/image/:id", async (req, res) => {

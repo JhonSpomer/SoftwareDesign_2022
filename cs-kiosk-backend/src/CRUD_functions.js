@@ -103,7 +103,7 @@ module.exports = {
                     content: _content,
                     fileExt: _fileExt
                 };
-                const result = await slides.updateOne({ _id:targetID }, { $set: slideDoc }, { upsert: true });
+                const result = await slides.updateOne({ _id: mongodb.ObjectId(targetID) }, { $set: slideDoc }, { upsert: true });
                 console.log(`A document was updated with the _id: ${result.upsertedId}`);
                 return result.upsertedId.toHexString();
             }
@@ -118,7 +118,7 @@ module.exports = {
         await client.connect();
         try {
             //delete document with given uID
-            const result = await slides.deleteOne({ _id: _targetID });
+            const result = await slides.deleteOne({ _id: mongodb.ObjectId(_targetID) });
             console.log(`${result.deletedId} document(s) deleted.`);
         }
         finally {
@@ -129,7 +129,7 @@ module.exports = {
         await client.connect();
         let slide;
         try {
-            slide = slides.findOne({ _id: targetID }, { _slideName: 1, _slideType: 1, _user: 1, _date: 1, _expDate: 1, _id: 1 , fileExt: 1 });
+            slide = await slides.findOne({ _id: mongodb.ObjectId(targetID) }, { _slideName: 1, _slideType: 1, _user: 1, _date: 1, _expDate: 1, _id: 1 , fileExt: 1 });
         }
         finally {
             return slide;
@@ -155,9 +155,9 @@ module.exports = {
             }
             else {
                 // //delete old slide
-                await delSlide(targetID);
+                await delSlide(mongodb.ObjectId(targetID));
                 //upload new slide
-                const stream = bucket.openUploadStreamWithId(targetID, _name, { metadata: { type: _type, owner: _user, lastModifiedBy: _user, lastModifiedDate: _date, expDate: _expDate, fileExt: _fileExt } });
+                const stream = bucket.openUploadStreamWithId(mongodb.ObjectId(targetID), _name, { metadata: { type: _type, owner: _user, lastModifiedBy: _user, lastModifiedDate: _date, expDate: _expDate, fileExt: _fileExt } });
                 const result = await _RS.pipe(stream);
                 //console.log('A slide file was added with the _id: ${result.insertedId}');
                 return stream.id.toHexString();
