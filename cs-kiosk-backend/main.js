@@ -132,6 +132,7 @@ const
 
     api.get("/order.json", async (req, res) => {
         const order = await db.getSlideOrder();
+        res.setHeader("Content-Type", "application/json");
         res
             .status(200)
             .send(JSON.stringify(order));
@@ -190,7 +191,8 @@ const
             "image",
             req.query.user,
             req.query.date,
-            req.query.expiration || "",
+            req.query.exp || "",
+            req.query.ext,
             req.params.id
         );
         for (const ws of Object.values(connections)) ws.send("update");
