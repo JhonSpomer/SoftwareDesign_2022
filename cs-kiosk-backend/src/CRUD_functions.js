@@ -211,15 +211,15 @@ module.exports = {
         const result = await config.insertOne(newDoc);
         return result.insertedId.toHexString();
     },
-    modSlideOrder: async function (idOrder) {
+    modSlideOrder: async function (_idOrder) {
         const upDoc = {
-            slideOrder: idOrder
+            slideOrder: _idOrder
         };
         const result = await config.updateOne({name: "carousel_config"}, {$set: upDoc}, {upsert: true});
         // return result.upsertedId.toHexString();
     },
     getSlideOrder: async function () {
-        const result = await config.findOne({name: "carousel_config"});
+        const result = await config.findOne({name: "carousel_config"}, {slideOrder:1});
         return result.slideOrder;
     }
 };
