@@ -36,8 +36,10 @@ export default function App() {
                 "image": () => <ImgFromArrayBuffer
                     arrayBuffer={slide.content}
                     mimeType={slide.mimeType || "image/jpeg"}
+                    width="2000vw"
+                    height="1000vh"
                 />
-            }[slide.type]()}
+            }[slide.slideType]()}
         </Carousel.Item>)
         : <Carousel.Item>
             <h1

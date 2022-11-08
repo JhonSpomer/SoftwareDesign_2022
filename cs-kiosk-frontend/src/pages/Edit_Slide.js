@@ -40,8 +40,6 @@ export default function EditSlide(props) {
 
         onSubmit={async () => {
             console.log("final submit!");
-            const href = `/preview`;
-            props.setActiveHref(href);
             let location = window.location.href;
             if (location === 'http://localhost:3000/edit/new') {
                 console.log("new slide");
@@ -55,7 +53,6 @@ export default function EditSlide(props) {
                         method: "POST",
                         mode: 'cors',
                         headers: {
-
                             "Content-Type": "text/plain"
                         },
                         body: jsonslide_link
@@ -71,11 +68,15 @@ export default function EditSlide(props) {
 
                     console.log("image HERE");
                     console.log("File:", fileValue0);
-                    const res = await fetch(`http://localhost:9000/image/new`, {
+                    const match = imageName.match(/(png|jpg)$/);
+                    if (!match) {
+                        setSlideError("Only PNG and JPG image formats are supported.");
+                        return;
+                    }
+                    const res = await fetch(`http://localhost:9000/image/new?type=${match[1]}`, {
                         method: "POST",
                         mode: 'cors',
                         headers: {
-
                             "Content-Type": "application/octet-stream"
                         },
                         body: fileValue0
@@ -92,7 +93,6 @@ export default function EditSlide(props) {
                             method: "POST",
                             mode: 'cors',
                             headers: {
-
                                 "Content-Type": "text/plain"
                             },
                             body: jsonslide_img
@@ -112,7 +112,6 @@ export default function EditSlide(props) {
                         method: "POST",
                         mode: 'cors',
                         headers: {
-
                             "Content-Type": "application/octet-stream"
                         },
                         body: PDFValue
@@ -128,7 +127,6 @@ export default function EditSlide(props) {
                             method: "POST",
                             mode: 'cors',
                             headers: {
-
                                 "Content-Type": "text/plain"
                             },
                             body: jsonslide_pdf
@@ -138,14 +136,13 @@ export default function EditSlide(props) {
                     }
                     console.log(jsonslide_pdf);
                 }
-
             } else {
                 console.log("edit slide");
             }
 
+            const href = `/preview`;
+            props.setActiveHref(href);
             props.navigate(href);
-
-
         }}
         i18nStrings={{
             stepNumberLabel: stepNumber =>
@@ -169,7 +166,6 @@ export default function EditSlide(props) {
             setActiveStepIndex(event.detail.requestedStepIndex);
         }}
 
-
         activeStepIndex={activeStepIndex}
         steps={[
             {
@@ -179,15 +175,13 @@ export default function EditSlide(props) {
                     onChange={
                         event => setSlideType(event.detail.value)
                         // setWhich(false)
-
-
                     }
                     value={slideType}
                     items={[
-                        { value: "none", label: "None" },
-                        { value: "link", label: "Website" },
-                        { value: "image", label: "Image" },
-                        { value: "pdf", label: "PDF document" },
+                        {value: "none", label: "None"},
+                        {value: "link", label: "Website"},
+                        {value: "image", label: "Image"},
+                        {value: "pdf", label: "PDF document"},
                     ]}
 
                 />,
@@ -217,7 +211,6 @@ export default function EditSlide(props) {
                 description:
                     "Choose a file to upload to the slide or a URL to display in the slide",
                 content: {
-
                     "image": (
                         <Container
                             header={
@@ -281,40 +274,42 @@ export default function EditSlide(props) {
 
                                     //hit db here
 
-                                }
-                                }
-                            >Upload</Button></Container>
+                                }}
+                            >
+                                Upload
+                            </Button>
+                        </Container>
                     ),
-                    "pdf": (
-                        <Container
-                            header={
-                                <Header variant="h2">
-                                    Enter a pdf to display
-                                </Header>
-                            }
-                        >                            <SpaceBetween direction="vertical" size="l">
-                                <FormField label="First field">
-                                    <input
-                                        type="file"
-                                        disabled={value === "pdf"}
-                                        onChange={event => {
-                                            console.log(event.target.files[0]);
-                                            setPDFName(event.target.files[0].name);
-                                            const fr = new FileReader();
-                                            fr.readAsArrayBuffer(event.target.files[0]);
-                                            fr.onload = () => setPDFValue(fr.result);
-                                            // setFileValue0(event.target.files[0]);
-                                        }}
-                                    />
-                                    <Button
-                                        onClick={async () => {
-                                            console.log("submit");
-                                            console.log(PDFValue);
+                    "pdf": <Container
+                        header={
+                            <Header variant="h2">
+                                Enter a pdf to display
+                            </Header>
+                        }
+                    >
+                        <SpaceBetween direction="vertical" size="l">
+                            <FormField label="First field">
+                                <input
+                                    type="file"
+                                    disabled={value === "pdf"}
+                                    onChange={event => {
+                                        console.log(event.target.files[0]);
+                                        setPDFName(event.target.files[0].name);
+                                        const fr = new FileReader();
+                                        fr.readAsArrayBuffer(event.target.files[0]);
+                                        fr.onload = () => setPDFValue(fr.result);
+                                        // setFileValue0(event.target.files[0]);
+                                    }}
+                                />
+                                <Button
+                                    onClick={async () => {
+                                        console.log("submit");
+                                        console.log(PDFValue);
 
-                                        }}>upload</Button>
-                                </FormField>
-                            </SpaceBetween></Container>
-                    )
+                                    }}>upload</Button>
+                            </FormField>
+                        </SpaceBetween>
+                    </Container>
                 }[slideType]
             }
         ]}

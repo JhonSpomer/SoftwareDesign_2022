@@ -73,7 +73,6 @@ module.exports = {
     },
     modSlide: async function (_slideName, _slideType, _user, _date, _expDate, _content, _fileExt, targetID) {
         await client.connect();
-        console.log(targetID);
         try {
             //if no existing document ID is provided, create a new slide record.
             if (!targetID) {
@@ -88,9 +87,9 @@ module.exports = {
                     content: _content,
                     fileExt: _fileExt
                 };
-                const result = await slides.insertOne(slideDoc, { upsert: true });
-                console.log(`A document was created with the _id: ${result.upsertedId}`);
-                return result.upsertedId.toHexString();
+                const result = await slides.insertOne(slideDoc, {upsert: true});
+                // console.log(`A document was created with the _id: ${result.insertedId}`);
+                return result.insertedId.toHexString();
             }
             else {
                 // slide metadata document
@@ -104,12 +103,12 @@ module.exports = {
                     content: _content,
                     fileExt: _fileExt
                 };
-                const result = await slides.updateOne({ _id: mongodb.ObjectId(targetID) }, { $set: slideDoc }, { upsert: true });
-                console.log(`A document was updated with the _id: ${result.upsertedId}`);
+                const result = await slides.updateOne({_id: mongodb.ObjectId(targetID)}, {$set: slideDoc}, {upsert: true});
+                // console.log(`A document was updated with the _id: ${result.upsertedId}`);
                 return result.upsertedId.toHexString();
             }
-           //console.log(`A document was updated with the _id: ${result.upsertedId}`);
-           
+            //console.log(`A document was updated with the _id: ${result.upsertedId}`);
+
         }
         finally {
             // await client.close();
@@ -120,7 +119,7 @@ module.exports = {
         try {
             //delete document with given uID
             const result = await slides.deleteOne({ _id: mongodb.ObjectId(_targetID) });
-            console.log(`${result.deletedId} document(s) deleted.`);
+            // console.log(`${result.deletedId} document(s) deleted.`);
         }
         finally {
             // await client.close();
@@ -130,7 +129,17 @@ module.exports = {
         await client.connect();
         let slide;
         try {
-            slide = await slides.findOne({ _id: mongodb.ObjectId(targetID) }, { slideName: 1, slideType: 1, slideOwner: 1, lastModifiedBy: 1, lastModifiedDate:1, expiration_date: 1, content:1, fileExt: 1, _id: 1 });
+            slide = await slides.findOne({ _id: mongodb.ObjectId(targetID) }, {
+                slideName: 1,
+                slideType: 1, 
+                slideOwner: 1,
+                lastModifiedBy: 1,
+                lastModifiedDate: 1,
+                expiration_date: 1,
+                content: 1,
+                fileExt: 1,
+                _id: 1
+            });
         }
         finally {
             return slide;
@@ -163,7 +172,7 @@ module.exports = {
                 //console.log('A slide file was added with the _id: ${result.insertedId}');
                 return stream.id.toHexString();
             }
-            
+
         }
         finally {
             // await client.close();
@@ -172,12 +181,16 @@ module.exports = {
     getFile: async function (_targetID) {
         await client.connect();
         try {
+            const document = await bucket.find({_id: mongodb.ObjectId(_targetID)}).toArray();
             return await new Promise((resolve, reject) => {
                 const file = bucket.openDownloadStream(mongodb.ObjectId(_targetID));
                 const buffers = [];
                 file.on("data", chunk => buffers.push(chunk));
                 file.once("end", () => {
-                    resolve(Buffer.concat(buffers));
+                    resolve({
+                        image: Buffer.concat(buffers),
+                        type: document[0].metadata.type
+                    });
                 });
                 file.once("error", reject);
             });
@@ -187,7 +200,7 @@ module.exports = {
         }
     },
 
-    getAllSlides: async function(){
+    getAllSlides: async function () {
         await client.connect();
         const rawObj = await slides.find();
         rawObj.rewind();
@@ -201,9 +214,9 @@ module.exports = {
     modSlideOrder: async function (idOrder) {
         const upDoc = {
             slideOrder: idOrder
-        }
-        const result =await config.updateOne({ name: "carousel_config" }, { $set: upDoc }, { upsert: true });
-        return result.upsertedId.toHexString();
+        };
+        const result = await config.updateOne({name: "carousel_config"}, {$set: upDoc}, {upsert: true});
+        // return result.upsertedId.toHexString();
     },
     getSlideOrder: async function () {
         const result = await config.findOne({name: "carousel_config"});

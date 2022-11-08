@@ -6,8 +6,6 @@ export function ImgFromArrayBuffer(props) {
     console.log(mimeType);
     delete props["arrayBuffer"];
     delete props["mimeType"];
-    let blob = new Blob([new Uint8Array(arrayBuffer)], {type: mimeType});
-    console.log(blob);
     return <img
         src={window.URL.createObjectURL(new Blob([new Uint8Array(arrayBuffer)], {type: mimeType}))}
         {...props}

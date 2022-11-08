@@ -46,10 +46,16 @@ const
     await app.whenReady();
     const connections = {};
 
+    function updateAllConnections() {
+        for (const ws of Object.values(connections)) ws.send("update");
+    }
+
 
     // Express API server
 
     api.use("/carousel", express.static(path.join(__dirname, "public/carousel")));
+    // api.use(express.urlencoded({limit: "50mb", extended: true, parameterLimit: 50000, type: "application/octet-stream"}));
+    api.use(express.raw({limit: "4mb", type: "application/octet-stream"}));
     api.use(express.raw());
 
     const server = api.listen(port, () => {
@@ -57,7 +63,6 @@ const
     });
 
     api.all("*", (req, res, next) => {
-        console.log(req.path);
         res.setHeader("Access-Control-Allow-Origin", "*");
         next();
     });
@@ -80,14 +85,14 @@ const
 
     api.get("/slides.json", async (req, res) => {
         const
-            order = await db.getSlideOrder(),
-            slides = [];
-        console.log(order);
-        for (const id of order) slides.push(await db.getSlide(id));
-        console.log(slides);
+            order = await db.getSlideOrder();
+        //     slides = [];
+        // console.log(order);
+        // for (const id of order) slides.push(await db.getSlide(id));
+        // console.log(slides);
         res
             .status(200)
-            .send(JSON.stringify(slides));
+            .send(JSON.stringify(await Promise.all(order.map(id => db.getSlide(id)))));
     });
 
     // api.post("/slides.json", (req, res) => {
@@ -115,15 +120,25 @@ const
     });
 
     api.post("/slide.json", (req, res) => {
-        console.log("Updating a slide");
         let buffer = "";
+        const index = req.query.index || Infinity;
         req.on("data", chunk => buffer += chunk.toString());
         req.on("close", async () => {
-            console.log("Closed");
             const slide = JSON.parse(buffer);
-            console.log(slide);
-            const id = await db.modSlide(slide.name, slide.type, undefined, undefined, undefined, slide.content, undefined, req.params.id);
-            for (const ws of Object.values(connections)) ws.send("update");
+            const id = await db.modSlide(
+                slide.name,
+                slide.type,
+                undefined,
+                undefined,
+                undefined,
+                slide.content,
+                undefined,
+                req.query.id
+            );
+            const order = await db.getSlideOrder();
+            if (!req.query.id) order.splice(index, 0, id);
+            await db.modSlideOrder(order);
+            updateAllConnections();
             res
                 .status(200)
                 .send(id);
@@ -132,7 +147,6 @@ const
 
     api.get("/order.json", async (req, res) => {
         const order = await db.getSlideOrder();
-        console.log("Header set");
         res.setHeader("Content-Type", "application/json");
         res
             .status(200)
@@ -143,10 +157,8 @@ const
         let buffer = "";
         req.on("data", chunk => buffer += chunk.toString());
         req.on("close", async () => {
-            console.log("Closed");
-            console.log(buffer);
             await db.modSlideOrder(JSON.parse(buffer));
-            for (const ws of Object.values(connections)) ws.send("update");
+            updateAllConnections();
         });
         res
             .status(200)
@@ -159,33 +171,34 @@ const
     });
 
     api.post("/image/new", async (req, res) => {
-        console.log("Creating new image");
+        if (req.query.type !== "png" && req.query.type !== "jpg") {
+            res
+                .status(401)
+                .send("Bad image type");
+            return;
+        }
+        if (req.query.type === "jpg") req.query.type = "jpeg";
         const id = await db.modFile(
             stream.Readable.from(Buffer.from(req.body)),
-            req.query.name,
-            "image",
+            req.query.type,
             req.query.user,
             req.query.date,
             req.query.expiration
         );
-        for (const ws of Object.values(connections)) ws.send("update");
+        updateAllConnections();
         res
             .status(200)
             .send(id);
     });
 
     api.get("/image/:id", async (req, res) => {
-        res.setHeader("Content-Type", "application/octet-stream");
-        console.log("Here", req.params.id);
         const image = await db.getFile(req.params.id);
-        console.log(image);
         res
             .status(200)
-            .send(image);
+            .send(image.image);
     });
 
     api.post("/image/:id", async (req, res) => {
-        console.log(req.params.image);
         const id = await db.modFile(
             stream.Readable.from(Buffer.from(req.body)),
             req.query.name,
@@ -196,7 +209,7 @@ const
             req.query.ext,
             req.params.id
         );
-        for (const ws of Object.values(connections)) ws.send("update");
+        updateAllConnections();
         res
             .status(200)
             .send(id);
@@ -204,16 +217,12 @@ const
 
 
     api.ws("/autoupdate", (ws, req) => {
-        console.log("Received websocket request");
         const id = uuid();
         connections[id] = ws;
 
-        ws.on("message", msg => {
-            console.log(msg);
-        });
+        ws.on("message", msg => {});
 
         ws.on("close", () => {
-            console.log("Closed");
             delete connections[id];
         });
     });

@@ -32,45 +32,7 @@ export default function Admin(props) {
 
     //variables
     const [SlideName, setSlideName] = useState();
-    const [ErrorValue, setErrorValue] = React.useState("");
-    const [items, setItems] = useState([
-        {
-            _id: "0",
-            name: "Item 1",
-            alt: "First",
-            description: "This is the first item"
-        },
-        {
-            _id: "1",
-            name: "Item 2",
-            alt: "Second",
-            description: "This is the second item"
-        },
-        {
-            _id: "2",
-            name: "Item 3",
-            alt: "Third",
-            description: "This is the third item"
-        },
-        {
-            _id: "3",
-            name: "Item 4",
-            alt: "Fourth",
-            description: "This is the fourth item"
-        },
-        {
-            _id: "4",
-            name: "Item 5",
-            alt: "Fifth",
-            description: "This is the fifth item"
-        },
-        {
-            _id: "5",
-            name: "Item 6",
-            alt: "Sixth",
-            description: "This is the sixth item"
-        }
-    ]);
+    const [ErrorValue, setErrorValue] = useState("");
     const slides = getSlides();
     const which = false;
 
@@ -81,7 +43,7 @@ export default function Admin(props) {
         }}
         cardDefinition={{
             header: item => (
-                <Link fontSize="heading-m">{item.name}</Link>
+                <Link fontSize="heading-m">{item.slideName}</Link>
             ),
             sections: [
                 {
@@ -107,15 +69,14 @@ export default function Admin(props) {
                                 //     mode: 'cors'
                                 // })).json();
                                 // console.log(data);
-                            }
-                            }
+                            }}
                         >
                             Edit slide
                         </Button>
                         <Button
                             onClick={() => {
                                 console.log("del");
-                                setItems(items.filter(i => i.name !== item.name));
+                                // setItems(items.filter(i => i.name !== item.name));
                             }}
                         >
                             Delete slide
@@ -133,56 +94,58 @@ export default function Admin(props) {
             { cards: 1 },
             { minWidth: 500, cards: 1 }
         ]}
-        items={items}
+        items={props.slides}
         loadingText="Loading resources"
         empty={
             <Box textAlign="center" color="inherit">
-                <b>No resources</b>
+                <b>
+                    No slides
+                </b>
                 <Box
                     padding={{ bottom: "s" }}
                     variant="p"
                     color="inherit"
                 >
-                    No resources to display.
+                    No slides to display.
                 </Box>
                 <Button
-
-                        onClick={async event => {
-                            event.preventDefault();
-                            console.log("new slide");
-                            const href = `/edit/new`;
-                            props.setActiveHref(href);
-                            props.navigate(href);
-                                                
-                    }
-                    }>Create slide</Button>
+                    onClick={async event => {
+                        event.preventDefault();
+                        console.log("new slide");
+                        const href = `/edit/new`;
+                        props.setActiveHref(href);
+                        props.navigate(href);
+                    }}
+                >
+                    Create slide
+                </Button>
             </Box>
         }
-        header={<Header
-            actions={<Button
-                onClick={async event => {
-                    event.preventDefault();
-                    console.log("new slide");
-                    const href = `/edit/new`;
-                    props.setActiveHref(href);
-                    props.navigate(href);
-                /*
-                                        
-                                        setItems(
-                                            [...items, {
-                                                _id:items.length,
-                                                name: "slide " + (items.length+1),
-                                                alt:"dfeault",
-                                                description: "This is default description for slide " + (items.length+1)
-                                            }]
-                                        )
-                                        */
-                                        
-            }}>Create Slide
-            </Button>}
-        >
-            Current Slides
-        </Header>}
+        header={
+            <Header
+                actions={<Button
+                    onClick={async event => {
+                        event.preventDefault();
+                        console.log("new slide");
+                        const href = `/edit/new`;
+                        props.setActiveHref(href);
+                        props.navigate(href);
+                        // setItems(
+                        //     [...items, {
+                        //         _id:items.length,
+                        //         name: "slide " + (items.length+1),
+                        //         alt:"dfeault",
+                        //         description: "This is default description for slide " + (items.length+1)
+                        //     }]
+                        // )
+                    }}>
+                        Create Slide
+                    </Button>
+                }
+            >
+                Current Slides
+            </Header>
+        }
     />;
 }
 
