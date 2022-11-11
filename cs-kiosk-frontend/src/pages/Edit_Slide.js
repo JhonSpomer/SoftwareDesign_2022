@@ -1,14 +1,17 @@
 /*
-Last updated: 11/03/2022
-Last updated by: Jhon
+Last updated: 11/11/2022
+Last updated by: Jhon & Matt
 Last change: Connecting to the actual endpoint that talks to the backend.
 
+
+
+This page allows the user to modify or create a new slide to put into the carousel. It should support links, pdf, png/jpg.
 
 --BUGS--
 -navigating off the page resets the array (NO LONGER RELEVENT?)
 
 --TODO--
--Get the slide rename function to work
+Edit and DEL
 */
 
 

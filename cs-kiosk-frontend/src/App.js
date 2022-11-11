@@ -1,12 +1,13 @@
 /*
-Last update: 11/3/2022 9:00 PM
+Last update: 11/11/2022 9:00 PM
 Last worked on by: Jhon
 Last added: connected to the server endpoints and backend , now checks for actual credentials.
-login page and front end, hides nav bar, with error validation.  
+
+login page and front end, hides nav bar, with error validation.  Now queries the database to check for valid credentials.
+
 -TODO-
 -add real disclaimer and user documentation.
 --BUGS--
--Page starts on login in the nav bar, even though it redirects to admin.
 -Can skip login page by direct path in navbar.
 */
 
