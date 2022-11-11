@@ -118,8 +118,9 @@ module.exports = {
         await client.connect();
         try {
             //delete document with given uID
-            const result = await slides.deleteOne({ _id: mongodb.ObjectId(_targetID) });
-            // console.log(`${result.deletedId} document(s) deleted.`);
+            //const result = 
+            await slides.deleteOne({ _id: mongodb.ObjectId(_targetID) });
+            //console.log(`${result.deletedId} document(s) deleted.`);
         }
         finally {
             // await client.close();
