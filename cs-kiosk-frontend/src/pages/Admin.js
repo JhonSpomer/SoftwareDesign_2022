@@ -1,14 +1,16 @@
 /*
-Last modified: 11/3/2022
-Last worked on by: Jhon
+Last modified: 11/11/2022
+Last worked on by: Jhon and Matt
 last added: Connecting to backend and reworking of add slide button
 
-This page should allow user to upload files provided and place them in the carousel and database. 
+This page should allow user to upload files provided and place them in the carousel and database. As well as display cards representing each slide in the 
+carosuel. 
+
 --NOTE--
 Admin_Old is no longer needed, but it is still in the github repo for reference.
 
 -TODO-
--debug database connection
+-Del and edit
 
 --BUGS--
 -If user reloads page, the navbar dissapears.
@@ -76,6 +78,17 @@ export default function Admin(props) {
                         <Button
                             onClick={() => {
                                 console.log("del");
+                                let json_test = JSON.stringify({ name: "test", type: "testtype", content: "testcontent", Id: "636a9b013115d351423ccff1" });
+                                const res = fetch ('http://localhost:9000/delete.json', {
+                                    method: "POST",
+                                    mode: "cors",
+                                    headers: {
+                                        "Content-Type": "text/plain"
+                                },
+                                body: json_test
+                            });
+                            console.log(json_test);
+                                //working on hitting the new del.json endpoint added in main.js. Even though it currently doesnt del anything.-Jhon
                                 // setItems(items.filter(i => i.name !== item.name));
                             }}
                         >

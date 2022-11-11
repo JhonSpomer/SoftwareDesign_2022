@@ -145,6 +145,36 @@ const
         });
     });
 
+    //===============================================================================================================
+    //
+    //
+    //
+    //
+    //
+    //adding del endpoint here. or trying anyways. ~Jhon
+    api.post("/delete.json", async (req, res) => {
+    
+        res.setHeader("Access-Control-Allow-Headers", "*");
+        console.log("Reached delete midpoint");
+        //want to redo slide order once deleted. 
+        let buffer = "";
+        req.on("data", chunk => buffer += chunk.toString());
+        req.on("close", async () => {
+            try {
+                const {Id} = JSON.parse(buffer);
+                await db.delUser(Id);
+                res
+                    .status(200)
+                    .send("deleting slide with id " + Id);
+            } catch (e) {
+                console.log("Failed to extract username and password.");
+            }
+        });
+
+    });
+
+
+
     api.get("/order.json", async (req, res) => {
         const order = await db.getSlideOrder();
         res.setHeader("Content-Type", "application/json");
