@@ -162,15 +162,18 @@ const
         req.on("close", async () => {
             try {
                 const {Id} = JSON.parse(buffer);
+                console.log(Id);
                 await db.delUser(Id);
                 res
                     .status(200)
                     .send("deleting slide with id " + Id);
+                    console.log("deleting " + Id);
             } catch (e) {
-                console.log("Failed to extract username and password.");
+                console.log("Failed to delete");
             }
         });
-
+        //console.log("Got here");
+        
     });
 
 
