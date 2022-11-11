@@ -163,8 +163,9 @@ const
             try {
                 const {Id} = JSON.parse(buffer);
                 console.log(Id);
-                await db.delUser(Id);
-                res
+                await db.delSlide(Id);
+                updateAllConnections();
+                res          
                     .status(200)
                     .send("deleting slide with id " + Id);
                     console.log("deleting " + Id);
