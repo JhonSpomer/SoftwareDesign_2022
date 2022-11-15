@@ -15,39 +15,17 @@ const
 
 expressWs(api);
 
-const
-    dummySlides = [
-        {
-            id: "slide0",
-            name: "Slide 0",
-            type: "link",
-            content: "https://webflow.com/made-in-webflow/website/Interactive-Sphere-Portfolio"
-        },
-        // {
-        //     id: "slide1",
-        //     name: "Slide 1",
-        //     type: "image",
-        //     content: fs.readFileSync("1.png")
-        // },
-        {
-            id: "slide2",
-            name: "Slide 2",
-            type: "link",
-            content: "https://www.fireeye.com/cyber-map/threat-map.html"
-        }
-    ],
-    dummyOrder = [
-        "slide0",
-        "slide1",
-        "slide2"
-    ];
-
 ;(async () => {
     await app.whenReady();
     const connections = {};
 
     function updateAllConnections() {
         for (const ws of Object.values(connections)) ws.send("update");
+    }
+
+    function authenticate(req) {
+        if (req.headers[""]) ;
+        return true;
     }
 
 
@@ -174,7 +152,6 @@ const
             }
         });
         //console.log("Got here");
-        
     });
 
 
