@@ -51,7 +51,7 @@ export default function EditSlide(props) {
                     //
                     //====================================LINK=======================================================
                     //
-                    let jsonslide_link = JSON.stringify({ name: SlideName, type: slideType, content: urlValue1 });
+                    let jsonslide_link = JSON.stringify({name: SlideName, type: slideType, content: urlValue1});
                     const res = await fetch(`http://localhost:9000/slide.json`, {
                         method: "POST",
                         mode: 'cors',
@@ -61,10 +61,7 @@ export default function EditSlide(props) {
                         body: jsonslide_link
                     });
                     console.log(jsonslide_link);
-
-
-                }
-                else if (slideType === 'image') {
+                } else if (slideType === 'image') {
                     //
                     //==============================IMAGE=============================================
                     //
@@ -104,8 +101,7 @@ export default function EditSlide(props) {
                         console.log(IDTest)
                         console.log("res2: " + res2);
                     }
-                }
-                else if (slideType === 'pdf') {
+                } else if (slideType === 'pdf') {
                     //
                     // ==========================PDF========================================
                     //
