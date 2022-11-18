@@ -27,6 +27,36 @@ module.exports = {
             // await client.close();
         }
     },
+    checkForUser: async function (UN, PS)
+    {
+        await client.connect();
+        if (PS === undefined)
+        {
+            if (users.find({"username":UN}).count() > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            if (users.find({"username":UN}, {"password":PS}).count() === 1)
+            {
+                return true;
+            }
+            else if (users.find({"username":UN}, {"password":PS}).count() > 1)
+            {
+                return "duplicate user records";
+            }
+            else
+            {
+                return false;
+            }
+        }
+    },
     modUser: async function (oldUN, newUN, newPS) {
         await client.connect();
         try {
