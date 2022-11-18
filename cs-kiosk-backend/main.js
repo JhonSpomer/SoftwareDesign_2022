@@ -130,29 +130,29 @@ expressWs(api);
     //
     //
     //adding del endpoint here. or trying anyways. ~Jhon
-    api.post("/delete.json", async (req, res) => {
+    api.get("/delete.json", async (req, res) => {
     
         res.setHeader("Access-Control-Allow-Headers", "*");
         console.log("Reached delete midpoint");
         //want to redo slide order once deleted. 
-        let buffer = "";
-        req.on("data", chunk => buffer += chunk.toString());
-        req.on("close", async () => {
-            try {
-                const {Id} = JSON.parse(buffer);
-                const order = await db.getSlideOrder();
-                await db.modSlideOrder(order.filter(i => i != Id));
-                console.log(Id);
-                await db.delSlide(Id);
-                updateAllConnections();
-                res          
-                    .status(200)
-                    .send("deleting slide with id " + Id);
-                    console.log("deleting " + Id);
-            } catch (e) {
-                console.log("Failed to delete");
-            }
-        });
+        // let buffer = "";
+        // req.on("data", chunk => buffer += chunk.toString());
+        // req.on("close", async () => {
+        try {
+            // const {Id} = JSON.parse(buffer);
+            const order = await db.getSlideOrder();
+            await db.modSlideOrder(order.filter(i => i != req.query.id));
+            console.log(req.query.id);
+            await db.delSlide(req.query.id);
+            updateAllConnections();
+            res          
+                .status(200)
+                .send("deleting slide with id " + req.query.id);
+                console.log("deleting " + req.query.id);
+        } catch (e) {
+            console.log("Failed to delete");
+        }
+        // });
         //console.log("Got here");
     });
 
