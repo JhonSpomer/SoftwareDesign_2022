@@ -13,7 +13,8 @@ login page and front end, hides nav bar, with error validation.  Now queries the
 
 //imports
 import React, { useEffect, useState } from 'react';
-
+import { Buffer } from 'buffer';
+//import { Buffer } from 'buffer';
 import "@cloudscape-design/global-styles/index.css"
 import Applayout from "@cloudscape-design/components/app-layout";
 import Button from "@cloudscape-design/components/button";
@@ -28,10 +29,12 @@ import Admin from "./pages/Admin"
 import Users from "./pages/Users"
 import Tests from "./pages/Test"
 import Preview from "./pages/Preview"
-import {useNavigate, useLocation, Route, Routes} from "react-router-dom";
+import { useNavigate, useLocation, Route, Routes } from "react-router-dom";
 import './App.css';
 import EditSlide from './pages/Edit_Slide';
 import UserEdit from './pages/UserEdit';
+//import { window } from 'process';
+
 
 //variables
 
@@ -122,11 +125,11 @@ function App() {
                         }
                     }}
                     items={[
-                        {type: "link", text: "Admin", href: "admin"},
-                        {type: "link", text: "Preview", href: "preview"},
-                        {type: "link", text: "Users", href: "users"},
-                        {type: "link", text: "Login", href: "/"},
-                        {type: "divider"},
+                        { type: "link", text: "Admin", href: "admin" },
+                        { type: "link", text: "Preview", href: "preview" },
+                        { type: "link", text: "Users", href: "users" },
+                        { type: "link", text: "Login", href: "/" },
+                        { type: "divider" },
                         {
                             //TODO
                             type: "link",
@@ -197,6 +200,7 @@ function App() {
                                                     setPasswordValue("");
                                                     setActiveHref("admin");
                                                     query(userValue, passwordValue);
+                                                    //sessionStorage.setItem(userValue);
                                                     //NavBarBool();
                                                 }}
                                             >
@@ -251,16 +255,26 @@ function App() {
     );
 
     async function query(usrName, pssWord) {
-        //later should query db, for now, it just flags todo error state.
         //check if user credentials are in database
 
-        let jsondata = JSON.stringify({username: usrName, password: pssWord});
+        let jsondata = JSON.stringify({ username: usrName, password: pssWord });
         console.log(jsondata);
+        let Creds = usrName + ':' + pssWord;
+        var EncodedCreds = Buffer.from(Creds);
+        console.log(Creds);
+        let base64Creds = EncodedCreds.toString('base64');
+
+        //let StringCreds = String(base64Creds);
+        
+        window.sessionStorage.setItem("UserCreds", base64Creds);
+
         const res = await fetch('http://localhost:9000/authenticate.json', {
             method: "POST",
             mode: 'cors',
             headers: {
-                "Content-Type": "text/plain"
+                "Content-Type": "text/plain",
+                Authorization: `Basic ${base64Creds}`
+
             },
             body: jsondata
         });
