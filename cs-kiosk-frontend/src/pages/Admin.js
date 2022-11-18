@@ -29,15 +29,12 @@ import { getSlides } from "../utility/retrieve_slides";
 import Cards from "@cloudscape-design/components/cards";
 import Link from "@cloudscape-design/components/link";
 import Box from "@cloudscape-design/components/box";
+import {ImgFromArrayBuffer} from "../utility/utils";
 
 export default function Admin(props) {
-
-    //variables
-    const [SlideName, setSlideName] = useState();
-    const [ErrorValue, setErrorValue] = useState("");
-    const slides = getSlides();
-    const which = false;
-
+    useEffect(() => {
+        console.log(props.slides);
+    }, []);
     return <Cards
         ariaLabels={{
             itemSelectionLabel: (e, t) => `select ${t.name}`,
@@ -49,13 +46,33 @@ export default function Admin(props) {
             ),
             sections: [
                 {
-                    id: "description",
-                    header: "Description",
-                    content: item => item.description
-                },
-                {
                     id: "type",
                     header: "Type",
+                    content: item => item.slideType.slice(0, 1).toUpperCase() + item.slideType.slice(1),
+                    width: "50"
+                },
+                {
+                    id: "preview",
+                    header: "Preview",
+                    content: item => ({
+                        "link": () => <iframe
+                            src={item.content}
+                            // width={"2000vw"}
+                            // height={"1000vh"}
+                            // csp={`frame-ancestors ${slide.content};`}
+                        />,
+                        "image": () => <ImgFromArrayBuffer
+                            arrayBuffer={props.files[item._id].image}
+                            mimeType={props.files[item._id].type || "image/jpeg"}
+                            // width="2000vw"
+                            // height="1000vh"
+                        />
+                    }[item.slideType]()),
+                    width: "50"
+                },
+                {
+                    id: "actions",
+                    header: "Actions",
                     content: item => <SpaceBetween
                         direction="horizontal"
                         size="m"
@@ -78,19 +95,15 @@ export default function Admin(props) {
                                     method: "GET",
                                     mode: "cors"
                                 });
-                               // console.log(json_test);
+                            // console.log(json_test);
                                 //working on hitting the new del.json endpoint added in main.js. Even though it currently doesnt del anything.-Jhon
                                 // setItems(items.filter(i => i.name !== item.name));
                             }}
                         >
                             Delete slide
                         </Button>
-                    </SpaceBetween>
-                },
-                {
-                    id: "size",
-                    header: "Size",
-                    content: item => item.size
+                    </SpaceBetween>,
+                    width: "50"
                 }
             ]
         }}
@@ -142,10 +155,10 @@ export default function Admin(props) {
                         //         description: "This is default description for slide " + (items.length+1)
                         //     }]
                         // )
-                    }}>
+                    }}
+                >
                     Create Slide
-                </Button>
-                }
+                </Button>}
             >
                 Current Slides
             </Header>
