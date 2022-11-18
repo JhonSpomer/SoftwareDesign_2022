@@ -49,7 +49,7 @@ function App() {
         [slides, setSlides] = useState([]);
 
     useEffect(() => {
-        console.log(location.pathname)
+        // console.log(location.pathname)
         if (location.pathname === "/") {
             setNavValue(true);
             setToolsValue(true);
@@ -74,7 +74,7 @@ function App() {
 
         try {
             const newSlides = await slidesRes.json();
-            console.log("Fetched slides:", newSlides);
+            // console.log("Fetched slides:", newSlides);
             setSlides(newSlides);
         } catch (error) {
             console.error("Encountered an error when attempting to fetch slides:", error);
@@ -87,7 +87,7 @@ function App() {
         const connection = new WebSocket(new URL("/autoupdate", "ws://localhost:9000"));
 
         async function onMessage(event) {
-            console.log(event.data);
+            // console.log(event.data);
             if (event.data === "update") {
                 await loadSlides();
             }
@@ -178,6 +178,7 @@ function App() {
                             <EditSlide
                                 navigate={navigate}
                                 setActiveHref={setActiveHref}
+                                slides={slides}
                             />
                         }
                     />
@@ -255,7 +256,7 @@ function App() {
         //check if user credentials are in database
 
         let jsondata = JSON.stringify({username: usrName, password: pssWord});
-        console.log(jsondata);
+        // console.log(jsondata);
         const res = await fetch('http://localhost:9000/authenticate.json', {
             method: "POST",
             mode: 'cors',
@@ -267,12 +268,12 @@ function App() {
         if (res.ok) {
             const value = await res.text();
             if (value === 'authenticated') {
-                console.log(value);
+                // console.log(value);
                 setNavValue(false);
                 navigate("/admin");
             }
         }
-        console.log("done");
+        // console.log("done");
     }
 }
 
