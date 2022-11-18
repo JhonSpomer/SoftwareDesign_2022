@@ -145,7 +145,7 @@ expressWs(api);
                 console.log(Id);
                 await db.delSlide(Id);
                 updateAllConnections();
-                res          
+                res
                     .status(200)
                     .send("deleting slide with id " + Id);
                     console.log("deleting " + Id);
