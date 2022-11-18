@@ -10,23 +10,6 @@ const slides = database.collection("slides");
 const config = database.collection("Config_data");
 const bucket = new mongodb.GridFSBucket(database, { bucketName: 'slideFiles' });
 module.exports = {
-    newUser: async function (UN, PS) {
-        await client.connect();
-        try {
-            // create a document to insert
-            const doc =
-            {
-                username: UN,
-                password: PS,
-            };
-            const result = await users.insertOne(doc);
-            //console.log(`A document was inserted with the _id: ${result.insertedId}`);
-            return result.insertedId.toHexString();
-        }
-        finally {
-            // await client.close();
-        }
-    },
     checkForUser: async function (UN, PS)
     {
         await client.connect();
@@ -57,11 +40,40 @@ module.exports = {
             }
         }
     },
-    modUser: async function (oldUN, newUN, newPS) {
+    newUser: async function (UN, PS) {
         await client.connect();
         try {
-            if (newUN === undefined) {
-                newUN = oldUN;
+            if (module.exports.checkForUser(UN))
+            {
+                return "username taken";
+            }
+            // create a document to insert
+            const doc =
+            {
+                username: UN,
+                password: PS,
+            };
+            const result = await users.insertOne(doc);
+            //console.log(`A document was inserted with the _id: ${result.insertedId}`);
+            return result.insertedId.toHexString();
+        }
+        finally {
+            // await client.close();
+        }
+    },
+    
+    modUser: async function (_oldUN, _newUN, _newPS) {
+        await client.connect();
+        try {
+            let newUN = _newUN;
+            let oldUN = _oldUN;
+            let newPS = _newPS;
+            if (module.exports.checkForUser(_newUN))
+            {
+                return "username taken";
+            }
+            if (_newUN === undefined) {
+                newUN = _oldUN;
             };
             // create a document with just the fields to be updated
             const upDoc =
@@ -196,7 +208,7 @@ module.exports = {
             }
             else {
                 // //delete old slide
-                await delSlide(mongodb.ObjectId(targetID));
+                await module.exports.delSlide(mongodb.ObjectId(targetID));
                 //upload new slide
                 const stream = bucket.openUploadStreamWithId(mongodb.ObjectId(targetID), _name, { metadata: { type: _type, owner: _user, lastModifiedBy: _user, lastModifiedDate: _date, expDate: _expDate, fileExt: _fileExt } });
                 const result = await _RS.pipe(stream);
