@@ -23,9 +23,11 @@ expressWs(api);
         for (const ws of Object.values(connections)) ws.send("update");
     }
 
-    function authenticate(req) {
-        if (req.headers[""]) ;
-        return true;
+    function authenticate(req) 
+    {
+        let auth = new Buffer.from(req.headers.authorization.split(' ')[1],
+        'base64').toString().split(':');
+        return db.checkForUser(auth[0], auth[1]);
     }
 
 
