@@ -29,12 +29,11 @@ import Admin from "./pages/Admin"
 import Users from "./pages/Users"
 import Tests from "./pages/Test"
 import Preview from "./pages/Preview"
-import { useNavigate, useLocation, Route, Routes } from "react-router-dom";
+import {useNavigate, useLocation, Route, Routes} from "react-router-dom";
 import './App.css';
 import EditSlide from './pages/Edit_Slide';
 import UserEdit from './pages/UserEdit';
-//import { window } from 'process';
-
+import {getImage} from './utility/utils';
 
 //variables
 
@@ -49,7 +48,8 @@ function App() {
         navigate = useNavigate(),
         location = useLocation(),
         [checked, setChecked] = useState(false),
-        [slides, setSlides] = useState([]);
+        [slides, setSlides] = useState([]),
+        [files, setFiles] = useState({});
 
     useEffect(() => {
         // console.log(location.pathname)
@@ -78,6 +78,21 @@ function App() {
         try {
             const newSlides = await slidesRes.json();
             // console.log("Fetched slides:", newSlides);
+            const
+                newFiles = [],
+                ids = [];
+            for (const slide of newSlides) {
+                if (slide.slideType === "image") {
+                    newFiles.push(getImage(slide.content));
+                    ids.push(slide._id);
+                }
+                // else if (slide.slideType === "pdf") files[slide._id] = 
+            }
+            newFiles.splice(0, newFiles.length, ...(await Promise.all(newFiles)));
+            for (const key in files) delete files[key];
+            for (let i = 0; i < newFiles.length; i++) files[ids[i]] = newFiles[i];
+            console.log(newFiles);
+            setFiles({...files});
             setSlides(newSlides);
         } catch (error) {
             console.error("Encountered an error when attempting to fetch slides:", error);
@@ -152,6 +167,7 @@ function App() {
                                 navigate={navigate}
                                 setActiveHref={setActiveHref}
                                 slides={slides}
+                                files={files}
                             />
                         }
                     />
