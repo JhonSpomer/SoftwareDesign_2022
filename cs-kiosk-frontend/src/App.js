@@ -268,7 +268,7 @@ function App() {
         //let StringCreds = String(base64Creds);
         
         window.sessionStorage.setItem("UserCreds", base64Creds);
-
+        console.log(base64Creds);
         const res = await fetch('http://localhost:9000/authenticate.json', {
             method: "POST",
             mode: 'cors',
