@@ -66,11 +66,6 @@ export default function Admin(props) {
                                 const href = `/edit/${item._id}`;
                                 props.setActiveHref(href);
                                 props.navigate(href);
-                                // console.log("add");
-                                // const data = await (await fetch('http://localhost:9000/slides.json', {
-                                //     mode: 'cors'
-                                // })).json();
-                                // console.log(data);
                             }}
                         >
                             Edit slide
@@ -120,7 +115,6 @@ export default function Admin(props) {
                 <Button
                     onClick={async event => {
                         event.preventDefault();
-                        console.log("new slide");
                         const href = `/edit/new`;
                         props.setActiveHref(href);
                         props.navigate(href);
@@ -135,7 +129,6 @@ export default function Admin(props) {
                 actions={<Button
                     onClick={async event => {
                         event.preventDefault();
-                        console.log("new slide");
                         const href = `/edit/new`;
                         props.setActiveHref(href);
                         props.navigate(href);

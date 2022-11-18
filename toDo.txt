@@ -1,0 +1,10 @@
+Matt:
+-
+Jhon:
+-
+Isaac:
+-user docs
+-admin docs
+-dev docs
+-writes tests for CRUD operations
+-write functions for getting DB stats
