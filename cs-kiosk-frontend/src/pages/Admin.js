@@ -78,16 +78,12 @@ export default function Admin(props) {
                         <Button
                             onClick={() => {
                                 console.log("del");
-                                let json_test = JSON.stringify({ name: "test", type: "testtype", content: "testcontent", Id: "636a9b013115d351423ccff1" });
-                                const res = fetch ('http://localhost:9000/delete.json', {
-                                    method: "POST",
-                                    mode: "cors",
-                                    headers: {
-                                        "Content-Type": "text/plain"
-                                },
-                                body: json_test
-                            });
-                            console.log(json_test);
+                                // let json_test = JSON.stringify({ name: "test", type: "testtype", content: "testcontent", Id:  });
+                                const res = fetch(`http://localhost:9000/delete.json?id=${item._id}`, {
+                                    method: "GET",
+                                    mode: "cors"
+                                });
+                               // console.log(json_test);
                                 //working on hitting the new del.json endpoint added in main.js. Even though it currently doesnt del anything.-Jhon
                                 // setItems(items.filter(i => i.name !== item.name));
                             }}
@@ -152,8 +148,8 @@ export default function Admin(props) {
                         //     }]
                         // )
                     }}>
-                        Create Slide
-                    </Button>
+                    Create Slide
+                </Button>
                 }
             >
                 Current Slides
