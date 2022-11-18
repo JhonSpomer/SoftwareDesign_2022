@@ -131,6 +131,8 @@ export default function Admin(props) {
                         event.preventDefault();
                         const href = `/edit/new`;
                         props.setActiveHref(href);
+                        let stored = sessionStorage.getItem("UserCreds");
+                        console.log(stored);
                         props.navigate(href);
                         // setItems(
                         //     [...items, {

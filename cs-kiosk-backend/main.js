@@ -44,13 +44,13 @@ expressWs(api);
 
     api.all("*", (req, res, next) => {
         res.setHeader("Access-Control-Allow-Origin", "*");
+        res.setHeader("Access-Control-Allow-Headers", 'Authorization');
         next();
     });
 
     api.post("/authenticate.json", async (req, res) => {
-        let buffer = "";
-        res.setHeader("Access-Control-Allow-Headers", Authorization);
-        res.setHeader("Access-Control-Allow-Origin", 'http://localhost:3000/');
+        let buffer = "";  
+        res.setHeader("Access-Control-Allow-Origin", 'http://localhost:3000');
         req.on("data", chunk => buffer += chunk.toString());
         req.on("close", async () => {
             try {
