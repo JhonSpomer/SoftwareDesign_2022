@@ -43,6 +43,11 @@ expressWs(api);
     });
 
     api.all("*", (req, res, next) => {
+        if (!authenticate(req))
+        {
+            res.status(401).send("authentication failed")
+            return;
+        }
         res.setHeader("Access-Control-Allow-Origin", "*");
         next();
     });
