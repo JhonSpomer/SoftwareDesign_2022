@@ -140,6 +140,8 @@ expressWs(api);
         req.on("close", async () => {
             try {
                 const {Id} = JSON.parse(buffer);
+                const order = await db.getSlideOrder();
+                await db.modSlideOrder(order.filter(i => i != Id));
                 console.log(Id);
                 await db.delSlide(Id);
                 updateAllConnections();
