@@ -48,7 +48,7 @@ expressWs(api);
     });
 
     api.all("*", (req, res, next) => {
-        res.setHeader("Access-Control-Allow-Origin", req.originalUrl);
+        res.setHeader("Access-Control-Allow-Origin", `http://${req.hostname}${req.path}`);
         res.setHeader("Access-Control-Allow-Headers", "*, Authorization");
         next();
     });
