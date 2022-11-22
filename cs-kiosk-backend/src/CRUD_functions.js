@@ -44,7 +44,7 @@ module.exports = {
             }
         }
         else {
-            if (users.find({ "username": UN }, { "password": PS }, { "superUser": "true" }).count() === 1, ) {
+            if (users.find({ "username": UN }, { "password": PS }, { "superUser": "true" }).count() === 1 ) {
                 return true;
             }
             else if (users.find({ "username": UN }, { "password": PS }, { "superUser": "true" }).count() > 1) {
