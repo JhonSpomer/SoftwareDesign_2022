@@ -2,10 +2,10 @@ const
     path = require("path"),
     express = require("express"),
     expressWs = require("express-ws"),
-    {app, BrowserWindow, protocol, session} = require("electron"),
+    { app, BrowserWindow, protocol, session } = require("electron"),
     fs = require("fs"),
     db = require("./src/CRUD_functions"),
-    {Binary} = require("mongodb"),
+    { Binary } = require("mongodb"),
     stream = require("stream"),
     uuid = require("uuid").v4;
 
@@ -15,7 +15,7 @@ const
 
 expressWs(api);
 
-;(async () => {
+; (async () => {
     await app.whenReady();
     const connections = {};
 
@@ -23,11 +23,12 @@ expressWs(api);
         for (const ws of Object.values(connections)) ws.send("update");
     }
 
-    function authenticate(req) 
-    {
+    function authenticate(req) {
+        console.log(req.get('Authorization'));
         console.log(req.headers);
-        let auth = new Buffer.from(req.headers.Authorization.split(' ')[1],
-        'base64').toString().split(':');
+
+        let auth = (new Buffer.from(req.headers.Authorization.split(' ')[1],
+            'base64')).toString().split(':');
         return db.checkForUser(auth[0], auth[1]);
     }
 
@@ -36,7 +37,7 @@ expressWs(api);
 
     api.use("/carousel", express.static(path.join(__dirname, "public/carousel")));
     // api.use(express.urlencoded({limit: "50mb", extended: true, parameterLimit: 50000, type: "application/octet-stream"}));
-    api.use(express.raw({limit: "4mb", type: "application/octet-stream"}));
+    api.use(express.raw({ limit: "4mb", type: "application/octet-stream" }));
     api.use(express.raw());
 
     const server = api.listen(port, () => {
@@ -44,23 +45,25 @@ expressWs(api);
     });
 
     api.all("*", (req, res, next) => {
-        if (!authenticate(req))
-        {
-            res.status(401).send("authentication failed")
-            return;
-        }
         res.setHeader("Access-Control-Allow-Origin", '*');
-        res.setHeader("Access-Control-Allow-Headers", 'Authorization');
+        res.setHeader("Access-Control-Allow-Headers", '*');
+        console.log(req.path);
+
+        console.log(req.headers);
+       // if (!authenticate(req)) {
+        //    res.status(401).send("authentication failed")
+        //    return;
+       // }
         next();
     });
 
     api.post("/authenticate.json", async (req, res) => {
-        let buffer = "";  
+        let buffer = "";
         res.setHeader("Access-Control-Allow-Origin", 'http://localhost:3000');
         req.on("data", chunk => buffer += chunk.toString());
         req.on("close", async () => {
             try {
-                const {username, password} = JSON.parse(buffer);
+                const { username, password } = JSON.parse(buffer);
                 await db.getUser(username, password);
                 res
                     .status(200)
@@ -154,10 +157,10 @@ expressWs(api);
             console.log(req.query.id);
             await db.delSlide(req.query.id);
             updateAllConnections();
-            res          
+            res
                 .status(200)
                 .send("deleting slide with id " + req.query.id);
-                console.log("deleting " + req.query.id);
+            console.log("deleting " + req.query.id);
         } catch (e) {
             console.log("Failed to delete");
         }
@@ -165,7 +168,7 @@ expressWs(api);
         //console.log("Got here");
     });
 
-    api.get("/delete/user.json", async (req, res) => {});
+    api.get("/delete/user.json", async (req, res) => { });
 
 
 
@@ -244,7 +247,7 @@ expressWs(api);
         const id = uuid();
         connections[id] = ws;
 
-        ws.on("message", msg => {});
+        ws.on("message", msg => { });
 
         ws.on("close", () => {
             delete connections[id];
@@ -253,7 +256,7 @@ expressWs(api);
 
 
     // Electron kiosk display
-    
+
     // session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
     //     callback({
     //         responseHeaders: {
@@ -270,12 +273,12 @@ expressWs(api);
         const url = new URL(details.referrer || details.url);
         details.requestHeaders["Origin"] = url.origin;
         details.requestHeaders["Referer"] = details.url;
-        callback({cancel: false, requestHeaders: details.requestHeaders});
+        callback({ cancel: false, requestHeaders: details.requestHeaders });
     });
     session.defaultSession.webRequest.onHeadersReceived(filter, (details, callback) => {
         const csp = Object.keys(details.responseHeaders).find(h => h.toLowerCase() === "content-security-policy") || "content-security-policy";
         details.responseHeaders[csp] = "frame-ancestors *;";
-        callback({cancel: false, responseHeaders: details.responseHeaders});
+        callback({ cancel: false, responseHeaders: details.responseHeaders });
     });
 
     const win = new BrowserWindow({

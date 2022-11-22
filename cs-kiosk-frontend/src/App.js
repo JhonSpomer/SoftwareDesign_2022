@@ -29,11 +29,11 @@ import Admin from "./pages/Admin"
 import Users from "./pages/Users"
 import Tests from "./pages/Test"
 import Preview from "./pages/Preview"
-import {useNavigate, useLocation, Route, Routes} from "react-router-dom";
+import { useNavigate, useLocation, Route, Routes } from "react-router-dom";
 import './App.css';
 import EditSlide from './pages/Edit_Slide';
 import UserEdit from './pages/UserEdit';
-import {getImage} from './utility/utils';
+import { getImage } from './utility/utils';
 
 //variables
 
@@ -92,7 +92,7 @@ function App() {
             for (const key in files) delete files[key];
             for (let i = 0; i < newFiles.length; i++) files[ids[i]] = newFiles[i];
             console.log(newFiles);
-            setFiles({...files});
+            setFiles({ ...files });
             setSlides(newSlides);
         } catch (error) {
             console.error("Encountered an error when attempting to fetch slides:", error);
@@ -282,7 +282,7 @@ function App() {
         let base64Creds = EncodedCreds.toString('base64');
 
         //let StringCreds = String(base64Creds);
-        
+
         window.sessionStorage.setItem("UserCreds", base64Creds);
         console.log(base64Creds);
         const res = await fetch('http://localhost:9000/authenticate.json', {
