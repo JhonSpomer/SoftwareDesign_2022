@@ -33,30 +33,6 @@ module.exports = {
         }
     },
 
-    checkForSU: async function (_UN, _PS) {
-        await client.connect();
-        if (PS === undefined) {
-            if (users.find({ "username": UN }).count() > 0) {
-                return true;
-            }
-            else {
-                return false;
-            }
-        }
-        else {
-            if (users.find({ "username": UN }, { "password": PS }, { "superUser": "true" }).count() === 1 ) {
-                return true;
-            }
-            else if (users.find({ "username": UN }, { "password": PS }, { "superUser": "true" }).count() > 1) {
-                return "duplicate user records";
-            }
-            else {
-                return false;
-            }
-        }
-
-    },
-
     newUser: async function (_UN, PS) {
         await client.connect();
         try {
@@ -69,28 +45,6 @@ module.exports = {
                 username: _UN,
                 password: _PS,
                 superUser: "false"
-            };
-            const result = await users.insertOne(doc);
-            //console.log(`A document was inserted with the _id: ${result.insertedId}`);
-            return result.insertedId.toHexString();
-        }
-        finally {
-            // await client.close();
-        }
-    },
-
-    newSuperUser: async function (_UN, _PS) {
-        await client.connect();
-        try {
-            if (module.exports.checkForSU(_UN)) {
-                return "username taken";
-            }
-            // create a document to insert
-            const doc =
-            {
-                username: UN,
-                password: PS,
-                superUser: "true"
             };
             const result = await users.insertOne(doc);
             //console.log(`A document was inserted with the _id: ${result.insertedId}`);
