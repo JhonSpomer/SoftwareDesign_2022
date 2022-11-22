@@ -50,10 +50,11 @@ expressWs(api);
         console.log(req.path);
 
         console.log(req.headers);
+       
        // if (!authenticate(req)) {
-        //    res.status(401).send("authentication failed")
-        //    return;
-       // }
+         //  res.status(401).send("authentication failed")
+          //return;
+        //}
         next();
     });
 
