@@ -80,7 +80,7 @@ export default function Admin(props) {
                         <Button
                             onClick={async event => {
                                 event.preventDefault();
-                                const href = `/edit/${item._id}`;
+                                const href = `/edit/slide/${item._id}`;
                                 props.setActiveHref(href);
                                 props.navigate(href);
                             }}
@@ -133,7 +133,7 @@ export default function Admin(props) {
                 <Button
                     onClick={async event => {
                         event.preventDefault();
-                        const href = `/edit/new`;
+                        const href = `/edit/slide/new`;
                         props.setActiveHref(href);
                         props.navigate(href);
                     }}
@@ -147,7 +147,7 @@ export default function Admin(props) {
                 actions={<Button
                     onClick={async event => {
                         event.preventDefault();
-                        const href = `/edit/new`;
+                        const href = `/edit/slide/new`;
                         props.setActiveHref(href);
                         let stored = sessionStorage.getItem("UserCreds");
                         console.log(stored);
