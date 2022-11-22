@@ -140,8 +140,7 @@ expressWs(api);
     //
     //
     //adding del endpoint here. or trying anyways. ~Jhon
-    api.get("/delete.json", async (req, res) => {
-    
+    api.get("/delete/slide.json", async (req, res) => {
         res.setHeader("Access-Control-Allow-Headers", "*");
         console.log("Reached delete midpoint");
         //want to redo slide order once deleted. 
@@ -165,6 +164,8 @@ expressWs(api);
         // });
         //console.log("Got here");
     });
+
+    api.get("/delete/user.json", async (req, res) => {});
 
 
 

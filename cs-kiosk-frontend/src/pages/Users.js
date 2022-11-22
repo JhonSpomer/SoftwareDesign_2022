@@ -67,77 +67,78 @@ export default function Users(props) {
     const slides = getSlides();
     const which = false;
 
-
     return <Cards
-    ariaLabels={{
-        itemSelectionLabel: (e, t) => `select ${t.name}`,
-        selectionGroupLabel: "Item selection"
-    }}
-    cardDefinition={{
-        header: item => (
-            <Link fontSize="heading-m">{item.name}</Link>
-        ),
-        sections: [
-            {
-                id: "description",
-                header: "Description",
-                content: item => item.description
-            },
-            {
-                id: "type",
-                header: "Type",
-                content: item => <SpaceBetween
-                    direction="horizontal"
-                    size="m"
-                >
-                    <Button
-                        onClick={async event => {
-                            event.preventDefault();
-                            const href = `/UserEdit/`;
-                            props.setActiveHref(href);
-                            props.navigate(href);
-                            // console.log("add");
-                            // const data = await (await fetch('http://localhost:9000/slides.json', {
-                            //     mode: 'cors'
-                            // })).json();
-                            // console.log(data);
-                        }
-                        }
+        ariaLabels={{
+            itemSelectionLabel: (e, t) => `select ${t.name}`,
+            selectionGroupLabel: "Item selection"
+        }}
+        cardDefinition={{
+            header: item => (
+                <Link fontSize="heading-m">{item.name}</Link>
+            ),
+            sections: [
+                {
+                    id: "description",
+                    header: "Description",
+                    content: item => item.description
+                },
+                {
+                    id: "type",
+                    header: "Type",
+                    content: item => <SpaceBetween
+                        direction="horizontal"
+                        size="m"
                     >
-                        Edit slide
-                    </Button>
-                    <Button
-                        onClick={() => {
-                            console.log("del");
-                            setItems(items.filter(i => i.name !== item.name));
-                        }}
-                    >
-                        Delete slide
-                    </Button>
-                </SpaceBetween>
-            },
-            {
-                id: "size",
-                header: "Size",
-                content: item => item.size
-            }
-        ]
-    }}
-    cardsPerRow={[
-        { cards: 1 },
-        { minWidth: 500, cards: 1 }
-    ]}
-    items={items}
-    loadingText="Loading resources"
-    empty={
-        <Box textAlign="center" color="inherit">
+                        <Button
+                            onClick={async event => {
+                                event.preventDefault();
+                                const href = `/UserEdit/`;
+                                props.setActiveHref(href);
+                                props.navigate(href);
+                                // console.log("add");
+                                // const data = await (await fetch('http://localhost:9000/slides.json', {
+                                //     mode: 'cors'
+                                // })).json();
+                                // console.log(data);
+                            }}
+                        >
+                            Edit user
+                        </Button>
+                        <Button
+                            onClick={async () => {
+                                console.log("del");
+                                setItems(items.filter(i => i.name !== item.name));
+                                await fetch(`http://localhost:9000/delete/user.json?id=${i._id}`, {
+                                    method: "GET",
+                                    mode: "cors"
+                                });
+                            }}
+                        >
+                            Delete user
+                        </Button>
+                    </SpaceBetween>
+                },
+                {
+                    id: "size",
+                    header: "Size",
+                    content: item => item.size
+                }
+            ]
+        }}
+        cardsPerRow={[
+            {cards: 1},
+            {minWidth: 500, cards: 1}
+        ]}
+        items={items}
+        loadingText="Loading resources"
+        empty={<Box textAlign="center" color="inherit">
             <b>No resources</b>
             <Box
                 padding={{ bottom: "s" }}
                 variant="p"
                 color="inherit"
             >
-                No resources to display.
+                No users to display.
             </Box>
             <Button
             onClick={() => {
@@ -149,35 +150,25 @@ export default function Users(props) {
                         description: "This is default description for slide " + (items.length+1)
                     }]
                 )
-            }}>Create slide</Button>
-        </Box>
-        }
-
+            }}>
+                Create user
+            </Button>
+        </Box>}
         header={<Header
             actions={<Button
                 onClick={() => {
-                    setItems(
-                        [...items, {
-                            _id: items.length,
-                            name: "User "+(items.length+1),
-                            alt: "test",
-                            description: "A user"
-                        }]);
-                }}>Create User
-
-            </Button>}>Current Users</Header>}
-
-
+                    setItems(items.concat([{
+                        _id: items.length,
+                        name: "User " + (items.length+1),
+                        alt: "test",
+                        description: "A user"
+                    }]));
+                }}
+            >
+                Create User
+            </Button>}
+        >
+            Current Users
+        </Header>}
     />;
-
-
-
-}
-
-
-function create() {
-
-
-    //TODO navigate to slide create
-
 }
