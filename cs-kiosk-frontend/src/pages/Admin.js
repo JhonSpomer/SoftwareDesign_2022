@@ -92,7 +92,7 @@ export default function Admin(props) {
                                 console.log("del");
                                 let creds = sessionStorage.getItem("UserCreds");
                                 // let json_test = JSON.stringify({ name: "test", type: "testtype", content: "testcontent", Id:  });
-                                const res = fetch(`http://localhost:9000/delete.json?id=${item._id}`, {
+                                const res = fetch(`http://localhost:9000/delete/slide.json?id=${item._id}`, {
                                     method: "GET",
                                     mode: "cors",
                                     headers: {
