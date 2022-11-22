@@ -291,7 +291,6 @@ function App() {
             headers: {
                 "Content-Type": "text/plain",
                 Authorization: `Basic ${base64Creds}`
-
             },
             body: jsondata
         });

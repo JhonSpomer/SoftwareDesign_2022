@@ -25,7 +25,8 @@ expressWs(api);
 
     function authenticate(req) 
     {
-        let auth = new Buffer.from(req.headers.authorization.split(' ')[1],
+        console.log(req.headers);
+        let auth = new Buffer.from(req.headers.Authorization.split(' ')[1],
         'base64').toString().split(':');
         return db.checkForUser(auth[0], auth[1]);
     }
@@ -48,7 +49,7 @@ expressWs(api);
             res.status(401).send("authentication failed")
             return;
         }
-        res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+        res.setHeader("Access-Control-Allow-Origin", '*');
         res.setHeader("Access-Control-Allow-Headers", 'Authorization');
         next();
     });
