@@ -178,17 +178,11 @@ expressWs(api);
         //console.log("Got here");
     });
 
-<<<<<<< HEAD
-    api.get("/delete/user.json", async (req, res) => { });
-
-
-=======
     api.get("/delete/user.json", async (req, res) => {
         if (req.query.username) {
             await db.delUser(req.query.username);
         }
     });
->>>>>>> 765a3301b1ec4096acf49abb05e028f8e66b29a6
 
     api.get("/order.json", async (req, res) => {
         const order = await db.getSlideOrder();
