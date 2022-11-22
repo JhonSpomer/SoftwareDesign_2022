@@ -48,7 +48,7 @@ expressWs(api);
             res.status(401).send("authentication failed")
             return;
         }
-        res.setHeader("Access-Control-Allow-Origin", "*");
+        res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
         res.setHeader("Access-Control-Allow-Headers", 'Authorization');
         next();
     });
