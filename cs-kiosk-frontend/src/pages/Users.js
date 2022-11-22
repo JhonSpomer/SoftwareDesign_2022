@@ -108,10 +108,11 @@ export default function Users(props) {
                             onClick={async () => {
                                 console.log("del");
                                 setItems(items.filter(i => i.name !== item.name));
-                                await fetch(`http://localhost:9000/delete/user.json?id=${i._id}`, {
-                                    method: "GET",
-                                    mode: "cors"
-                                });
+
+                              //  await fetch(`http://localhost:9000/delete/user.json?id=${i._id}`, {
+                               //     method: "GET",
+                              //      mode: "cors"
+                              //  });
                             }}
                         >
                             Delete user
