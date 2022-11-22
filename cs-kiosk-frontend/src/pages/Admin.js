@@ -1,5 +1,5 @@
 /*
-Last modified: 11/11/2022
+Last modified: 11/11[ /2022
 Last worked on by: Jhon and Matt
 last added: Connecting to backend and reworking of add slide button
 
@@ -80,7 +80,7 @@ export default function Admin(props) {
                         <Button
                             onClick={async event => {
                                 event.preventDefault();
-                                const href = `/edit/slide/${item._id}`;
+                                const href = `/edit/${item._id}`;
                                 props.setActiveHref(href);
                                 props.navigate(href);
                             }}
@@ -91,6 +91,7 @@ export default function Admin(props) {
                             onClick={() => {
                                 console.log("del");
                                 let creds = sessionStorage.getItem("UserCreds");
+                                console.log(creds);
                                 // let json_test = JSON.stringify({ name: "test", type: "testtype", content: "testcontent", Id:  });
                                 const res = fetch(`http://localhost:9000/delete/slide.json?id=${item._id}`, {
                                     method: "GET",
@@ -132,7 +133,7 @@ export default function Admin(props) {
                 <Button
                     onClick={async event => {
                         event.preventDefault();
-                        const href = `/edit/slide/new`;
+                        const href = `/edit/new`;
                         props.setActiveHref(href);
                         props.navigate(href);
                     }}
@@ -146,7 +147,7 @@ export default function Admin(props) {
                 actions={<Button
                     onClick={async event => {
                         event.preventDefault();
-                        const href = `/edit/slide/new`;
+                        const href = `/edit/new`;
                         props.setActiveHref(href);
                         let stored = sessionStorage.getItem("UserCreds");
                         console.log(stored);
