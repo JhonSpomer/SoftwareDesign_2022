@@ -23,13 +23,13 @@ expressWs(api);
         for (const ws of Object.values(connections)) ws.send("update");
     }
 
-    function authenticate(req) {
-        console.log(req.get('Authorization'));
-        console.log(req.headers);
+    // function authenticate(req) {
+    //     console.log(req.get('Authorization'));
+    //     console.log(req.headers);
 
-        let auth = (new Buffer.from(req.headers.Authorization.split(' ')[1], 'base64')).toString().split(':');
-        return true;//db.checkForUser(auth[0], auth[1]);
-    }
+    //     let auth = (new Buffer.from(req.headers.Authorization.split(' ')[1], 'base64')).toString().split(':');
+    //     return true;//db.checkForUser(auth[0], auth[1]);
+    // }
 
 
     // Express API server
@@ -50,7 +50,7 @@ expressWs(api);
 
         console.log(req.headers);
         console.log(req.get('Authorization'));
-        console.log(req.get("Authorization").split(" "));
+        // console.log(req.get("Authorization").split(" "));
         // console.log(req.get("Authorization").split(" ")[1]);
         // let auth = Buffer.from(req.get("Authorization").split(" ")[1], "base64").toString().split(":");
         // console.log(auth);
