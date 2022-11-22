@@ -31,6 +31,10 @@ expressWs(api);
     //     return true;//db.checkForUser(auth[0], auth[1]);
     // }
 
+    // function authenticateSU(req) {
+    // 
+    // }
+
 
     // Express API server
 
