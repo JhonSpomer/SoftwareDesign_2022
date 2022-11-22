@@ -49,7 +49,9 @@ expressWs(api);
         console.log(req.path);
 
         console.log(req.headers);
-        console.log(req.get('Authorization'));
+        let auth = req.get("Authorization");
+        console.log(auth);
+        console.log(typeof auth);
         // console.log(req.get("Authorization").split(" "));
         // console.log(req.get("Authorization").split(" ")[1]);
         // let auth = Buffer.from(req.get("Authorization").split(" ")[1], "base64").toString().split(":");
