@@ -64,8 +64,8 @@ export default function Admin(props) {
                         "image": () => <ImgFromArrayBuffer
                             arrayBuffer={props.files[item._id].image}
                             mimeType={props.files[item._id].type || "image/jpeg"}
-                            // width="2000vw"
-                            // height="1000vh"
+                            width="20vw"
+                            height="10vh"
                         />
                     }[item.slideType]()),
                     width: "50"

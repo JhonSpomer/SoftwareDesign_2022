@@ -49,7 +49,7 @@ expressWs(api);
 
     api.all("*", (req, res, next) => {
         res.setHeader("Access-Control-Allow-Origin", req.get("Origin"));
-        res.setHeader("Access-Control-Allow-Headers", "*, Authorization");
+        res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
         next();
     });
 
@@ -60,8 +60,10 @@ expressWs(api);
         let auth = req.get("Authorization");
         console.log(auth);
         console.log(typeof auth);
-        if (typeof auth === "string") console.log(auth.split(" "));
-        // console.log(auth.split(" ")[1]);
+        if (typeof auth === "string") {
+            console.log(auth.split(" "));
+            console.log(auth.split(" ")[1]);
+        }
         // let credentials = Buffer.from(auth.split(" ")[1], "base64").toString().split(":");
         // console.log(credentials);
        
