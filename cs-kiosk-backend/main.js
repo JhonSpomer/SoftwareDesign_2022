@@ -49,8 +49,8 @@ expressWs(api);
             res.status(401).send("authentication failed")
             return;
         }
-        res.setHeader("Access-Control-Allow-Origin", '*');
-        res.setHeader("Access-Control-Allow-Headers", 'Authorization');
+        res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+        res.setHeader("Access-Control-Allow-Headers", "*");
         next();
     });
 
@@ -133,6 +133,17 @@ expressWs(api);
         });
     });
 
+    api.post("/user.json", (req, res) => {
+        let buffer = "";
+        req.on("data", chunk => buffer += chunk.toString());
+        req.once("close", async () => {
+            const newUserCredentials = JSON.parse(buffer);
+            req
+                .status(200)
+                .send("Modified user.");
+        });
+    });
+
     //===============================================================================================================
     //
     //
@@ -141,7 +152,6 @@ expressWs(api);
     //
     //adding del endpoint here. or trying anyways. ~Jhon
     api.get("/delete/slide.json", async (req, res) => {
-        res.setHeader("Access-Control-Allow-Headers", "*");
         console.log("Reached delete midpoint");
         //want to redo slide order once deleted. 
         // let buffer = "";
@@ -165,9 +175,11 @@ expressWs(api);
         //console.log("Got here");
     });
 
-    api.get("/delete/user.json", async (req, res) => {});
-
-
+    api.get("/delete/user.json", async (req, res) => {
+        if (req.query.username) {
+            await db.delUser(req.query.username);
+        }
+    });
 
     api.get("/order.json", async (req, res) => {
         const order = await db.getSlideOrder();
@@ -189,10 +201,10 @@ expressWs(api);
             .send("Done");
     });
 
-    api.all("/image/*", (req, res, next) => {
-        res.setHeader("Access-Control-Allow-Headers", "*");
-        next();
-    });
+    // api.all("/image/*", (req, res, next) => {
+    //     res.setHeader("Access-Control-Allow-Headers", "*");
+    //     next();
+    // });
 
     api.post("/image/new", async (req, res) => {
         if (req.query.type !== "png" && req.query.type !== "jpg") {
