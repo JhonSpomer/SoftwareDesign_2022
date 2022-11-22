@@ -12,8 +12,8 @@ login page and front end, hides nav bar, with error validation.  Now queries the
 */
 
 //imports
-import React, { useEffect, useState } from 'react';
-import { Buffer } from 'buffer';
+import React, {useEffect, useState} from 'react';
+import {Buffer} from 'buffer';
 //import { Buffer } from 'buffer';
 import "@cloudscape-design/global-styles/index.css"
 import Applayout from "@cloudscape-design/components/app-layout";
@@ -31,7 +31,7 @@ import Tests from "./pages/Test"
 import Preview from "./pages/Preview"
 import { useNavigate, useLocation, Route, Routes } from "react-router-dom";
 import './App.css';
-import EditSlide from './pages/Edit_Slide';
+import EditSlide from './pages/EditSlide';
 import UserEdit from './pages/UserEdit';
 import { getImage } from './utility/utils';
 
@@ -39,13 +39,13 @@ import { getImage } from './utility/utils';
 
 function App() {
     const
+        navigate = useNavigate(),
         [userValue, setUserValue] = useState(),
         [passwordValue, setPasswordValue] = useState(""),
         [ErrorValue, setErrorValue] = useState(""),
         [activeHref, setActiveHref] = useState("/"),
         [navigationHide, setNavValue] = useState(true),
         [toolsHide, setToolsValue] = useState(true),
-        navigate = useNavigate(),
         location = useLocation(),
         [checked, setChecked] = useState(false),
         [slides, setSlides] = useState([]),
@@ -130,7 +130,7 @@ function App() {
             navigation={
                 <SideNavigation
                     activeHref={activeHref}
-                    header={{ href: "/", text: "Admin Navigation" }}
+                    header={{href: "/", text: "Admin Navigation"}}
                     onFollow={event => {
                         if (!event.detail.external) {
                             event.preventDefault();
@@ -140,11 +140,11 @@ function App() {
                         }
                     }}
                     items={[
-                        { type: "link", text: "Admin", href: "admin" },
-                        { type: "link", text: "Preview", href: "preview" },
-                        { type: "link", text: "Users", href: "users" },
-                        { type: "link", text: "Login", href: "/" },
-                        { type: "divider" },
+                        {type: "link", text: "Admin", href: "admin"},
+                        {type: "link", text: "Preview", href: "preview"},
+                        {type: "link", text: "Users", href: "users"},
+                        {type: "link", text: "Login", href: "/"},
+                        {type: "divider"},
                         {
                             //TODO
                             type: "link",
@@ -182,7 +182,7 @@ function App() {
                         }
                     />
                     <Route
-                        path="/UserEdit"
+                        path="/edit/user/*"
                         element={
                             <UserEdit
                                 navigate={navigate}
@@ -192,7 +192,7 @@ function App() {
                     />
 
                     <Route
-                        path="/edit/*"
+                        path="/edit/slide/*"
                         element={
                             <EditSlide
                                 navigate={navigate}

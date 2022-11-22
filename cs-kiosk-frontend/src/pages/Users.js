@@ -15,9 +15,9 @@ import SpaceBetween from "@cloudscape-design/components/space-between"
 import Header from "@cloudscape-design/components/header"
 import FormField from "@cloudscape-design/components/form-field";
 import Button from "@cloudscape-design/components/button";
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import Input from "@cloudscape-design/components/input";
-import { getSlides } from "../utility/retrieve_slides";
+import {getSlides} from "../utility/retrieve_slides";
 import Cards from "@cloudscape-design/components/cards";
 import Link from "@cloudscape-design/components/link";
 import Box from "@cloudscape-design/components/box";
@@ -92,14 +92,15 @@ export default function Users(props) {
                         <Button
                             onClick={async event => {
                                 event.preventDefault();
-                                const href = `/UserEdit/`;
+                                const href = `/edit/user/${item._id}`;
                                 props.setActiveHref(href);
                                 props.navigate(href);
-                                // console.log("add");
-                                // const data = await (await fetch('http://localhost:9000/slides.json', {
-                                //     mode: 'cors'
-                                // })).json();
-                                // console.log(data);
+                                console.log("edit");
+                                const data = await (await fetch("http://localhost:9000/slides.json", {
+                                    method: "POST",
+                                    mode: "cors"
+                                })).json();
+                                console.log(data);
                             }}
                         >
                             Edit user
@@ -135,23 +136,23 @@ export default function Users(props) {
         empty={<Box textAlign="center" color="inherit">
             <b>No resources</b>
             <Box
-                padding={{ bottom: "s" }}
+                padding={{bottom: "s"}}
                 variant="p"
                 color="inherit"
             >
                 No users to display.
             </Box>
             <Button
-            onClick={() => {
-                setItems(
-                    [...items, {
-                        _id:items.length,
-                        name: "slide " + (items.length+1),
-                        alt:"dfeault",
-                        description: "This is default description for slide " + (items.length+1)
-                    }]
-                )
-            }}>
+                onClick={() => {
+                    setItems(
+                        [...items, {
+                            _id: items.length,
+                            name: "slide " + (items.length + 1),
+                            alt: "dfeault",
+                            description: "This is default description for slide " + (items.length + 1)
+                        }]
+                    )
+                }}>
                 Create user
             </Button>
         </Box>}
@@ -160,7 +161,7 @@ export default function Users(props) {
                 onClick={() => {
                     setItems(items.concat([{
                         _id: items.length,
-                        name: "User " + (items.length+1),
+                        name: "User " + (items.length + 1),
                         alt: "test",
                         description: "A user"
                     }]));
