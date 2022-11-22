@@ -52,7 +52,7 @@ expressWs(api);
         let auth = req.get("Authorization");
         console.log(auth);
         console.log(typeof auth);
-        // console.log(req.get("Authorization").split(" "));
+        if (typeof auth === "string") console.log(auth.split(" "));
         // console.log(req.get("Authorization").split(" ")[1]);
         // let auth = Buffer.from(req.get("Authorization").split(" ")[1], "base64").toString().split(":");
         // console.log(auth);
