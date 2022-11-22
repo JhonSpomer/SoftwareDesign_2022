@@ -118,8 +118,8 @@ expressWs(api);
         req.on("close", async () => {
             const slide = JSON.parse(buffer);
             const id = await db.modSlide(
-                slide.name,
-                slide.type,
+                slide.slideName,
+                slide.slideType,
                 undefined,
                 undefined,
                 undefined,
