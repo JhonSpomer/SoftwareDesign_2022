@@ -50,6 +50,10 @@ expressWs(api);
     api.all("*", (req, res, next) => {
         res.setHeader("Access-Control-Allow-Origin", 'http://localhost:3000');
         res.setHeader("Access-Control-Allow-Headers", 'Authorization');
+        next();
+    });
+
+    function requireAuthentication(req, res, next) {
         console.log(req.path);
 
         console.log(req.headers);
@@ -57,16 +61,16 @@ expressWs(api);
         console.log(auth);
         console.log(typeof auth);
         if (typeof auth === "string") console.log(auth.split(" "));
-        // console.log(req.get("Authorization").split(" ")[1]);
-        let credentials = Buffer.from(auth.split(" ")[1], "base64").toString().split(":");
-        console.log(credentials);
+        // console.log(auth.split(" ")[1]);
+        // let credentials = Buffer.from(auth.split(" ")[1], "base64").toString().split(":");
+        // console.log(credentials);
        
-        //if (!authenticate(req)) {
-         //  res.status(401).send("authentication failed")
-          //return;
-       // }
+        // if (!authenticate(req)) {
+        //     res.status(401).send("authentication failed")
+        //     return;
+        // }
         next();
-    });
+    }
 
     api.post("/authenticate.json", async (req, res) => {
         let buffer = "";
@@ -108,6 +112,8 @@ expressWs(api);
     //         .send("Done");
     // });
 
+    api.all("/slide.json", requireAuthentication);
+
     api.get("/slide.json", async (req, res) => {
         const slide = await db.getSlide(req.params.slide);
         if (slide) {
@@ -146,6 +152,8 @@ expressWs(api);
                 .send(id);
         });
     });
+
+    api.all("/user.json", requireAuthentication);
 
     api.post("/user.json", (req, res) => {
         let buffer = "";
@@ -189,11 +197,15 @@ expressWs(api);
         //console.log("Got here");
     });
 
+    api.all("/delete/*", requireAuthentication);
+
     api.get("/delete/user.json", async (req, res) => {
         if (req.query.username) {
             await db.delUser(req.query.username);
         }
     });
+
+    api.all("/order.json", requireAuthentication);
 
     api.get("/order.json", async (req, res) => {
         const order = await db.getSlideOrder();
@@ -219,6 +231,8 @@ expressWs(api);
     //     res.setHeader("Access-Control-Allow-Headers", "*");
     //     next();
     // });
+    
+    api.all("/image", requireAuthentication);
 
     api.post("/image/new", async (req, res) => {
         if (req.query.type !== "png" && req.query.type !== "jpg") {
