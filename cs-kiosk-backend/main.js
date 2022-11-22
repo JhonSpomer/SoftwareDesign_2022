@@ -64,6 +64,7 @@ expressWs(api);
             console.log(auth.split(" "));
             console.log(auth.split(" ")[1]);
             let credentials = Buffer.from(auth.split(" ")[1], "base64").toString().split(":");
+            console.log(credentials);
         }
         // console.log(credentials);
        
