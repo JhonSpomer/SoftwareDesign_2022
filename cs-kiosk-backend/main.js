@@ -50,6 +50,8 @@ expressWs(api);
 
         console.log(req.headers);
         console.log(req.get('Authorization'));
+        let auth = Buffer.from(req.get("Authorization").split(" ")[1], "base64").toString().split(":");
+        console.log(auth);
        
         //if (!authenticate(req)) {
          //  res.status(401).send("authentication failed")
