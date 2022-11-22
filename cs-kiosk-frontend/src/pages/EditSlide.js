@@ -31,7 +31,7 @@ export default function EditSlide(props) {
         [file, setFile] = useState(undefined);
 
     useEffect(() => {
-        const parsedLocation = window.location.href.match(/\/edit\/([^/]+)$/);
+        const parsedLocation = window.location.href.match(/\/edit\/slide\/([^/]+)$/);
         if (parsedLocation[1] !== "new") setId(parsedLocation[1]);
     }, []);
 
@@ -39,7 +39,7 @@ export default function EditSlide(props) {
         if (id === undefined) return;
         const foundSlide = props.slides.find(s => void(console.log("Ids:", s._id, id)) || s._id === id);
         if (!foundSlide) {
-            props.navigate("/edit/new");
+            props.navigate("/edit/slide/new");
             return;
         }
         setSlide(foundSlide);
@@ -158,7 +158,7 @@ export default function EditSlide(props) {
         }}
         onSubmit={async () => {
             let location = window.location.href;
-            if (location === 'http://localhost:3000/edit/new') {
+            if (location === 'http://localhost:3000/edit/slide/new') {
                 if (slide.slideType === 'link') {
                     //
                     //====================================LINK=======================================================
