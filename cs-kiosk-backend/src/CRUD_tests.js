@@ -20,3 +20,12 @@ function main()
         get slide
     */
 }
+
+function userTest(_UN,_PS,_newUN, _newPS)
+{
+    if (_newUN === undefined && _newPS === undefined)
+    {
+
+    }
+    
+}

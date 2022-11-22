@@ -10,48 +10,65 @@ const slides = database.collection("slides");
 const config = database.collection("Config_data");
 const bucket = new mongodb.GridFSBucket(database, { bucketName: 'slideFiles' });
 module.exports = {
-    checkForUser: async function (UN, PS)
-    {
+    checkForUser: async function (UN, PS) {
         await client.connect();
-        if (PS === undefined)
-        {
-            if (users.find({"username":UN}).count() > 0)
-            {
+        if (PS === undefined) {
+            if (users.find({ "username": UN }).count() > 0) {
                 return true;
             }
-            else
-            {
+            else {
                 return false;
             }
         }
-        else
-        {
-            if (users.find({"username":UN}, {"password":PS}).count() === 1)
-            {
+        else {
+            if (users.find({ "username": UN }, { "password": PS }).count() === 1) {
                 return true;
             }
-            else if (users.find({"username":UN}, {"password":PS}).count() > 1)
-            {
+            else if (users.find({ "username": UN }, { "password": PS }).count() > 1) {
                 return "duplicate user records";
             }
-            else
-            {
+            else {
                 return false;
             }
         }
     },
-    newUser: async function (UN, PS) {
+
+    checkForSU: async function (_UN, _PS) {
+        await client.connect();
+        if (PS === undefined) {
+            if (users.find({ "username": UN }).count() > 0) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        else {
+            if (users.find({ "username": UN }, { "password": PS }, { "superUser": "true" }).count() === 1, ) {
+                return true;
+            }
+            else if (users.find({ "username": UN }, { "password": PS }, { "superUser": "true" }).count() > 1) {
+                return "duplicate user records";
+            }
+            else {
+                return false;
+            }
+        }
+
+    },
+
+    newUser: async function (_UN, PS) {
         await client.connect();
         try {
-            if (module.exports.checkForUser(UN))
-            {
+            if (module.exports.checkForUser(_UN)) {
                 return "username taken";
             }
             // create a document to insert
             const doc =
             {
-                username: UN,
-                password: PS,
+                username: _UN,
+                password: _PS,
+                superUser: "false"
             };
             const result = await users.insertOne(doc);
             //console.log(`A document was inserted with the _id: ${result.insertedId}`);
@@ -61,29 +78,66 @@ module.exports = {
             // await client.close();
         }
     },
-    
-    modUser: async function (_oldUN, _newUN, _newPS) {
+
+    newSuperUser: async function (_UN, _PS) {
         await client.connect();
         try {
-            let newUN = _newUN;
-            let oldUN = _oldUN;
-            let newPS = _newPS;
-            if (module.exports.checkForUser(_newUN))
-            {
+            if (module.exports.checkForSU(_UN)) {
                 return "username taken";
             }
-            if (_newUN === undefined) {
-                newUN = _oldUN;
-            };
-            // create a document with just the fields to be updated
-            const upDoc =
+            // create a document to insert
+            const doc =
             {
-                username: newUN,
-                password: newPS,
+                username: UN,
+                password: PS,
+                superUser: "true"
             };
+            const result = await users.insertOne(doc);
+            //console.log(`A document was inserted with the _id: ${result.insertedId}`);
+            return result.insertedId.toHexString();
+        }
+        finally {
+            // await client.close();
+        }
+    },
+
+    modUser: async function (_oldUN, _oldPS, _newUN, _newPS) {
+        await client.connect();
+        try {
+            // let newUN = _newUN;
+            // let oldUN = _oldUN;
+            // let newPS = _newPS;
+            // check if there is a user with the given credentials
+            if (!module.exports.checkForUser)
+            {
+                console.log("User does not exist. Use NewUser to create a new user")
+                return false;
+            }
+            let upDoc;
+            if (module.exports.checkForUser(_newUN)) {
+                return "username taken";
+            }
+
+            // create a document with just the fields to be updated
+            if (_newUN === undefined && _newPS !== undefined) {
+                upDoc = {password: _newPS};
+            }
+            
+            if (_newPS === undefined && _newUN !== undefined) {
+                upDoc = {password: _newUN};
+            }
+
+            else {
+            
+                upDoc =
+                {
+                    username: _newUN,
+                    password: _newPS,
+                };
+            }
             //update document with given username
             //upsert set to true - will insert given document if it does not already exixst
-            const result = await users.updateOne({ username: oldUN, }, { $set: upDoc }, { upsert: true });
+            const result = await users.updateOne({ username: _oldUN, password: _oldPS }, { $set: upDoc }, { upsert: false });
             //console.log(`A document was updated with the _id: ${result.upsertedId}`);
             return result.upsertedId.toHexString();
         }
@@ -129,7 +183,7 @@ module.exports = {
                     content: _content,
                     fileExt: _fileExt
                 };
-                const result = await slides.insertOne(slideDoc, {upsert: true});
+                const result = await slides.insertOne(slideDoc, { upsert: true });
                 // console.log(`A document was created with the _id: ${result.insertedId}`);
                 return result.insertedId.toHexString();
             }
@@ -145,7 +199,7 @@ module.exports = {
                     content: _content,
                     fileExt: _fileExt
                 };
-                const result = await slides.updateOne({_id: mongodb.ObjectId(targetID)}, {$set: slideDoc}, {upsert: true});
+                const result = await slides.updateOne({ _id: mongodb.ObjectId(targetID) }, { $set: slideDoc }, { upsert: true });
                 // console.log(`A document was updated with the _id: ${result.upsertedId}`);
                 return result.upsertedId.toHexString();
             }
@@ -174,7 +228,7 @@ module.exports = {
         try {
             slide = await slides.findOne({ _id: mongodb.ObjectId(targetID) }, {
                 slideName: 1,
-                slideType: 1, 
+                slideType: 1,
                 slideOwner: 1,
                 lastModifiedBy: 1,
                 lastModifiedDate: 1,
@@ -224,7 +278,7 @@ module.exports = {
     getFile: async function (_targetID) {
         await client.connect();
         try {
-            const document = await bucket.find({_id: mongodb.ObjectId(_targetID)}).toArray();
+            const document = await bucket.find({ _id: mongodb.ObjectId(_targetID) }).toArray();
             return await new Promise((resolve, reject) => {
                 const file = bucket.openDownloadStream(mongodb.ObjectId(_targetID));
                 const buffers = [];
@@ -258,7 +312,7 @@ module.exports = {
         const upDoc = {
             slideOrder: _idOrder
         };
-        const result = await config.updateOne({name: "carousel_config"}, {$set: upDoc}, {upsert: true});
+        const result = await config.updateOne({ name: "carousel_config" }, { $set: upDoc }, { upsert: true });
         // return result.upsertedId.toHexString();
     },
     getSlideOrder: async function () {
