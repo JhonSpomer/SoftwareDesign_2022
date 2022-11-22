@@ -270,7 +270,7 @@ module.exports = {
         // return result.upsertedId.toHexString();
     },
     getSlideOrder: async function () {
-        const result = await config.findOne({name: "carousel_config"}, {slideOrder:1});
+        const result = await config.findOne({ name: "carousel_config" });
         return result.slideOrder;
     }
 };

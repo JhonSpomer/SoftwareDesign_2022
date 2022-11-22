@@ -189,9 +189,11 @@ expressWs(api);
         //console.log("Got here");
     });
 
-    api.get("/delete/user.json", async (req, res) => {});
-
-
+    api.get("/delete/user.json", async (req, res) => {
+        if (req.query.username) {
+            await db.delUser(req.query.username);
+        }
+    });
 
     api.get("/order.json", async (req, res) => {
         const order = await db.getSlideOrder();
