@@ -90,10 +90,14 @@ export default function Admin(props) {
                         <Button
                             onClick={() => {
                                 console.log("del");
+                                let creds = sessionStorage.getItem("UserCreds");
                                 // let json_test = JSON.stringify({ name: "test", type: "testtype", content: "testcontent", Id:  });
                                 const res = fetch(`http://localhost:9000/delete.json?id=${item._id}`, {
                                     method: "GET",
-                                    mode: "cors"
+                                    mode: "cors",
+                                    headers: {
+                                        Authorization: `Basic ${creds}`
+                                    }
                                 });
                             // console.log(json_test);
                                 //working on hitting the new del.json endpoint added in main.js. Even though it currently doesnt del anything.-Jhon

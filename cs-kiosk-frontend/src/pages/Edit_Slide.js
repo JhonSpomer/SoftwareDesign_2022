@@ -164,11 +164,13 @@ export default function EditSlide(props) {
                     //====================================LINK=======================================================
                     //
                     console.log(slide);
+                    let Creds = sessionStorage.getItem("UserCreds");
                     const res = await fetch(`http://localhost:9000/slide.json`, {
                         method: "POST",
                         mode: 'cors',
                         headers: {
-                            "Content-Type": "text/plain"
+                            "Content-Type": "text/plain",
+                            Authorization: `Basic ${Creds}`
                         },
                         body: JSON.stringify(slide)
                     });
@@ -181,21 +183,25 @@ export default function EditSlide(props) {
                         setSlideError("Only PNG and JPG image formats are supported.");
                         return;
                     }
+                    let Creds = sessionStorage.getItem("UserCreds");
                     const res = await fetch(`http://localhost:9000/image/new?type=${match[1]}`, {
                         method: "POST",
                         mode: 'cors',
                         headers: {
-                            "Content-Type": "application/octet-stream"
+                            "Content-Type": "application/octet-stream",
+                            Authorization: `Basic ${Creds}`
                         },
                         body: file
                     });
                     const IDvalue = await res.text();
                     if (res.ok) {
+                        let Creds = sessionStorage.getItem("UserCreds");
                         const res2 = await fetch(`http://localhost:9000/slide.json`, {
                             method: "POST",
                             mode: 'cors',
                             headers: {
-                                "Content-Type": "text/plain"
+                                "Content-Type": "text/plain",
+                                Authorization: `Basic ${Creds}`
                             },
                             body: JSON.stringify(slide)
                         });
@@ -205,21 +211,26 @@ export default function EditSlide(props) {
                     //
                     // ==========================PDF========================================
                     //
+                    let Creds = sessionStorage.getItem("UserCreds");
                     const res = await fetch(`http://localhost:9000/pdf/new`, {
                         method: "POST",
                         mode: 'cors',
                         headers: {
-                            "Content-Type": "application/octet-stream"
+                            "Content-Type": "application/octet-stream",
+                            Authorization: `Basic ${Creds}`
+                            
                         },
                         body: file
                     });
                     const IDvalue = await res.text();
                     if (res.ok) {
+                        let Creds = sessionStorage.getItem("UserCreds");
                         const res2 = await fetch(`http://localhost:9000/slide.json`, {
                             method: "POST",
                             mode: 'cors',
                             headers: {
-                                "Content-Type": "text/plain"
+                                "Content-Type": "text/plain",
+                                Authorization: `Basic ${Creds}`
                             },
                             body: JSON.stringify(slide)
                         });
