@@ -194,6 +194,7 @@ export default function EditSlide(props) {
                         body: file
                     });
                     const IDvalue = await res.text();
+                    console.log(IDvalue);
                     if (res.ok) {
                         let Creds = sessionStorage.getItem("UserCreds");
                         const res2 = await fetch(`http://localhost:9000/slide.json`, {
@@ -203,7 +204,7 @@ export default function EditSlide(props) {
                                 "Content-Type": "text/plain",
                                 Authorization: `Basic ${Creds}`
                             },
-                            body: JSON.stringify(slide)
+                            body: JSON.stringify({...slide, content: IDvalue})
                         });
                         // const IDTest = await res2.text();
                     }
@@ -223,6 +224,7 @@ export default function EditSlide(props) {
                         body: file
                     });
                     const IDvalue = await res.text();
+                    console.log(IDvalue);
                     if (res.ok) {
                         let Creds = sessionStorage.getItem("UserCreds");
                         const res2 = await fetch(`http://localhost:9000/slide.json`, {
@@ -232,7 +234,7 @@ export default function EditSlide(props) {
                                 "Content-Type": "text/plain",
                                 Authorization: `Basic ${Creds}`
                             },
-                            body: JSON.stringify(slide)
+                            body: JSON.stringify({...slide, content: IDvalue})
                         });
                         // const IDTest = await res2.text();
                     }
