@@ -27,9 +27,8 @@ expressWs(api);
         console.log(req.get('Authorization'));
         console.log(req.headers);
 
-        let auth = (new Buffer.from(req.headers.Authorization.split(' ')[1],
-            'base64')).toString().split(':');
-        return db.checkForUser(auth[0], auth[1]);
+        let auth = (new Buffer.from(req.headers.Authorization.split(' ')[1], 'base64')).toString().split(':');
+        return true;//db.checkForUser(auth[0], auth[1]);
     }
 
 
@@ -50,6 +49,7 @@ expressWs(api);
         console.log(req.path);
 
         console.log(req.headers);
+        console.log(req.get('Authorization'));
        
         //if (!authenticate(req)) {
          //  res.status(401).send("authentication failed")
