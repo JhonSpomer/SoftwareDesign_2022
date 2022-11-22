@@ -63,8 +63,8 @@ expressWs(api);
         if (typeof auth === "string") {
             console.log(auth.split(" "));
             console.log(auth.split(" ")[1]);
+            let credentials = Buffer.from(auth.split(" ")[1], "base64").toString().split(":");
         }
-        // let credentials = Buffer.from(auth.split(" ")[1], "base64").toString().split(":");
         // console.log(credentials);
        
         // if (!authenticate(req)) {
@@ -168,6 +168,8 @@ expressWs(api);
         });
     });
 
+    api.all("/delete/*", requireAuthentication);
+
     //===============================================================================================================
     //
     //
@@ -198,8 +200,6 @@ expressWs(api);
         // });
         //console.log("Got here");
     });
-
-    api.all("/delete/*", requireAuthentication);
 
     api.get("/delete/user.json", async (req, res) => {
         if (req.query.username) {
