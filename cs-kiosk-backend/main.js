@@ -45,16 +45,16 @@ expressWs(api);
     });
 
     api.all("*", (req, res, next) => {
-        res.setHeader("Access-Control-Allow-Origin", '*');
-        res.setHeader("Access-Control-Allow-Headers", '*');
+        res.setHeader("Access-Control-Allow-Origin", 'http://localhost:3000');
+        res.setHeader("Access-Control-Allow-Headers", 'Authorization');
         console.log(req.path);
 
         console.log(req.headers);
        
-       // if (!authenticate(req)) {
+        //if (!authenticate(req)) {
          //  res.status(401).send("authentication failed")
           //return;
-        //}
+       // }
         next();
     });
 
