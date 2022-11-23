@@ -44,7 +44,7 @@ module.exports = {
             }
         }
         else {
-            if (users.find({ "username": UN }, { "password": PS }, { "superUser": "true" }).count() === 1, ) {
+            if (users.find({ "username": UN }, { "password": PS }, { "superUser": "true" }).count() === 1) {
                 return true;
             }
             else if (users.find({ "username": UN }, { "password": PS }, { "superUser": "true" }).count() > 1) {
@@ -152,6 +152,13 @@ module.exports = {
         finally {
             return user;
         }
+    },
+
+    getAllUsers: async function () {
+        await client.connect();
+        const rawObj = await users.find();
+        rawObj.rewind();
+        return users.toArray();
     },
 
     newConfigFile: async function (newDoc) {

@@ -111,6 +111,27 @@ expressWs(api);
             }
         });
     });
+    
+    //my rough attempt a making "create new user" function
+    api.post("/createUser.json", async (req, res) => {
+        if (!authenticateSU(req)) {
+            return;
+        }
+        let buffer = "";
+        req.on("data", chunk => buffer += chunk.toString());
+        req.on("close", async () => {
+            try {
+                const { username, password, superUser } = JSON.parse(buffer);
+                const id = SUdb.newUser(username, password, superUser);
+                res
+                    .status(200)
+                    .send(id);
+                
+            } catch (e) {
+                console.log("Failed to extract username and password.");
+            }
+        });
+    });
 
     api.get("/slides.json", async (req, res) => {
         const
@@ -174,6 +195,7 @@ expressWs(api);
         });
     });
 
+    // what is this function for? 
     api.post("/user.json", (req, res) => {
         let buffer = "";
         req.on("data", chunk => buffer += chunk.toString());
@@ -218,7 +240,6 @@ expressWs(api);
 
     api.get("/delete/user.json", async (req, res) => {
         if (!authenticateSU(req)) {
-            res.status(401).send("authentication failed")
             return;
         }
         if (req.query.username) {
