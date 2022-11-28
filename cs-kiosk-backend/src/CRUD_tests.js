@@ -1,3 +1,4 @@
+const SUdb = require("./src/SUCRUD_functions")
 const db = require("./src/CRUD_functions")
 
 function main()
@@ -23,9 +24,13 @@ function main()
 
 function userTest(_UN,_PS,_newUN, _newPS)
 {
-    if (_newUN === undefined && _newPS === undefined)
-    {
+    console.log(db.checkForUser(_UN, _PS));
+    console.log(SUdb.newUser(_UN, _PS));
+    console.log(SUdb.getUser(_UN, _PS));
+    console.log(SUdb.modUser(_UN, undefined,undefined, _newPS));
+    console.log(SUdb.getUser(_UN, _newPS));
 
-    }
+    
+
     
 }

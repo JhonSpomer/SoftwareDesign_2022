@@ -11,24 +11,24 @@ const users = database.collection("users");
 const config = database.collection("Config_data");
 //const bucket = new mongodb.GridFSBucket(database, { bucketName: 'slideFiles' });
 module.exports = {
-    checkForUser: async function (UN, PS) {
-        await client.connect();
-        if (PS === undefined) {
-            if (await users.find({"username": UN}).count() > 0) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            if (await users.find({"username": UN, "password": PS}).count() === 1) {
-                return true;
-            } else if (await users.find({"username": UN, "password": PS}).count() > 1) {
-                return "duplicate user records";
-            } else {
-                return false;
-            }
-        }
-    },
+    // checkForUser: async function (UN, PS) {
+    //     await client.connect();
+    //     if (PS === undefined) {
+    //         if (await users.find({"username": UN}).count() > 0) {
+    //             return true;
+    //         } else {
+    //             return false;
+    //         }
+    //     } else {
+    //         if (await users.find({"username": UN, "password": PS}).count() === 1) {
+    //             return true;
+    //         } else if (await users.find({"username": UN, "password": PS}).count() > 1) {
+    //             return "duplicate user records";
+    //         } else {
+    //             return false;
+    //         }
+    //     }
+    // },
 
     checkForSU: async function (_UN, _PS) {
         await client.connect();
@@ -68,6 +68,7 @@ module.exports = {
         //console.log("check 3");
         const result = await users.insertOne(doc);
         console.log(`A document was inserted with the _id: ${result.insertedId}`);
+        return result.insertedId.toHexString();
     },
 
 
@@ -92,9 +93,9 @@ module.exports = {
                 upDoc = {password: _newPS};
             }
             
-            if (_newPS === undefined && _newUN !== undefined) {
-                upDoc = {password: _newUN};
-            }
+            // if (_newPS === undefined && _newUN !== undefined) {
+            //     upDoc = {password: _newUN};
+            // }
 
             else {
             
@@ -119,7 +120,7 @@ module.exports = {
     {
         await client.connect();
         const upDoc = {superUser:_SU};
-        const result = await users.updateOne({ username: _oldUN, password: _oldPS }, { $set: upDoc }, { upsert: false });
+        const result = await users.updateOne({ username: _UN, password: _PS }, { $set: upDoc }, { upsert: false });
         return result.upsertedId.toHexString();
     },
     
