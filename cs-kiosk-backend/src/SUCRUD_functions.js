@@ -54,11 +54,11 @@ module.exports = {
     newUser: async function (_UN, _PS, _SU = false) {
         await client.connect();
         console.log("check 1");
-        // if (module.exports.checkForUser(_UN)) {
-        //     console.log("check 2");
-        //     return "username taken";
-        // }
-        // create a document to insert
+        if (module.exports.checkForUser(_UN)) {
+            console.log("check 2");
+            return "username taken";
+        }
+        //create a document to insert
         const doc =
         {
             username: _UN,
@@ -151,11 +151,11 @@ module.exports = {
     }
 }
 
-const testUser = {
-    username: "susan",
-    password: "admin", 
-    superUser: true};
-module.exports.newUser("susuan","admin",true);
+// const testUser = {
+//     username: "susan",
+//     password: "admin", 
+//     superUser: true};
+// module.exports.newUser("susan","admin",true);
 
 
 //discrete function for super user CRUD operations will be left here in case standard users
