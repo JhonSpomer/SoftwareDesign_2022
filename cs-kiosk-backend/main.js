@@ -5,6 +5,7 @@ const
     { app, BrowserWindow, protocol, session } = require("electron"),
     fs = require("fs"),
     db = require("./src/CRUD_functions"),
+    SUdb = require("./src/SUCRUD_functions"),
     { Binary } = require("mongodb"),
     stream = require("stream"),
     uuid = require("uuid").v4;
@@ -31,10 +32,6 @@ expressWs(api);
     //     return true;//db.checkForUser(auth[0], auth[1]);
     // }
 
-    // function authenticateSU(req) {
-    // 
-    // }
-
 
     // Express API server
 
@@ -53,41 +50,64 @@ expressWs(api);
         next();
     });
 
-    function requireAuthentication(req, res, next) {
-        console.log(req.path);
-
-        console.log(req.headers);
+    async function requireAuthentication(req, res, next) {
         let auth = req.get("Authorization");
-        console.log(auth);
-        console.log(typeof auth);
         if (typeof auth === "string") {
-            console.log(auth.split(" "));
-            console.log(auth.split(" ")[1]);
-            let credentials = Buffer.from(auth.split(" ")[1], "base64").toString().split(":");
-            console.log(credentials);
+            try {
+                let [username, password] = Buffer.from(auth.split(" ")[1], "base64").toString().split(":");
+                if (await db.checkForUser(username, password)) return next();
+            } catch (error) {
+                console.error(error);
+            }
         }
-        // console.log(credentials);
-       
-        // if (!authenticate(req)) {
-        //     res.status(401).send("authentication failed")
-        //     return;
-        // }
-        next();
+        res
+            .status(401)
+            .send("authentication failed");
+        return;
+    }
+
+    async function requireSuperUserAuthentication(req, res, next) {
+        let auth = req.get("Authorization");
+        if (typeof auth === "string") {
+            try {
+                const [username, password] = (new Buffer.from(auth.split(" ")[1], "base64")).toString().split(":");
+                if (await SUdb.checkForSU(username, password)) return next();
+            } catch (error) {
+                console.error(error);
+            }
+        }
+        res
+            .status(401)
+            .send("authentication failed");
+        return;
     }
 
     api.post("/authenticate.json", async (req, res) => {
         let buffer = "";
-        res.setHeader("Access-Control-Allow-Origin", 'http://localhost:3000');
         req.on("data", chunk => buffer += chunk.toString());
         req.on("close", async () => {
             try {
-                const { username, password } = JSON.parse(buffer);
-                await db.getUser(username, password);
-                res
-                    .status(200)
-                    .send("authenticated");
+                const {username, password} = JSON.parse(buffer);
+                console.log(username, password);
+                let authRes = db.checkForUser(username, password);
+                if (authRes === true) {
+                    res
+                        .status(200)
+                        .send("authenticated");
+                } else if (authRes === false) {
+                    res
+                        .status(401)
+                        .send("authentication failed");
+                } else {
+                    res
+                        .status(401)
+                        .send(authRes);
+                }
             } catch (e) {
                 console.log("Failed to extract username and password.");
+                res
+                    .status(401)
+                    .send("not authenticated");
             }
         });
     });
@@ -211,9 +231,13 @@ expressWs(api);
         //console.log("Got here");
     });
 
-    api.get("/delete/user.json", async (req, res) => {
+    api.get("/delete/user.json", requireSuperUserAuthentication, async (req, res) => {
+        if (!authenticateSU(req)) {
+            res.status(401).send("authentication failed")
+            return;
+        }
         if (req.query.username) {
-            await db.delUser(req.query.username);
+            await SUdb.delUser(req.query.username);
         }
     });
 
@@ -336,7 +360,7 @@ expressWs(api);
 
     win.loadURL("http://localhost:9000/carousel");
 
-    // await db.updUser("admin", "newAdmin", "newPassword");
+    // await SUdb.updUser("admin", "newAdmin", "newPassword");
     // console.log(await db.getUser("newAdmin", "newPassword"));
 
     // Cleanup

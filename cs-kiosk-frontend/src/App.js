@@ -29,11 +29,13 @@ import Admin from "./pages/Admin"
 import Users from "./pages/Users"
 import Tests from "./pages/Test"
 import Preview from "./pages/Preview"
-import { useNavigate, useLocation, Route, Routes } from "react-router-dom";
+import {useNavigate, useLocation, Route, Routes} from "react-router-dom";
 import './App.css';
 import EditSlide from './pages/EditSlide';
 import UserEdit from './pages/UserEdit';
-import { getImage } from './utility/utils';
+import {getImage} from './utility/utils';
+import EditUser from "./pages/EditUser";
+import Profile from './pages/Profile';
 
 //variables
 
@@ -140,6 +142,7 @@ function App() {
                         }
                     }}
                     items={[
+                        {type: "link", text: "User Settings", href: "profile"},
                         {type: "link", text: "Admin", href: "admin"},
                         {type: "link", text: "Preview", href: "preview"},
                         {type: "link", text: "Users", href: "users"},
@@ -160,6 +163,7 @@ function App() {
                 <Routes>
                     <Route path="*" element={<div>Oh no! You appear to have gotten lost. Please restart the system to get back to the login page. If this does not fix this problem. Please contact the system maintence team.</div>} />
                     <Route path="/test" element={<Tests />} />
+                    <Route path="/profile" element={<Profile />} />
                     <Route
                         path="/admin"
                         element={
