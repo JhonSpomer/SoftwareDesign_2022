@@ -29,11 +29,12 @@ import Admin from "./pages/Admin"
 import Users from "./pages/Users"
 import Tests from "./pages/Test"
 import Preview from "./pages/Preview"
-import { useNavigate, useLocation, Route, Routes } from "react-router-dom";
+import {useNavigate, useLocation, Route, Routes} from "react-router-dom";
 import './App.css';
 import EditSlide from './pages/EditSlide';
 import UserEdit from './pages/UserEdit';
-import { getImage } from './utility/utils';
+import {getImage} from './utility/utils';
+import EditUser from "./pages/EditUser";
 
 //variables
 
@@ -140,6 +141,7 @@ function App() {
                         }
                     }}
                     items={[
+                        {type: "link", text: "User Settings", href: "profile"},
                         {type: "link", text: "Admin", href: "admin"},
                         {type: "link", text: "Preview", href: "preview"},
                         {type: "link", text: "Users", href: "users"},

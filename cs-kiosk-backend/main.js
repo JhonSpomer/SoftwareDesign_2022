@@ -94,26 +94,30 @@ expressWs(api);
 
     api.post("/authenticate.json", async (req, res) => {
         let buffer = "";
-        res.setHeader("Access-Control-Allow-Origin", 'http://localhost:3000');
         req.on("data", chunk => buffer += chunk.toString());
         req.on("close", async () => {
             try {
-                const { username, password } = JSON.parse(buffer);
+                const {username, password} = JSON.parse(buffer);
+                console.log(username, password);
                 let authRes = db.checkForUser(username, password);
-                if (authRes === true)
-                {
+                if (authRes === true) {
                     res
                         .status(200)
                         .send("authenticated");
-                }
-                else if (authRes === false){
-                    res.status(401).send("authentication failed");
-                }
-                else {
-                    res.status(401).send(authRes);
+                } else if (authRes === false) {
+                    res
+                        .status(401)
+                        .send("authentication failed");
+                } else {
+                    res
+                        .status(401)
+                        .send(authRes);
                 }
             } catch (e) {
                 console.log("Failed to extract username and password.");
+                res
+                    .status(401)
+                    .send("not authenticated");
             }
         });
     });
