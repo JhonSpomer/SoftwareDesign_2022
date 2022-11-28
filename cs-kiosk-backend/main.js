@@ -46,16 +46,17 @@ expressWs(api);
 
     api.all("*", (req, res, next) => {
         res.setHeader("Access-Control-Allow-Origin", req.get("Origin"));
-        res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+        res.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type");
         next();
     });
 
     async function requireAuthentication(req, res, next) {
+        res.setHeader("Access-Control-Allow-Origin", req.get("Origin"));
+        res.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type");
         let auth = req.get("Authorization");
         if (typeof auth === "string") {
             try {
                 let [username, password] = Buffer.from(auth.split(" ")[1], "base64").toString().split(":");
-                console.log("Authenticating regular user:", username, password);
                 if (await db.checkForUser(username, password)) return next();
             } catch (error) {
                 console.error(error);
@@ -68,11 +69,12 @@ expressWs(api);
     }
 
     async function requireSuperUserAuthentication(req, res, next) {
+        res.setHeader("Access-Control-Allow-Origin", req.get("Origin"));
+        res.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type");
         let auth = req.get("Authorization");
         if (typeof auth === "string") {
             try {
                 const [username, password] = (new Buffer.from(auth.split(" ")[1], "base64")).toString().split(":");
-                console.log("Authenticating super user:", username, password);
                 if (await SUdb.checkForSU(username, password)) return next();
             } catch (error) {
                 console.error(error);
@@ -117,27 +119,10 @@ expressWs(api);
     api.get("/slides.json", async (req, res) => {
         const
             order = await db.getSlideOrder();
-        //     slides = [];
-        // console.log(order);
-        // for (const id of order) slides.push(await db.getSlide(id));
-        // console.log(slides);
         res
             .status(200)
             .send(JSON.stringify(await Promise.all(order.map(id => db.getSlide(id)))));
     });
-
-    // api.post("/slides.json", (req, res) => {
-    //     req.on("data", chunk => console.log(chunk.toString()));
-    //     req.on("close", () => {
-    //         console.log("Closed");
-    //         for (const ws of Object.values(connections)) ws.send("update");
-    //     });
-    //     res
-    //         .status(200)
-    //         .send("Done");
-    // });
-
-    api.all("/slide.json", requireAuthentication);
 
     api.get("/slide.json", async (req, res) => {
         const slide = await db.getSlide(req.params.slide);
@@ -152,7 +137,7 @@ expressWs(api);
         }
     });
 
-    api.post("/slide.json", (req, res) => {
+    api.post("/slide.json", requireAuthentication, (req, res) => {
         let buffer = "";
         const index = req.query.index || Infinity;
         req.on("data", chunk => buffer += chunk.toString());
@@ -178,9 +163,7 @@ expressWs(api);
         });
     });
 
-    api.all("/user.json", requireAuthentication);
-
-    api.post("/user.json", (req, res) => {
+    api.post("/user.json", requireAuthentication, (req, res) => {
         let buffer = "";
         req.on("data", chunk => buffer += chunk.toString());
         req.once("close", async () => {
@@ -211,12 +194,7 @@ expressWs(api);
     //adding del endpoint here. or trying anyways. ~Jhon
     api.get("/delete/slide.json", async (req, res) => {
         console.log("Reached delete midpoint");
-        //want to redo slide order once deleted. 
-        // let buffer = "";
-        // req.on("data", chunk => buffer += chunk.toString());
-        // req.on("close", async () => {
         try {
-            // const {Id} = JSON.parse(buffer);
             const order = await db.getSlideOrder();
             await db.modSlideOrder(order.filter(i => i != req.query.id));
             console.log(req.query.id);
@@ -229,21 +207,13 @@ expressWs(api);
         } catch (e) {
             console.log("Failed to delete");
         }
-        // });
-        //console.log("Got here");
     });
 
     api.get("/delete/user.json", requireSuperUserAuthentication, async (req, res) => {
-        // if (!authenticateSU(req)) {
-        //     res.status(401).send("authentication failed")
-        //     return;
-        // }
         if (req.query.username) {
             await SUdb.delUser(req.query.username);
         }
     });
-
-    api.all("/order.json", requireAuthentication);
 
     api.get("/order.json", async (req, res) => {
         const order = await db.getSlideOrder();
@@ -253,7 +223,7 @@ expressWs(api);
             .send(JSON.stringify(order));
     });
 
-    api.post("/order.json", (req, res) => {
+    api.post("/order.json", requireAuthentication, (req, res) => {
         let buffer = "";
         req.on("data", chunk => buffer += chunk.toString());
         req.on("close", async () => {
@@ -265,14 +235,7 @@ expressWs(api);
             .send("Done");
     });
 
-    // api.all("/image/*", (req, res, next) => {
-    //     res.setHeader("Access-Control-Allow-Headers", "*");
-    //     next();
-    // });
-    
-    api.all("/image", requireAuthentication);
-
-    api.post("/image/new", async (req, res) => {
+    api.post("/image/new", requireAuthentication, async (req, res) => {
         if (req.query.type !== "png" && req.query.type !== "jpg") {
             res
                 .status(401)
@@ -300,7 +263,7 @@ expressWs(api);
             .send(image.image);
     });
 
-    api.post("/image/:id", async (req, res) => {
+    api.post("/image/:id", requireAuthentication, async (req, res) => {
         const id = await db.modFile(
             stream.Readable.from(Buffer.from(req.body)),
             req.query.name,
