@@ -53,9 +53,9 @@ module.exports = {
 
     newUser: async function (_UN, _PS, _SU = false) {
         await client.connect();
-        console.log("check 1");
+        //console.log("check 1");
         if (module.exports.checkForUser(_UN)) {
-            console.log("check 2");
+            //console.log("check 2");
             return "username taken";
         }
         //create a document to insert
@@ -65,7 +65,7 @@ module.exports = {
             password: _PS,
             superUser: _SU
         };
-        console.log("check 3");
+        //console.log("check 3");
         const result = await users.insertOne(doc);
         console.log(`A document was inserted with the _id: ${result.insertedId}`);
     },
