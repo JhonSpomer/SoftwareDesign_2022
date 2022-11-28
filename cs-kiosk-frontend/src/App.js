@@ -182,6 +182,16 @@ function App() {
                         }
                     />
                     <Route
+                        path="/test"
+                        element={
+                            <Tests
+                                navigate={navigate}
+                                setActiveHref={setActiveHref}
+                            />
+                        }
+
+                    />
+                    <Route
                         path="/edit/user/*"
                         element={
                             <UserEdit

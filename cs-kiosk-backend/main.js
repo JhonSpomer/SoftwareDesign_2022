@@ -169,6 +169,15 @@ expressWs(api);
         });
     });
 
+
+    api.get("/MiddlewareTest", async (req, res) => {
+        console.log("Reached The middleware test endpoint: Test Successful.");
+
+        res
+            .status(200)
+            .send("MiddlewareTest successful");
+    });
+
     api.all("/delete/*", requireAuthentication);
 
     //===============================================================================================================

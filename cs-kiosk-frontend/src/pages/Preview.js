@@ -1,7 +1,7 @@
 /*
-Last updated: 10/27/2022
+Last updated: 11/27/2022
 Last worked on by: Jhon & Matthew
-Last added: Nothing!
+Last added: turned preview into a prop.
 
 Display react/bootstrap carosuel to preview current kiosk display.
 
@@ -9,8 +9,7 @@ Display react/bootstrap carosuel to preview current kiosk display.
 NONE
 
 --BUGS--
-
-PREVIEW IS SKEWED RIGHT
+NONE
 
 */
 
@@ -18,12 +17,12 @@ import React from "react";
 import ContentLayout from "@cloudscape-design/components/content-layout";
 import Container from "@cloudscape-design/components/container";
 
-export default function Preview () {
+export default function Preview (props) {
     return <ContentLayout>
         <iframe
             src="http://localhost:9000/carousel"
-            width={"100%"}
-            height={"100%"}
+            width={props.width || "100%"}
+            height={props.height || "100%"}
         />
     </ContentLayout>;
 }
