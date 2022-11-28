@@ -2,7 +2,7 @@ const
     mongodb = require("mongodb"),
     fs = require('fs');
 //const buffer = fs.readFileSync("../.mongodb.auth");
-const buffer = fs.readFileSync("/home/user/CSCI490/SoftwareDesign_2022/.mongodb.auth");
+const buffer = fs.readFileSync("../.mongodb.auth");
 const uri = buffer.toString();
 const client = new mongodb.MongoClient(uri);
 const database = client.db("BulletinDisplay");

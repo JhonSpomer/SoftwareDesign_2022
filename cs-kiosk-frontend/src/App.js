@@ -35,6 +35,7 @@ import EditSlide from './pages/EditSlide';
 import UserEdit from './pages/UserEdit';
 import {getImage} from './utility/utils';
 import EditUser from "./pages/EditUser";
+import Profile from './pages/Profile';
 
 //variables
 
@@ -162,6 +163,7 @@ function App() {
                 <Routes>
                     <Route path="*" element={<div>Oh no! You appear to have gotten lost. Please restart the system to get back to the login page. If this does not fix this problem. Please contact the system maintence team.</div>} />
                     <Route path="/test" element={<Tests />} />
+                    <Route path="/profile" element={<Profile />} />
                     <Route
                         path="/admin"
                         element={
