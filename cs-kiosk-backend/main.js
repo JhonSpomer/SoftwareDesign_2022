@@ -53,18 +53,17 @@ expressWs(api);
         next();
     });
 
-    function requireAuthentication(req, res, next) {
-        console.log(req.path);
-
-        console.log(req.headers);
+    async function requireAuthentication(req, res, next) {
         let auth = req.get("Authorization");
-        console.log(auth);
-        console.log(typeof auth);
         if (typeof auth === "string") {
-            console.log(auth.split(" "));
-            console.log(auth.split(" ")[1]);
-            let credentials = Buffer.from(auth.split(" ")[1], "base64").toString().split(":");
-            console.log(credentials);
+            try {
+                let [username, password] = Buffer.from(auth.split(" ")[1], "base64").toString().split(":");
+                if (await db.checkForUser(username, password)) next();
+                else return;
+            } catch (error) {
+                console.error(error);
+                return;
+            }
         }
         // console.log(credentials);
        
@@ -72,7 +71,7 @@ expressWs(api);
         //     res.status(401).send("authentication failed")
         //     return;
         // }
-        next();
+        // next();
     }
 
     api.post("/authenticate.json", async (req, res) => {
@@ -82,10 +81,15 @@ expressWs(api);
         req.on("close", async () => {
             try {
                 const { username, password } = JSON.parse(buffer);
-                await db.getUser(username, password);
-                res
-                    .status(200)
-                    .send("authenticated");
+                if (await db.checkForUser(username, password)) {
+                    res
+                        .status(200)
+                        .send("authenticated");
+                } else {
+                    res
+                        .status(401)
+                        .send("not authenticated");
+                }
             } catch (e) {
                 console.log("Failed to extract username and password.");
             }

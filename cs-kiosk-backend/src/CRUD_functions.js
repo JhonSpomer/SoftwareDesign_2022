@@ -21,10 +21,10 @@ module.exports = {
             }
         }
         else {
-            if (users.find({ "username": UN }, { "password": PS }).count() === 1) {
+            if (users.find({ "username": UN, "password": PS }).count() === 1) {
                 return true;
             }
-            else if (users.find({ "username": UN }, { "password": PS }).count() > 1) {
+            else if (users.find({ "username": UN, "password": PS }).count() > 1) {
                 return "duplicate user records";
             }
             else {
