@@ -55,6 +55,7 @@ expressWs(api);
         if (typeof auth === "string") {
             try {
                 let [username, password] = Buffer.from(auth.split(" ")[1], "base64").toString().split(":");
+                console.log("Authenticating regular user:", username, password);
                 if (await db.checkForUser(username, password)) return next();
             } catch (error) {
                 console.error(error);
@@ -71,6 +72,7 @@ expressWs(api);
         if (typeof auth === "string") {
             try {
                 const [username, password] = (new Buffer.from(auth.split(" ")[1], "base64")).toString().split(":");
+                console.log("Authenticating super user:", username, password);
                 if (await SUdb.checkForSU(username, password)) return next();
             } catch (error) {
                 console.error(error);
@@ -89,7 +91,7 @@ expressWs(api);
             try {
                 const {username, password} = JSON.parse(buffer);
                 console.log(username, password);
-                let authRes = db.checkForUser(username, password);
+                let authRes = await db.checkForUser(username, password);
                 if (authRes === true) {
                     res
                         .status(200)
@@ -232,10 +234,10 @@ expressWs(api);
     });
 
     api.get("/delete/user.json", requireSuperUserAuthentication, async (req, res) => {
-        if (!authenticateSU(req)) {
-            res.status(401).send("authentication failed")
-            return;
-        }
+        // if (!authenticateSU(req)) {
+        //     res.status(401).send("authentication failed")
+        //     return;
+        // }
         if (req.query.username) {
             await SUdb.delUser(req.query.username);
         }
