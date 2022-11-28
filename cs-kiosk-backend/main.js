@@ -32,27 +32,6 @@ expressWs(api);
     //     return true;//db.checkForUser(auth[0], auth[1]);
     // }
 
-    function authenticateSU(req) {
-        let auth = (new Buffer.from(req.get('Authorization').split(' ')[1], 'base64')).toString().split(':');
-        let authRes = SUdb.checkForSU(auth[0], auth[1]);
-        if (authRes === true)
-        {
-            res
-                .status(200)
-                .send("authenticated");
-            return true;
-        }
-        else if (authRes === false){
-            res.status(401).send("authentication failed");
-            return false;
-        }
-        else {
-            res.status(401).send(authRes);
-            return false;
-        }
-        return ;
-    }
-
 
     // Express API server
 
@@ -76,20 +55,31 @@ expressWs(api);
         if (typeof auth === "string") {
             try {
                 let [username, password] = Buffer.from(auth.split(" ")[1], "base64").toString().split(":");
-                if (await db.checkForUser(username, password)) next();
-                else return;
+                if (await db.checkForUser(username, password)) return next();
             } catch (error) {
                 console.error(error);
-                return;
             }
         }
-        // console.log(credentials);
-       
-        // if (!authenticate(req)) {
-        //     res.status(401).send("authentication failed")
-        //     return;
-        // }
-        // next();
+        res
+            .status(401)
+            .send("authentication failed");
+        return;
+    }
+
+    async function requireSuperUserAuthentication(req, res, next) {
+        let auth = req.get("Authorization");
+        if (typeof auth === "string") {
+            try {
+                const [username, password] = (new Buffer.from(auth.split(" ")[1], "base64")).toString().split(":");
+                if (await SUdb.checkForSU(username, password)) return next();
+            } catch (error) {
+                console.error(error);
+            }
+        }
+        res
+            .status(401)
+            .send("authentication failed");
+        return;
     }
 
     api.post("/authenticate.json", async (req, res) => {
@@ -232,7 +222,7 @@ expressWs(api);
         //console.log("Got here");
     });
 
-    api.get("/delete/user.json", async (req, res) => {
+    api.get("/delete/user.json", requireSuperUserAuthentication, async (req, res) => {
         if (!authenticateSU(req)) {
             res.status(401).send("authentication failed")
             return;

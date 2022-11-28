@@ -13,7 +13,7 @@ module.exports = {
     checkForUser: async function (UN, PS) {
         await client.connect();
         if (PS === undefined) {
-            if (users.find({ "username": UN }).count() > 0) {
+            if (users.find({"username": UN}).count() > 0) {
                 return true;
             }
             else {
@@ -21,10 +21,10 @@ module.exports = {
             }
         }
         else {
-            if (users.find({ "username": UN, "password": PS }).count() === 1) {
+            if (await users.find({ "username": UN, "password": PS }).count() === 1) {
                 return true;
             }
-            else if (users.find({ "username": UN }, { "password": PS }).count() > 1) {
+            else if (await users.find({"username": UN, "password": PS}).count() > 1) {
                 return "duplicate user records, please contact database admin.";
             }
             else {

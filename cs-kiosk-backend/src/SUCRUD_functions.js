@@ -14,21 +14,17 @@ module.exports = {
     checkForUser: async function (UN, PS) {
         await client.connect();
         if (PS === undefined) {
-            if (await users.find({ "username": UN }).count() > 0) {
+            if (await users.find({"username": UN}).count() > 0) {
                 return true;
-            }
-            else {
+            } else {
                 return false;
             }
-        }
-        else {
-            if (await users.find({ "username": UN }, { "password": PS }).count() === 1) {
+        } else {
+            if (await users.find({"username": UN, "password": PS}).count() === 1) {
                 return true;
-            }
-            else if (await users.find({ "username": UN }, { "password": PS }).count() > 1) {
+            } else if (await users.find({"username": UN, "password": PS}).count() > 1) {
                 return "duplicate user records";
-            }
-            else {
+            } else {
                 return false;
             }
         }
@@ -37,21 +33,18 @@ module.exports = {
     checkForSU: async function (_UN, _PS) {
         await client.connect();
         if (PS === undefined) {
-            if (await users.find({ "username": UN }).count() > 0) {
+            if (await users.find({"username": UN}).count() > 0) {
                 return true;
-            }
-            else {
+            } else {
                 return false;
             }
         }
         else {
-            if (await users.find({ "username": UN }, { "password": PS }, { "superUser": "true" }).count() === 1 ) {
+            if (await users.find({"username": UN, "password": PS, "superUser": true}).count() === 1 ) {
                 return true;
-            }
-            else if (await users.find({ "username": UN }, { "password": PS }, { "superUser": "true" }).count() > 1) {
+            } else if (await users.find({"username": UN, "password": PS, "superUser": true}).count() > 1) {
                 return "duplicate user records, please contact database administrator";
-            }
-            else {
+            } else {
                 return false;
             }
         }
