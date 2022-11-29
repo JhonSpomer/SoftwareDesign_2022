@@ -14,15 +14,18 @@ Admin-
         -Currently, the carousel only supports img formats, and website links, pdf format is planned but currently is not fully implimented.
         -Images are supported in jpg and png formats.
         -The carousel is capable of displaying web 3 websites and loading all the content within.
+        - It is up to individual USERS to ensure that their content abides by the guidelines for using the system. This means it should meet the quality standards of CMU,
+        abide by FERPA, and in general not contain anything obscene.
 
 Preview-
     This page allows an authorized user to view the display without having to go to the actual kiosk display screen.
 
 Users-
     This page allows a super user to modify, add, and delete valid user credentials from the user database. This allows a super user to control who can access the system.
+    A normal user cannot modify anything here, only view current users.
 
     Additional notes-
-        -At this time, Susan is the only super user account.
+        -At this time, Susan is the only valid super user account.
 
 User Settings-
     This tab displays the current users active user name and password. The password is obscured and only displays the first and last characters.
@@ -31,6 +34,16 @@ User Settings-
 localhost:3000/test-
     This page is impossible to reach unless the URL is specifically changed to the above URL. It is a debugging page that serves to allow the user to run simple tests on
     various parts of the system. Normal users should never need to access this. It is for developers and maintence of the system.
+
+    functionality: The outcome is displayed in the frontend and backend consoles.
+        - A button that querrys the user database with invalid credentials, this test SHOULD fail. 
+        - A button that querrys the image database with invalid credentials, his test SHOULD fail.
+        - A button that querrys the middleware of the system. This test should suceed. 
+        - A preview of the slide carousel, so the developer can see if things have changed, or the behavior of the carousel is expected.
+
+        NOTE: The first two tests should fail because the credentials being passed are not present in the user database. Since it is unwise to hard code a valid
+        set of credentials into the test page. A developer or tester who wants these tests to succeed only needs to change the credentials submitted to a valid 
+        credential pair.
 
 Login-
     This returns the user to the login page, logging them out of the system.

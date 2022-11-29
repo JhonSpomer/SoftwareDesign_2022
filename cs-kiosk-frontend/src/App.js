@@ -150,10 +150,10 @@ function App() {
                         {type: "divider"},
                         {
                             //TODO
-                            type: "link",
-                            text: "User Guide",
-                            href: "https://example.com",
-                            external: true
+                            //type: "link",
+                            //text: "documentation",
+                           // href: "https://example.com",
+                            //external: true
                         }
                     ]}
                 />
@@ -275,7 +275,8 @@ function App() {
                                         setChecked(event.detail.checked)
                                     }
                                 >
-                                    YOU AGREE TO THE --TODO-- TERMS. GREAT THANKS
+                                    You agree to the guidelines set out by the CMU Computer Science department;
+                                     In addition, you agree to abide by FERPA guidelines for all content on this kiosk.
                                 </Checkbox>
                             </div>
                         }
