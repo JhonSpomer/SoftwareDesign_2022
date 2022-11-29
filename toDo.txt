@@ -1,10 +1,11 @@
 Matt:
--
+-email JB about static IP
 Jhon:
 -
 Isaac:
 -user docs
 -admin docs
 -dev docs
--writes tests for CRUD operations
--write functions for getting DB stats
+-writes tests for CRUD operations - WIP
+-write functions for getting DB stats - WIP
+-Email MongoDB support about free tier - WIP
