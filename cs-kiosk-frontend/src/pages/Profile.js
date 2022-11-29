@@ -1,3 +1,16 @@
+/*
+Last update: 11/29/2022 
+Last worked on by: Jhon. Because Matt hates leaving documentation for future students maintening of this project.
+Last added: This now exists!
+
+Profile page displays username and obscured password. Assuming the user properly arrived and was authenticated in the user database.
+
+-TODO-
+
+--BUGS--
+*/
+
+
 import React, {useState} from "react";
 import Container from "@cloudscape-design/components/container";
 import ContentLayout from "@cloudscape-design/components/content-layout";

@@ -4,7 +4,8 @@ Last worked on by: Jhon
 Last added: buttons that hit endpoints. Preview image.
 
 Hidden page to allow easy view of the slide preview, as well as test functionality to ping various end points as well as test middleware responsiveness via simple
-buton clicks, rather than navigating all over the page.
+buton clicks, rather than navigating all over the page. Middleware test should succeed. The img and user database tests SHOULD fail. This is because it is unwise 
+to hardcode a valid set of crednetials into these tests, if passed valid credentials, these two tests should succeed instead.
 
 -TODO-
 

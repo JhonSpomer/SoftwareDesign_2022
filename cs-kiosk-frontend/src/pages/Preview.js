@@ -3,7 +3,7 @@ Last updated: 11/27/2022
 Last worked on by: Jhon & Matthew
 Last added: turned preview into a prop.
 
-Display react/bootstrap carosuel to preview current kiosk display.
+Display react/bootstrap carosuel to preview current kiosk display. Displays web 3!
 
 -TODO-
 NONE

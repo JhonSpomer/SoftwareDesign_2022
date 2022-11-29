@@ -1,11 +1,11 @@
 /*
 Last modified: 10/11/2022
 Last worked on by: Jhon
-last added: radio box toggleing.
+last added: DEPRECATION NOTICE.
 This page should allow user to upload files provided and place them in the carousel and database. User can toggle to the input field they desire.
 
 --NOTE--
-Currently I have this file renamed as Admin_old. It is no longer used and only remains for archive purposes.
+Currently I have this file renamed as Admin_old. It is no longer used and only remains for archive purposes. It is DEPCRECATED and not currently used in the kiosk software.
 
 -TODO-
 none. depreciated.

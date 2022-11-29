@@ -1,12 +1,13 @@
 /*
-Last update: 11/11/2022 9:00 PM
+Last update: 11/29/2022 9:00 PM
 Last worked on by: Jhon
 Last added: connected to the server endpoints and backend , now checks for actual credentials.
 
 login page and front end, hides nav bar, with error validation.  Now queries the database to check for valid credentials.
 
 -TODO-
--add real disclaimer and user documentation.
+-none
+
 --BUGS--
 -Can skip login page by direct path in navbar.
 */
@@ -14,7 +15,6 @@ login page and front end, hides nav bar, with error validation.  Now queries the
 //imports
 import React, {useEffect, useState} from 'react';
 import {Buffer} from 'buffer';
-//import { Buffer } from 'buffer';
 import "@cloudscape-design/global-styles/index.css"
 import Applayout from "@cloudscape-design/components/app-layout";
 import Button from "@cloudscape-design/components/button";
@@ -54,13 +54,13 @@ function App() {
         [files, setFiles] = useState({});
 
     useEffect(() => {
-        // console.log(location.pathname)
         if (location.pathname === "/") {
             setNavValue(true);
             setToolsValue(true);
         }
     }, [location]);
 
+    //Currently unused, Commented out but left for completness.
     // async function loadOrder() {
     //     const newOrder = await fetch("http://localhost:9000/order.json", {
     //         method: "GET"
@@ -79,7 +79,6 @@ function App() {
 
         try {
             const newSlides = await slidesRes.json();
-            // console.log("Fetched slides:", newSlides);
             const
                 newFiles = [],
                 ids = [];
@@ -88,7 +87,6 @@ function App() {
                     newFiles.push(getImage(slide.content));
                     ids.push(slide._id);
                 }
-                // else if (slide.slideType === "pdf") files[slide._id] = 
             }
             newFiles.splice(0, newFiles.length, ...(await Promise.all(newFiles)));
             for (const key in files) delete files[key];
@@ -102,12 +100,10 @@ function App() {
     }
 
     useEffect(() => {
-        // loadOrder();
         loadSlides();
         const connection = new WebSocket(new URL("/autoupdate", "ws://localhost:9000"));
 
         async function onMessage(event) {
-            // console.log(event.data);
             if (event.data === "update") {
                 await loadSlides();
             }
@@ -138,7 +134,6 @@ function App() {
                             event.preventDefault();
                             setActiveHref(event.detail.href);
                             navigate(event.detail.href);
-                            //setAdminPage(true);
                         }
                     }}
                     items={[
@@ -149,6 +144,7 @@ function App() {
                         {type: "link", text: "Login", href: "/"},
                         {type: "divider"},
                         {
+                            //We don't have a documentation website to link to at this time; thus, I've commented this segment out as to not misslead users. -Jhon
                             //TODO
                             //type: "link",
                             //text: "documentation",
@@ -296,7 +292,6 @@ function App() {
         console.log(Creds);
         let base64Creds = EncodedCreds.toString('base64');
 
-        //let StringCreds = String(base64Creds);
 
         window.sessionStorage.setItem("UserCreds", base64Creds);
         console.log(base64Creds);
@@ -312,12 +307,10 @@ function App() {
         if (res.ok) {
             const value = await res.text();
             if (value === 'authenticated') {
-                // console.log(value);
                 setNavValue(false);
                 navigate("/admin");
             }
         }
-        // console.log("done");
     }
 }
 

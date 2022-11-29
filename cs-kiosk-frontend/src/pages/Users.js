@@ -1,13 +1,16 @@
 /*
-Last updated: 11/1/2022
+Last updated: 11/29/2022
 Last worked on by: Jhon
-Last added: Properly add and delete from the array. Edit button works now.
+Last added: Documentation. 
+
+
+This page displays users who are currently active in the user database, a super user can edit, add, and delete credentials, a normal user cannot.
 
 -TODO-
--link array to user database.
+-link array to user database. Remove dummy arrays.
 
 --BUGS--
--array resets when navigating off page.
+
 */
 
 import Form from "@cloudscape-design/components/form";
