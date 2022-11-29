@@ -9,3 +9,8 @@ Isaac:
 -writes tests for CRUD operations - WIP
 -write functions for getting DB stats - WIP
 -Email MongoDB support about free tier - WIP
+
+General:
+- SU slide approval
+- slide expirations
+- QR code generation
