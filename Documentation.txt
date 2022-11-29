@@ -1,0 +1,36 @@
+General functionality of Display board. A short guide of the functionality of each page of the admin dashboard.
+
+Login Page-
+    This page allows the user to log in to the system by passing their credentials to a user database and verifying they are among the allowed users. If invalid credentials are passed,
+    the system will refuse to authorize the user. 
+
+    Additional notes-
+        - The system will save your credentials only for your current session. If you reload a page, close the window, or otherwise leave the admin dashboard, you will have to log in again.
+
+Admin-
+    Admin is a dashboard where you can manage the slides currently being displayed in the carousel. Here you can add, delete, and edit slides in the display.
+    
+    Additional notes-
+        -Currently, the carousel only supports img formats, and website links, pdf format is planned but currently is not fully implimented.
+        -Images are supported in jpg and png formats.
+        -The carousel is capable of displaying web 3 websites and loading all the content within.
+
+Preview-
+    This page allows an authorized user to view the display without having to go to the actual kiosk display screen.
+
+Users-
+    This page allows a super user to modify, add, and delete valid user credentials from the user database. This allows a super user to control who can access the system.
+
+    Additional notes-
+        -At this time, Susan is the only super user account.
+
+User Settings-
+    This tab displays the current users active user name and password. The password is obscured and only displays the first and last characters.
+
+
+localhost:3000/test-
+    This page is impossible to reach unless the URL is specifically changed to the above URL. It is a debugging page that serves to allow the user to run simple tests on
+    various parts of the system. Normal users should never need to access this. It is for developers and maintence of the system.
+
+Login-
+    This returns the user to the login page, logging them out of the system.
