@@ -300,7 +300,7 @@ function App() {
             mode: 'cors',
             headers: {
                 "Content-Type": "text/plain",
-                Authorization: `Basic ${base64Creds}`
+                "Authorization": `Basic ${base64Creds}`
             },
             body: jsondata
         });

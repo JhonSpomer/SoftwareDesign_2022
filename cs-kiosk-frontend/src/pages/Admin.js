@@ -92,7 +92,7 @@ export default function Admin(props) {
                                     method: "GET",
                                     mode: "cors",
                                     headers: {
-                                        Authorization: `Basic ${creds}`
+                                        "Authorization": `Basic ${creds}`
                                     }
                                 });
                             }}
