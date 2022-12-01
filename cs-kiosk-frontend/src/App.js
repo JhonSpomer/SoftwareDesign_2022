@@ -1,12 +1,13 @@
 /*
-Last update: 11/11/2022 9:00 PM
+Last update: 11/29/2022 9:00 PM
 Last worked on by: Jhon
 Last added: connected to the server endpoints and backend , now checks for actual credentials.
 
 login page and front end, hides nav bar, with error validation.  Now queries the database to check for valid credentials.
 
 -TODO-
--add real disclaimer and user documentation.
+-none
+
 --BUGS--
 -Can skip login page by direct path in navbar.
 */
@@ -14,7 +15,6 @@ login page and front end, hides nav bar, with error validation.  Now queries the
 //imports
 import React, {useEffect, useState} from 'react';
 import {Buffer} from 'buffer';
-//import { Buffer } from 'buffer';
 import "@cloudscape-design/global-styles/index.css"
 import Applayout from "@cloudscape-design/components/app-layout";
 import Button from "@cloudscape-design/components/button";
@@ -29,11 +29,13 @@ import Admin from "./pages/Admin"
 import Users from "./pages/Users"
 import Tests from "./pages/Test"
 import Preview from "./pages/Preview"
-import { useNavigate, useLocation, Route, Routes } from "react-router-dom";
+import {useNavigate, useLocation, Route, Routes} from "react-router-dom";
 import './App.css';
 import EditSlide from './pages/EditSlide';
 import UserEdit from './pages/UserEdit';
-import { getImage } from './utility/utils';
+import {getImage} from './utility/utils';
+import EditUser from "./pages/EditUser";
+import Profile from './pages/Profile';
 
 //variables
 
@@ -52,13 +54,13 @@ function App() {
         [files, setFiles] = useState({});
 
     useEffect(() => {
-        // console.log(location.pathname)
         if (location.pathname === "/") {
             setNavValue(true);
             setToolsValue(true);
         }
     }, [location]);
 
+    //Currently unused, Commented out but left for completness.
     // async function loadOrder() {
     //     const newOrder = await fetch("http://localhost:9000/order.json", {
     //         method: "GET"
@@ -77,7 +79,6 @@ function App() {
 
         try {
             const newSlides = await slidesRes.json();
-            // console.log("Fetched slides:", newSlides);
             const
                 newFiles = [],
                 ids = [];
@@ -86,7 +87,6 @@ function App() {
                     newFiles.push(getImage(slide.content));
                     ids.push(slide._id);
                 }
-                // else if (slide.slideType === "pdf") files[slide._id] = 
             }
             newFiles.splice(0, newFiles.length, ...(await Promise.all(newFiles)));
             for (const key in files) delete files[key];
@@ -100,12 +100,10 @@ function App() {
     }
 
     useEffect(() => {
-        // loadOrder();
         loadSlides();
         const connection = new WebSocket(new URL("/autoupdate", "ws://localhost:9000"));
 
         async function onMessage(event) {
-            // console.log(event.data);
             if (event.data === "update") {
                 await loadSlides();
             }
@@ -136,21 +134,22 @@ function App() {
                             event.preventDefault();
                             setActiveHref(event.detail.href);
                             navigate(event.detail.href);
-                            //setAdminPage(true);
                         }
                     }}
                     items={[
+                        {type: "link", text: "User Settings", href: "profile"},
                         {type: "link", text: "Admin", href: "admin"},
                         {type: "link", text: "Preview", href: "preview"},
                         {type: "link", text: "Users", href: "users"},
                         {type: "link", text: "Login", href: "/"},
                         {type: "divider"},
                         {
+                            //We don't have a documentation website to link to at this time; thus, I've commented this segment out as to not misslead users. -Jhon
                             //TODO
-                            type: "link",
-                            text: "User Guide",
-                            href: "https://example.com",
-                            external: true
+                            //type: "link",
+                            //text: "documentation",
+                           // href: "https://example.com",
+                            //external: true
                         }
                     ]}
                 />
@@ -160,6 +159,7 @@ function App() {
                 <Routes>
                     <Route path="*" element={<div>Oh no! You appear to have gotten lost. Please restart the system to get back to the login page. If this does not fix this problem. Please contact the system maintence team.</div>} />
                     <Route path="/test" element={<Tests />} />
+                    <Route path="/profile" element={<Profile />} />
                     <Route
                         path="/admin"
                         element={
@@ -180,6 +180,16 @@ function App() {
                                 setActiveHref={setActiveHref}
                             />
                         }
+                    />
+                    <Route
+                        path="/test"
+                        element={
+                            <Tests
+                                navigate={navigate}
+                                setActiveHref={setActiveHref}
+                            />
+                        }
+
                     />
                     <Route
                         path="/edit/user/*"
@@ -261,7 +271,8 @@ function App() {
                                         setChecked(event.detail.checked)
                                     }
                                 >
-                                    YOU AGREE TO THE --TODO-- TERMS. GREAT THANKS
+                                    You agree to the guidelines set out by the CMU Computer Science department;
+                                     In addition, you agree to abide by FERPA guidelines for all content on this kiosk.
                                 </Checkbox>
                             </div>
                         }
@@ -281,7 +292,6 @@ function App() {
         console.log(Creds);
         let base64Creds = EncodedCreds.toString('base64');
 
-        //let StringCreds = String(base64Creds);
 
         window.sessionStorage.setItem("UserCreds", base64Creds);
         console.log(base64Creds);
@@ -297,12 +307,10 @@ function App() {
         if (res.ok) {
             const value = await res.text();
             if (value === 'authenticated') {
-                // console.log(value);
                 setNavValue(false);
                 navigate("/admin");
             }
         }
-        // console.log("done");
     }
 }
 

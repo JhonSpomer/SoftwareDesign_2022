@@ -1,17 +1,16 @@
 /*
-Last updated: 11/11/2022
+Last updated: 11/29/2022
 Last updated by: Jhon & Matt
 Last change: Connecting to the actual endpoint that talks to the backend.
 
 
 
-This page allows the user to modify or create a new slide to put into the carousel. It should support links, pdf, png/jpg.
+This page allows the user to modify or create a new slide to put into the carousel. It should support links, pdf, png/jpg. Currently it only supports png.jpg and
+links, including web3!
 
 --BUGS--
--navigating off the page resets the array (NO LONGER RELEVENT?)
 
 --TODO--
-Edit and DEL
 */
 
 import React, {useState, useEffect} from "react";
@@ -165,12 +164,13 @@ export default function EditSlide(props) {
                     //
                     console.log(slide);
                     let Creds = sessionStorage.getItem("UserCreds");
+                    console.log("Credentials:", Creds);
                     const res = await fetch(`http://localhost:9000/slide.json`, {
                         method: "POST",
                         mode: 'cors',
                         headers: {
                             "Content-Type": "text/plain",
-                            Authorization: `Basic ${Creds}`
+                            "Authorization": `Basic ${Creds}`
                         },
                         body: JSON.stringify(slide)
                     });
@@ -184,12 +184,13 @@ export default function EditSlide(props) {
                         return;
                     }
                     let Creds = sessionStorage.getItem("UserCreds");
+                    console.log("Credentials:", Creds);
                     const res = await fetch(`http://localhost:9000/image/new?type=${match[1]}`, {
                         method: "POST",
                         mode: 'cors',
                         headers: {
                             "Content-Type": "application/octet-stream",
-                            Authorization: `Basic ${Creds}`
+                            "Authorization": `Basic ${Creds}`
                         },
                         body: file
                     });
@@ -197,12 +198,13 @@ export default function EditSlide(props) {
                     console.log(IDvalue);
                     if (res.ok) {
                         let Creds = sessionStorage.getItem("UserCreds");
+                        console.log("Credentials:", Creds);
                         const res2 = await fetch(`http://localhost:9000/slide.json`, {
                             method: "POST",
                             mode: 'cors',
                             headers: {
                                 "Content-Type": "text/plain",
-                                Authorization: `Basic ${Creds}`
+                                "Authorization": `Basic ${Creds}`
                             },
                             body: JSON.stringify({...slide, content: IDvalue})
                         });
@@ -213,12 +215,13 @@ export default function EditSlide(props) {
                     // ==========================PDF========================================
                     //
                     let Creds = sessionStorage.getItem("UserCreds");
+                    console.log("Credentials:", Creds);
                     const res = await fetch(`http://localhost:9000/pdf/new`, {
                         method: "POST",
                         mode: 'cors',
                         headers: {
                             "Content-Type": "application/octet-stream",
-                            Authorization: `Basic ${Creds}`
+                            "Authorization": `Basic ${Creds}`
                             
                         },
                         body: file
@@ -227,12 +230,13 @@ export default function EditSlide(props) {
                     console.log(IDvalue);
                     if (res.ok) {
                         let Creds = sessionStorage.getItem("UserCreds");
+                        console.log("Credentials:", Creds);
                         const res2 = await fetch(`http://localhost:9000/slide.json`, {
                             method: "POST",
                             mode: 'cors',
                             headers: {
                                 "Content-Type": "text/plain",
-                                Authorization: `Basic ${Creds}`
+                                "Authorization": `Basic ${Creds}`
                             },
                             body: JSON.stringify({...slide, content: IDvalue})
                         });

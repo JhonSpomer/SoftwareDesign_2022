@@ -2,55 +2,49 @@ const
     mongodb = require("mongodb"),
     fs = require('fs');
 const buffer = fs.readFileSync("../.mongodb.auth");
+//const buffer = fs.readFileSync("/home/user/CSCI490/SoftwareDesign_2022/.mongodb.auth");
 const uri = buffer.toString();
 const client = new mongodb.MongoClient(uri);
 const database = client.db("BulletinDisplay");
 const users = database.collection("users");
-const slides = database.collection("slides");
+//const slides = database.collection("slides");
 const config = database.collection("Config_data");
-const bucket = new mongodb.GridFSBucket(database, { bucketName: 'slideFiles' });
+//const bucket = new mongodb.GridFSBucket(database, { bucketName: 'slideFiles' });
 module.exports = {
-    checkForUser: async function (UN, PS) {
-        await client.connect();
-        if (PS === undefined) {
-            if (users.find({ "username": UN }).count() > 0) {
-                return true;
-            }
-            else {
-                return false;
-            }
-        }
-        else {
-            if (users.find({ "username": UN }, { "password": PS }).count() === 1) {
-                return true;
-            }
-            else if (users.find({ "username": UN }, { "password": PS }).count() > 1) {
-                return "duplicate user records";
-            }
-            else {
-                return false;
-            }
-        }
-    },
+    // checkForUser: async function (UN, PS) {
+    //     await client.connect();
+    //     if (PS === undefined) {
+    //         if (await users.find({"username": UN}).count() > 0) {
+    //             return true;
+    //         } else {
+    //             return false;
+    //         }
+    //     } else {
+    //         if (await users.find({"username": UN, "password": PS}).count() === 1) {
+    //             return true;
+    //         } else if (await users.find({"username": UN, "password": PS}).count() > 1) {
+    //             return "duplicate user records";
+    //         } else {
+    //             return false;
+    //         }
+    //     }
+    // },
 
     checkForSU: async function (_UN, _PS) {
         await client.connect();
         if (PS === undefined) {
-            if (users.find({ "username": UN }).count() > 0) {
+            if (await users.find({"username": UN}).count() > 0) {
                 return true;
-            }
-            else {
+            } else {
                 return false;
             }
         }
         else {
-            if (users.find({ "username": UN }, { "password": PS }, { "superUser": "true" }).count() === 1) {
+            if (await users.find({"username": UN, "password": PS, "superUser": true}).count() === 1 ) {
                 return true;
-            }
-            else if (users.find({ "username": UN }, { "password": PS }, { "superUser": "true" }).count() > 1) {
+            } else if (await users.find({"username": UN, "password": PS, "superUser": true}).count() > 1) {
                 return "duplicate user records, please contact database administrator";
-            }
-            else {
+            } else {
                 return false;
             }
         }
@@ -59,24 +53,22 @@ module.exports = {
 
     newUser: async function (_UN, _PS, _SU = false) {
         await client.connect();
-        try {
-            if (module.exports.checkForUser(_UN)) {
-                return "username taken";
-            }
-            // create a document to insert
-            const doc =
-            {
-                username: _UN,
-                password: _PS,
-                superUser: _SU
-            };
-            const result = await users.insertOne(doc);
-            //console.log(`A document was inserted with the _id: ${result.insertedId}`);
-            return result.insertedId.toHexString();
+        //console.log("check 1");
+        if (module.exports.checkForUser(_UN)) {
+            //console.log("check 2");
+            return "username taken";
         }
-        finally {
-            // await client.close();
-        }
+        //create a document to insert
+        const doc =
+        {
+            username: _UN,
+            password: _PS,
+            superUser: _SU
+        };
+        //console.log("check 3");
+        const result = await users.insertOne(doc);
+        console.log(`A document was inserted with the _id: ${result.insertedId}`);
+        return result.insertedId.toHexString();
     },
 
 
@@ -101,9 +93,9 @@ module.exports = {
                 upDoc = {password: _newPS};
             }
             
-            if (_newPS === undefined && _newUN !== undefined) {
-                upDoc = {password: _newUN};
-            }
+            // if (_newPS === undefined && _newUN !== undefined) {
+            //     upDoc = {password: _newUN};
+            // }
 
             else {
             
@@ -128,7 +120,7 @@ module.exports = {
     {
         await client.connect();
         const upDoc = {superUser:_SU};
-        const result = await users.updateOne({ username: _oldUN, password: _oldPS }, { $set: upDoc }, { upsert: false });
+        const result = await users.updateOne({ username: _UN, password: _PS }, { $set: upDoc }, { upsert: false });
         return result.upsertedId.toHexString();
     },
     
@@ -164,9 +156,14 @@ module.exports = {
     newConfigFile: async function (newDoc) {
         const result = await config.insertOne(newDoc);
         return result.insertedId.toHexString();
-    },
+    }
+}
 
-
+// const testUser = {
+//     username: "susan",
+//     password: "admin", 
+//     superUser: true};
+// module.exports.newUser("susan","admin",true);
 
 
 //discrete function for super user CRUD operations will be left here in case standard users
@@ -235,5 +232,3 @@ module.exports = {
     //         // await client.close();
     //     }
     // },
-
-}

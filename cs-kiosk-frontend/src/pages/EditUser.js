@@ -1,3 +1,17 @@
+/*
+Last updated: 11/29/2022
+Last worked on by: Jhon
+Last added: documentation. Since matt still hates adding documentation for future maintence of this project. 
+
+Edit user page for the user documentation. Should only be accessed by a super user , since only a super user can edit, delete, or add new users. 
+
+-TODO-
+
+-BUGS-
+
+*/
+
+
 import React, {useState, useEffect} from "react";
 import Form from "@cloudscape-design/components/form";
 import SpaceBetween from "@cloudscape-design/components/space-between";

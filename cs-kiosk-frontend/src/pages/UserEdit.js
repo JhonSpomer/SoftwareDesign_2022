@@ -1,12 +1,12 @@
 /*
-Last updated: 11/3/2022
+Last updated: 11/29/2022
 Last worked on by: Jhon
-Last added: Can now navigate to this page. 
+Last added: Deprecation note.
 
-This page displays the current users in the database to susan.
+This page displays the current users in the database to susan. This is DEPRECATED. The page remains for records sake, but currently is unused in the kiosk softeware.
 
 -TODO-
-Display users from database and allow addition or deletion.
+NONE. DEPRECATED
 
 */
 import React from 'react'; //nothing here yet. 

@@ -32,27 +32,6 @@ expressWs(api);
     //     return true;//db.checkForUser(auth[0], auth[1]);
     // }
 
-    function authenticateSU(req) {
-        let auth = (new Buffer.from(req.get('Authorization').split(' ')[1], 'base64')).toString().split(':');
-        let authRes = SUdb.checkForSU(auth[0], auth[1]);
-        if (authRes === true)
-        {
-            res
-                .status(200)
-                .send("authenticated");
-            return true;
-        }
-        else if (authRes === false){
-            res.status(401).send("authentication failed");
-            return false;
-        }
-        else {
-            res.status(401).send(authRes);
-            return false;
-        }
-        return ;
-    }
-
 
     // Express API server
 
@@ -66,36 +45,56 @@ expressWs(api);
     });
 
     api.all("*", (req, res, next) => {
-        res.setHeader("Access-Control-Allow-Origin", 'http://localhost:3000');
-        res.setHeader("Access-Control-Allow-Headers", 'Authorization');
-        console.log(req.path);
-
-        console.log(req.headers);
-        let auth = req.get("Authorization");
-        console.log(auth);
-        console.log(typeof auth);
-        if (typeof auth === "string") console.log(auth.split(" "));
-        // console.log(req.get("Authorization").split(" ")[1]);
-        let credentials = Buffer.from(auth.split(" ")[1], "base64").toString().split(":");
-        console.log(credentials);
-       
-        //if (!authenticate(req)) {
-         //  res.status(401).send("authentication failed")
-          //return;
-       // }
+        res.setHeader("Access-Control-Allow-Origin", req.get("Origin"));
+        res.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type");
         next();
     });
 
+    async function requireAuthentication(req, res, next) {
+        res.setHeader("Access-Control-Allow-Origin", req.get("Origin"));
+        res.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type");
+        let auth = req.get("Authorization");
+        if (typeof auth === "string") {
+            try {
+                let [username, password] = Buffer.from(auth.split(" ")[1], "base64").toString().split(":");
+                if (await db.checkForUser(username, password)) return next();
+            } catch (error) {
+                console.error(error);
+            }
+        }
+        res
+            .status(401)
+            .send("authentication failed");
+        return;
+    }
+
+    async function requireSuperUserAuthentication(req, res, next) {
+        res.setHeader("Access-Control-Allow-Origin", req.get("Origin"));
+        res.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type");
+        let auth = req.get("Authorization");
+        if (typeof auth === "string") {
+            try {
+                const [username, password] = (new Buffer.from(auth.split(" ")[1], "base64")).toString().split(":");
+                if (await SUdb.checkForSU(username, password)) return next();
+            } catch (error) {
+                console.error(error);
+            }
+        }
+        res
+            .status(401)
+            .send("authentication failed");
+        return;
+    }
+
     api.post("/authenticate.json", async (req, res) => {
         let buffer = "";
-        res.setHeader("Access-Control-Allow-Origin", 'http://localhost:3000');
         req.on("data", chunk => buffer += chunk.toString());
         req.on("close", async () => {
             try {
-                const { username, password } = JSON.parse(buffer);
-                let authRes = db.checkForUser(username, password);
-                if (authRes === true)
-                {
+                const {username, password} = JSON.parse(buffer);
+                console.log(username, password);
+                let authRes = await db.checkForUser(username, password);
+                if (authRes === true) {
                     res
                         .status(200)
                         .send("authenticated");
@@ -108,27 +107,9 @@ expressWs(api);
                 }
             } catch (e) {
                 console.log("Failed to extract username and password.");
-            }
-        });
-    });
-    
-    //my rough attempt a making "create new user" function
-    api.post("/createUser.json", async (req, res) => {
-        if (!authenticateSU(req)) {
-            return;
-        }
-        let buffer = "";
-        req.on("data", chunk => buffer += chunk.toString());
-        req.on("close", async () => {
-            try {
-                const { username, password, superUser } = JSON.parse(buffer);
-                const id = SUdb.newUser(username, password, superUser);
                 res
-                    .status(200)
-                    .send(id);
-                
-            } catch (e) {
-                console.log("Failed to extract username and password.");
+                    .status(401)
+                    .send("not authenticated");
             }
         });
     });
@@ -136,25 +117,10 @@ expressWs(api);
     api.get("/slides.json", async (req, res) => {
         const
             order = await db.getSlideOrder();
-        //     slides = [];
-        // console.log(order);
-        // for (const id of order) slides.push(await db.getSlide(id));
-        // console.log(slides);
         res
             .status(200)
             .send(JSON.stringify(await Promise.all(order.map(id => db.getSlide(id)))));
     });
-
-    // api.post("/slides.json", (req, res) => {
-    //     req.on("data", chunk => console.log(chunk.toString()));
-    //     req.on("close", () => {
-    //         console.log("Closed");
-    //         for (const ws of Object.values(connections)) ws.send("update");
-    //     });
-    //     res
-    //         .status(200)
-    //         .send("Done");
-    // });
 
     api.get("/slide.json", async (req, res) => {
         const slide = await db.getSlide(req.params.slide);
@@ -169,7 +135,7 @@ expressWs(api);
         }
     });
 
-    api.post("/slide.json", (req, res) => {
+    api.post("/slide.json", requireAuthentication, (req, res) => {
         let buffer = "";
         const index = req.query.index || Infinity;
         req.on("data", chunk => buffer += chunk.toString());
@@ -195,8 +161,7 @@ expressWs(api);
         });
     });
 
-    // what is this function for? 
-    api.post("/user.json", (req, res) => {
+    api.post("/user.json", requireAuthentication, (req, res) => {
         let buffer = "";
         req.on("data", chunk => buffer += chunk.toString());
         req.once("close", async () => {
@@ -207,6 +172,17 @@ expressWs(api);
         });
     });
 
+
+    api.get("/MiddlewareTest", async (req, res) => {
+        console.log("Reached The middleware test endpoint: Test Successful.");
+
+        res
+            .status(200)
+            .send("MiddlewareTest successful");
+    });
+
+    api.all("/delete/*", requireAuthentication);
+
     //===============================================================================================================
     //
     //
@@ -216,12 +192,7 @@ expressWs(api);
     //adding del endpoint here. or trying anyways. ~Jhon
     api.get("/delete/slide.json", async (req, res) => {
         console.log("Reached delete midpoint");
-        //want to redo slide order once deleted. 
-        // let buffer = "";
-        // req.on("data", chunk => buffer += chunk.toString());
-        // req.on("close", async () => {
         try {
-            // const {Id} = JSON.parse(buffer);
             const order = await db.getSlideOrder();
             await db.modSlideOrder(order.filter(i => i != req.query.id));
             console.log(req.query.id);
@@ -234,14 +205,9 @@ expressWs(api);
         } catch (e) {
             console.log("Failed to delete");
         }
-        // });
-        //console.log("Got here");
     });
 
-    api.get("/delete/user.json", async (req, res) => {
-        if (!authenticateSU(req)) {
-            return;
-        }
+    api.get("/delete/user.json", requireSuperUserAuthentication, async (req, res) => {
         if (req.query.username) {
             await SUdb.delUser(req.query.username);
         }
@@ -255,7 +221,7 @@ expressWs(api);
             .send(JSON.stringify(order));
     });
 
-    api.post("/order.json", (req, res) => {
+    api.post("/order.json", requireAuthentication, (req, res) => {
         let buffer = "";
         req.on("data", chunk => buffer += chunk.toString());
         req.on("close", async () => {
@@ -267,12 +233,7 @@ expressWs(api);
             .send("Done");
     });
 
-    // api.all("/image/*", (req, res, next) => {
-    //     res.setHeader("Access-Control-Allow-Headers", "*");
-    //     next();
-    // });
-
-    api.post("/image/new", async (req, res) => {
+    api.post("/image/new", requireAuthentication, async (req, res) => {
         if (req.query.type !== "png" && req.query.type !== "jpg") {
             res
                 .status(401)
@@ -300,7 +261,7 @@ expressWs(api);
             .send(image.image);
     });
 
-    api.post("/image/:id", async (req, res) => {
+    api.post("/image/:id", requireAuthentication, async (req, res) => {
         const id = await db.modFile(
             stream.Readable.from(Buffer.from(req.body)),
             req.query.name,
