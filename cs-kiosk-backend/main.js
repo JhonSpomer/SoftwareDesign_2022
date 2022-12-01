@@ -70,9 +70,9 @@ expressWs(api);
             }
         }
         console.log("Got here too???");
-        res
-            .status(401);
-            // .send("authentication failed");
+        // res
+        //     .status(401)
+        //     .send("authentication failed");
         return next();
     }
 
@@ -83,7 +83,12 @@ expressWs(api);
         if (typeof auth === "string") {
             try {
                 const [username, password] = (new Buffer.from(auth.split(" ")[1], "base64")).toString().split(":");
-                if (await SUdb.checkForSU(username, password)) return next();
+                if (await SUdb.checkForSU(username, password)) {
+                    req.username = username;
+                    req.password = password;
+                    next();
+                    return;
+                }
             } catch (error) {
                 console.error(error);
             }
