@@ -54,18 +54,26 @@ expressWs(api);
         res.setHeader("Access-Control-Allow-Origin", req.get("Origin"));
         res.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type");
         let auth = req.get("Authorization");
+        console.log("Auth:", auth);
         if (typeof auth === "string") {
             try {
                 let [username, password] = Buffer.from(auth.split(" ")[1], "base64").toString().split(":");
-                if (await db.checkForUser(username, password)) return next();
+                console.log(username, password);
+                if (await db.checkForUser(username, password)) {
+                    req.username = username;
+                    req.password = password;
+                    next();
+                    return;
+                }
             } catch (error) {
                 console.error(error);
             }
         }
+        console.log("Got here too???");
         res
-            .status(401)
-            .send("authentication failed");
-        return;
+            .status(401);
+            // .send("authentication failed");
+        return next();
     }
 
     async function requireSuperUserAuthentication(req, res, next) {
@@ -80,10 +88,10 @@ expressWs(api);
                 console.error(error);
             }
         }
-        res
-            .status(401)
-            .send("authentication failed");
-        return;
+        // res
+        //     .status(401)
+        //     .send("authentication failed");
+        return next();
     }
 
     api.post("/authenticate.json", async (req, res) => {
@@ -138,40 +146,51 @@ expressWs(api);
     });
 
     api.post("/slide.json", requireAuthentication, (req, res) => {
-        let buffer = "";
-        const index = req.query.index || Infinity;
-        req.on("data", chunk => buffer += chunk.toString());
-        req.on("close", async () => {
-            const slide = JSON.parse(buffer);
-            const id = await db.modSlide(
-                slide.slideName,
-                slide.slideType,
-                undefined,
-                undefined,
-                undefined,
-                slide.content,
-                undefined,
-                req.query.id
-            );
-            const order = await db.getSlideOrder();
-            if (!req.query.id) order.splice(index, 0, id);
-            await db.modSlideOrder(order);
-            updateAllConnections();
-            res
-                .status(200)
-                .send(id);
-        });
+        if (req.username && req.password) {
+            let buffer = "";
+            const index = req.query.index || Infinity;
+            req.on("data", chunk => buffer += chunk.toString());
+            req.on("close", async () => {
+                const slide = JSON.parse(buffer);
+                const id = await db.modSlide(
+                    slide.slideName,
+                    slide.slideType,
+                    undefined,
+                    undefined,
+                    undefined,
+                    slide.content,
+                    undefined,
+                    req.query.id
+                );
+                const order = await db.getSlideOrder();
+                if (!req.query.id) order.splice(index, 0, id);
+                await db.modSlideOrder(order);
+                updateAllConnections();
+                res
+                    .status(200)
+                    .send(id);
+                return;
+            });
+        }
+        res
+            .status(401)
+            .send("not authorized");
     });
 
     api.post("/user.json", requireAuthentication, (req, res) => {
-        let buffer = "";
-        req.on("data", chunk => buffer += chunk.toString());
-        req.once("close", async () => {
-            const newUserCredentials = JSON.parse(buffer);
-            req
-                .status(200)
-                .send("Modified user.");
-        });
+        if (req.username && req.password) {
+            let buffer = "";
+            req.on("data", chunk => buffer += chunk.toString());
+            req.once("close", async () => {
+                const newUserCredentials = JSON.parse(buffer);
+                res
+                    .status(200)
+                    .send("Modified user.");
+            });
+        }
+        res
+            .status(401)
+            .send("not authorized");
     });
 
 
@@ -183,7 +202,7 @@ expressWs(api);
             .send("MiddlewareTest successful");
     });
 
-    api.all("/delete/*", requireAuthentication);
+    // api.all("/delete/*", requireAuthentication);
 
     //===============================================================================================================
     //
@@ -192,27 +211,29 @@ expressWs(api);
     //
     //
     //adding del endpoint here. or trying anyways. ~Jhon
-    api.get("/delete/slide.json", async (req, res) => {
-        console.log("Reached delete midpoint");
-        try {
-            const order = await db.getSlideOrder();
-            await db.modSlideOrder(order.filter(i => i != req.query.id));
-            console.log(req.query.id);
-            await db.delSlide(req.query.id);
-            updateAllConnections();
-            res
-                .status(200)
-                .send("deleting slide with id " + req.query.id);
-            console.log("deleting " + req.query.id);
-        } catch (e) {
-            console.log("Failed to delete");
+    api.get("/delete/slide.json", requireAuthentication, async (req, res) => {
+        if (req.username && req.password) {
+            console.log("Reached delete midpoint");
+            try {
+                const order = await db.getSlideOrder();
+                await db.modSlideOrder(order.filter(i => i != req.query.id));
+                console.log(req.query.id);
+                await db.delSlide(req.query.id);
+                updateAllConnections();
+                res
+                    .status(200)
+                    .send("deleting slide with id " + req.query.id);
+                console.log("deleting " + req.query.id);
+            } catch (e) {
+                console.log("Failed to delete");
+            }
         }
+        res
+            .status(401)
+            .send("not authorized");
     });
 
     api.get("/delete/user.json", requireSuperUserAuthentication, async (req, res) => {
-        if (req.query.username) {
-            await SUdb.delUser(req.query.username);
-        }
     });
 
     api.get("/order.json", async (req, res) => {
@@ -224,36 +245,46 @@ expressWs(api);
     });
 
     api.post("/order.json", requireAuthentication, (req, res) => {
-        let buffer = "";
-        req.on("data", chunk => buffer += chunk.toString());
-        req.on("close", async () => {
-            await db.modSlideOrder(JSON.parse(buffer));
-            updateAllConnections();
-        });
+        if (req.username && req.password) {
+            let buffer = "";
+            req.on("data", chunk => buffer += chunk.toString());
+            req.on("close", async () => {
+                await db.modSlideOrder(JSON.parse(buffer));
+                updateAllConnections();
+            });
+            res
+                .status(200)
+                .send("Done");
+        }
         res
-            .status(200)
-            .send("Done");
+            .status(401)
+            .send("not authorized");
     });
 
     api.post("/image/new", requireAuthentication, async (req, res) => {
-        if (req.query.type !== "png" && req.query.type !== "jpg") {
+        if (req.username && req.password) {
+            if (req.query.type !== "png" && req.query.type !== "jpg") {
+                res
+                    .status(401)
+                    .send("Bad image type");
+                return;
+            }
+            if (req.query.type === "jpg") req.query.type = "jpeg";
+            const id = await db.modFile(
+                stream.Readable.from(Buffer.from(req.body)),
+                req.query.type,
+                req.query.user,
+                req.query.date,
+                req.query.expiration
+            );
+            updateAllConnections();
             res
-                .status(401)
-                .send("Bad image type");
-            return;
+                .status(200)
+                .send(id);
         }
-        if (req.query.type === "jpg") req.query.type = "jpeg";
-        const id = await db.modFile(
-            stream.Readable.from(Buffer.from(req.body)),
-            req.query.type,
-            req.query.user,
-            req.query.date,
-            req.query.expiration
-        );
-        updateAllConnections();
         res
-            .status(200)
-            .send(id);
+            .status(401)
+            .send("not authorized");
     });
 
     api.get("/image/:id", async (req, res) => {
@@ -264,20 +295,25 @@ expressWs(api);
     });
 
     api.post("/image/:id", requireAuthentication, async (req, res) => {
-        const id = await db.modFile(
-            stream.Readable.from(Buffer.from(req.body)),
-            req.query.name,
-            "image",
-            req.query.user,
-            req.query.date,
-            req.query.exp || "",
-            req.query.ext,
-            req.params.id
-        );
-        updateAllConnections();
+        if (req.username && req.password) {
+            const id = await db.modFile(
+                stream.Readable.from(Buffer.from(req.body)),
+                req.query.name,
+                "image",
+                req.query.user,
+                req.query.date,
+                req.query.exp || "",
+                req.query.ext,
+                req.params.id
+            );
+            updateAllConnections();
+            res
+                .status(200)
+                .send(id);
+        }
         res
-            .status(200)
-            .send(id);
+            .status(401)
+            .send("not authorized");
     });
 
 
