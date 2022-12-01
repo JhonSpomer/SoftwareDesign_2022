@@ -62,6 +62,8 @@ expressWs(api);
                 console.error(error);
             }
         }
+        console.log("Got here");
+        console.log(auth);
         res
             .status(401)
             .send("authentication failed");
