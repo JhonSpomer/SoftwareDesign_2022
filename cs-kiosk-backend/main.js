@@ -150,6 +150,19 @@ expressWs(api);
         }
     });
 
+    api.get("/user.json", async (req, res) => {
+        const user = await SUdb.getUser(req.query.user);
+        if (user) {
+            res
+                .status(200)
+                .send(JSON.stringify(user));
+        } else {
+            res
+                .status(404)
+                .send("nonexistant");
+        }
+    });
+
     api.post("/slide.json", requireAuthentication, (req, res) => {
         if (req.username && req.password) {
             let buffer = "";

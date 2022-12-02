@@ -27,49 +27,9 @@ import Box from "@cloudscape-design/components/box";
 
 
 export default function Users(props) {
-    //variables
-    const [SlideName, setSlideName] = useState();
-    const [items, setItems] = useState([
-        {
-            name: "User 1",
-            alt: "First",
-            description: "This is the first item"
-
-        },
-        {
-            name: "User 2",
-            alt: "Second",
-            description: "This is the second item"
-
-        },
-        {
-            name: "User 3",
-            alt: "Third",
-            description: "This is the third item"
-
-        },
-        {
-            name: "User 4",
-            alt: "Fourth",
-            description: "This is the fourth item"
-
-        },
-        {
-            name: "User 5",
-            alt: "Fifth",
-            description: "This is the fifth item"
-
-        },
-        {
-            name: "User 6",
-            alt: "Sixth",
-            description: "This is the sixth item"
-
-        }
-    ]);
-    const slides = getSlides();
-    const which = false;
-
+    useEffect(() => {
+        console.log(props.users);
+    }, []);
     return <Cards
         ariaLabels={{
             itemSelectionLabel: (e, t) => `select ${t.name}`,
@@ -77,17 +37,31 @@ export default function Users(props) {
         }}
         cardDefinition={{
             header: item => (
-                <Link fontSize="heading-m">{item.name}</Link>
+                <Link fontSize="heading-m">{item.username}</Link>
             ),
             sections: [
                 {
-                    id: "description",
-                    header: "Description",
-                    content: item => item.description
-                },
-                {
                     id: "type",
                     header: "Type",
+                    //content: item => item.slideType.slice(0, 1).toUpperCase() + item.slideType.slice(1),
+                    width: "50"
+                },
+                {
+                    id: "preview",
+                    header: "Preview",
+                    content: item => ({
+                        "link": () => <iframe
+                            src={item.username}
+                            // width={"2000vw"}
+                            // height={"1000vh"}
+                            // csp={`frame-ancestors ${slide.content};`}
+                        />
+                    }[item.slideType]()),
+                    width: "50"
+                },
+                {
+                    id: "actions",
+                    header: "Actions",
                     content: item => <SpaceBetween
                         direction="horizontal"
                         size="m"
@@ -98,82 +72,78 @@ export default function Users(props) {
                                 const href = `/edit/user/${item._id}`;
                                 props.setActiveHref(href);
                                 props.navigate(href);
-                                console.log("edit");
-                                const data = await (await fetch("http://localhost:9000/slides.json", {
-                                    method: "POST",
-                                    mode: "cors"
-                                })).json();
-                                console.log(data);
                             }}
                         >
                             Edit user
                         </Button>
                         <Button
-                            onClick={async () => {
+                            onClick={() => {
                                 console.log("del");
-                                setItems(items.filter(i => i.name !== item.name));
-
-                              //  await fetch(`http://localhost:9000/delete/user.json?id=${i._id}`, {
-                               //     method: "GET",
-                              //      mode: "cors"
-                              //  });
+                                let creds = sessionStorage.getItem("UserCreds");
+                                console.log(creds);
+                                const res = fetch(`http://localhost:9000/delete/slide.json?id=${item._id}`, {
+                                    method: "GET",
+                                    mode: "cors",
+                                    headers: {
+                                        "Authorization": `Basic ${creds}`
+                                    }
+                                });
                             }}
                         >
                             Delete user
                         </Button>
-                    </SpaceBetween>
-                },
-                {
-                    id: "size",
-                    header: "Size",
-                    content: item => item.size
+                    </SpaceBetween>,
+                    width: "50"
                 }
             ]
         }}
         cardsPerRow={[
-            {cards: 1},
-            {minWidth: 500, cards: 1}
+            { cards: 1 },
+            { minWidth: 500, cards: 1 }
         ]}
-        items={items}
+        items={props.users}
         loadingText="Loading resources"
-        empty={<Box textAlign="center" color="inherit">
-            <b>No resources</b>
-            <Box
-                padding={{bottom: "s"}}
-                variant="p"
-                color="inherit"
-            >
-                No users to display.
+        empty={
+            <Box textAlign="center" color="inherit">
+                <b>
+                    No users
+                </b>
+                <Box
+                    padding={{ bottom: "s" }}
+                    variant="p"
+                    color="inherit"
+                >
+                    No users to display.
+                </Box>
+                <Button
+                    onClick={async event => {
+                        event.preventDefault();
+                        const href = `/edit/user/new`;
+                        props.setActiveHref(href);
+                        props.navigate(href);
+                    }}
+                >
+                    Create user
+                </Button>
             </Box>
-            <Button
-                onClick={() => {
-                    setItems(
-                        [...items, {
-                            _id: items.length,
-                            name: "slide " + (items.length + 1),
-                            alt: "dfeault",
-                            description: "This is default description for slide " + (items.length + 1)
-                        }]
-                    )
-                }}>
-                Create user
-            </Button>
-        </Box>}
-        header={<Header
-            actions={<Button
-                onClick={() => {
-                    setItems(items.concat([{
-                        _id: items.length,
-                        name: "User " + (items.length + 1),
-                        alt: "test",
-                        description: "A user"
-                    }]));
-                }}
+        }
+        header={
+            <Header
+                actions={<Button
+                    onClick={async event => {
+                        event.preventDefault();
+                        const href = `/edit/user/new`;
+                        props.setActiveHref(href);
+                        let stored = sessionStorage.getItem("UserCreds");
+                        console.log(stored);
+                        props.navigate(href);
+                    }}
+                >
+                    Create User
+                </Button>}
             >
-                Create User
-            </Button>}
-        >
-            Current Users
-        </Header>}
+                Current User Accounts
+            </Header>
+        }
     />;
 }

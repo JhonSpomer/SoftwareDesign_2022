@@ -51,6 +51,7 @@ function App() {
         location = useLocation(),
         [checked, setChecked] = useState(false),
         [slides, setSlides] = useState([]),
+        [users, setUsers] = useState([]),
         [files, setFiles] = useState({});
 
     useEffect(() => {
@@ -99,13 +100,51 @@ function App() {
         }
     }
 
+    async function loadAUser() {
+
+        
+       // const user = await (await fetch(`http://localhost:9000/user.json?user=${testid}`))
+    }
+
+    async function loadUsers() {
+        let testid = "6384152b31bac2f795b2940d"
+        const usersRes = await fetch(new URL(`http://localhost:9000/user.json?user=${testid}`), {
+            method: "GET"
+        });
+
+        try {
+            const newUsers = await usersRes.json();
+            const
+                newFiles = [],
+                ids = [];
+            for (const slide of newUsers) {
+
+
+               // if (slide.slideType === "image") {
+                 //   newFiles.push(getImage(users.content));
+                 //   ids.push(users._id);
+               // }
+            }
+            newFiles.splice(0, newFiles.length, ...(await Promise.all(newFiles)));
+            for (const key in files) delete files[key];
+            for (let i = 0; i < newFiles.length; i++) files[ids[i]] = newFiles[i];
+            console.log(newFiles);
+            //setFiles({ ...files });
+            setUsers(newUsers);
+        } catch (error) {
+            console.error("Encountered an error when attempting to fetch Users:", error);
+        }
+    }
+
     useEffect(() => {
         loadSlides();
+        loadUsers();
         const connection = new WebSocket(new URL("/autoupdate", "ws://localhost:9000"));
 
         async function onMessage(event) {
             if (event.data === "update") {
                 await loadSlides();
+                await loadUsers();
             }
         }
 
