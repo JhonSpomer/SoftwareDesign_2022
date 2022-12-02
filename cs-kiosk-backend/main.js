@@ -171,7 +171,7 @@ expressWs(api);
             let buffer = "";
             const index = req.query.index || Infinity;
             req.on("data", chunk => buffer += chunk.toString());
-            req.on("close", async () => {
+            req.once("close", async () => {
                 const slide = JSON.parse(buffer);
                 const id = await db.modSlide(
                     slide.slideName,
@@ -192,26 +192,29 @@ expressWs(api);
                     .send(id);
                 return;
             });
+        } else {
+            res
+                .status(401)
+                .send("not authorized");
         }
-        res
-            .status(401)
-            .send("not authorized");
     });
 
     api.post("/user.json", requireAuthentication, (req, res) => {
+        console.log("Got here");
         if (req.username && req.password) {
             let buffer = "";
             req.on("data", chunk => buffer += chunk.toString());
             req.once("close", async () => {
                 try {
                     const {oldUsername, oldPassword, newUsername, newPassword} = JSON.parse(buffer);
+                    console.log("Retrieved username and password:", oldUsername, oldPassword, newUsername, newPassword);
                     if (req.username !== oldUsername || req.password !== oldPassword) {
                         res
-                            .status(401)
-                            .send("permission denied");
+                            .status(400)
+                            .send("bad request");
                         return;
                     }
-                    await SUdb.modUser(
+                    await db.modUser(
                         oldUsername,
                         oldPassword,
                         newUsername,
@@ -229,10 +232,11 @@ expressWs(api);
                     return;
                 }
             });
+        } else {
+            res
+                .status(401)
+                .send("not authorized");
         }
-        res
-            .status(401)
-            .send("not authorized");
     });
 
 
