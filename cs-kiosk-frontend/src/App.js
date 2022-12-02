@@ -231,7 +231,7 @@ function App() {
                     <Route
                         path="/edit/user/*"
                         element={
-                            <UserEdit
+                            <EditUser
                                 navigate={navigate}
                                 setActiveHref={setActiveHref}
                             />

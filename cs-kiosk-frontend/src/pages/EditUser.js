@@ -19,6 +19,8 @@ import Button from "@cloudscape-design/components/button";
 import Header from "@cloudscape-design/components/header";
 import FormField from "@cloudscape-design/components/form-field";
 import Input from "@cloudscape-design/components/input";
+import ContentLayout from "@cloudscape-design/components/content-layout";
+import Container from "@cloudscape-design/components/container";
 
 export default function EditUser(props) {
     const
@@ -28,82 +30,98 @@ export default function EditUser(props) {
         [password, setPassword] = useState(""),
         [passwordConfirm, setPasswordConfirm] = useState("");
 
-    return <form onSubmit={event => event.preventDefault()}>
-        <Form
-            header={<Header
-                variant="h1"
-            >
-                Enter new username and password
-            </Header>}
-            actions={<SpaceBetween
-                direction="horizontal"
-                size="xs"
-            >
-                <Button
-                    variant="normal"
-                >
-                    Cancel
-                </Button>
-                <Button
-                    variant="primary"
-                    onClick={async event => {
-                        event.preventDefault();
-                        if (password !== passwordConfirm) {
-                            setPasswordError("Passwords do not match. Please type matching passwords.");
-                            return;
-                        }
-                        const credentials = window.sessionStorage.getItem("UserCreds");
-                        const res = await fetch("http://localhost:9000/user.json", {
-                            method: "POST",
-                            mode: "cors",
-                            headers: {
-                                "Content-Type": "application/json",
-                                "Authorization": `Basic ${credentials}`
-                            }
-                        });
-                        console.log(res);
-                        if (res.ok) {
-                            props.setActiveHref("/profile");
-                            props.navigate("/profile");
-                            return;
-                        } else {
-                            setError("A server error occurred. Please try again later.");
-                            return;
-                        }
-                    }}
-                >
-                    Submit
-                </Button>
-            </SpaceBetween>}
+    return <ContentLayout
+        header={<Header
+            variant="h1"
         >
-            <FormField
-                label="Username"
+            Edit Username and Password
+        </Header>}
+    >
+        <Container
+            header={<Header
+                variant="h2"
             >
-                <Input
-                    type="text"
-                    value={username}
-                    onChange={event => setUsername(event.detail.value)}
-                />
-            </FormField>
-            <FormField
-                label="Password"
-            >
-                <Input
-                    type="password"
-                    value={password}
-                    onChange={event => setPassword(event.detail.value)}
-                />
-            </FormField>
-            <FormField
-                label="Re-type password"
-                errorText={passwordError}
-            >
-                <Input
-                    type="password"
-                    value={passwordConfirm}
-                    onChange={event => setPasswordConfirm(event.detail.value)}
-                />
-            </FormField>
-        </Form>
-    </form>;
+                User Credentials
+            </Header>}
+        >
+            <form onSubmit={event => event.preventDefault()}>
+                <Form
+                    header={<Header
+                        variant="h1"
+                    >
+                        Enter new username and password
+                    </Header>}
+                    actions={<SpaceBetween
+                        direction="horizontal"
+                        size="xs"
+                    >
+                        <Button
+                            variant="normal"
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            variant="primary"
+                            onClick={async event => {
+                                event.preventDefault();
+                                if (password !== passwordConfirm) {
+                                    setPasswordError("Passwords do not match. Please type matching passwords.");
+                                    return;
+                                }
+                                const credentials = window.sessionStorage.getItem("UserCreds");
+                                const res = await fetch("http://localhost:9000/user.json", {
+                                    method: "POST",
+                                    mode: "cors",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                        "Authorization": `Basic ${credentials}`
+                                    }
+                                });
+                                console.log(res);
+                                if (res.ok) {
+                                    props.setActiveHref("/profile");
+                                    props.navigate("/profile");
+                                    return;
+                                } else {
+                                    setError("A server error occurred. Please try again later.");
+                                    return;
+                                }
+                            }}
+                        >
+                            Submit
+                        </Button>
+                    </SpaceBetween>}
+                >
+                    <FormField
+                        label="Username"
+                    >
+                        <Input
+                            type="text"
+                            value={username}
+                            onChange={event => setUsername(event.detail.value)}
+                        />
+                    </FormField>
+                    <FormField
+                        label="Password"
+                    >
+                        <Input
+                            type="password"
+                            value={password}
+                            onChange={event => setPassword(event.detail.value)}
+                        />
+                    </FormField>
+                    <FormField
+                        label="Re-type password"
+                        errorText={passwordError}
+                    >
+                        <Input
+                            type="password"
+                            value={passwordConfirm}
+                            onChange={event => setPasswordConfirm(event.detail.value)}
+                        />
+                    </FormField>
+                </Form>
+            </form>
+        </Container>
+    </ContentLayout>;
 }
