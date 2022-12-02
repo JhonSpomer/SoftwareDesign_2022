@@ -107,8 +107,8 @@ function App() {
     }
 
     async function loadUsers() {
-        let testid = "6384152b31bac2f795b2940d"
-        const usersRes = await fetch(new URL(`http://localhost:9000/user.json?user=${testid}`), {
+
+        const usersRes = await fetch(new URL(`http://localhost:9000/users.json`), {
             method: "GET"
         });
 
@@ -117,14 +117,6 @@ function App() {
             const
                 newFiles = [],
                 ids = [];
-            for (const slide of newUsers) {
-
-
-               // if (slide.slideType === "image") {
-                 //   newFiles.push(getImage(users.content));
-                 //   ids.push(users._id);
-               // }
-            }
             newFiles.splice(0, newFiles.length, ...(await Promise.all(newFiles)));
             for (const key in files) delete files[key];
             for (let i = 0; i < newFiles.length; i++) files[ids[i]] = newFiles[i];

@@ -84,7 +84,7 @@ module.exports = {
             }
 
             if (module.exports.checkForUser(_newUN)) {
-                return false;
+                return "username taken";
             }
 
             // create a document with just the fields to be updated
@@ -139,7 +139,7 @@ module.exports = {
         await client.connect();
         let user;
         try {
-            user = await users.findOne({ username: UN, password: PS }, { username: 1, password: 1 });
+            user = await users.findOne({ username: UN}, { username: 1});
         }
         finally {
             return user;
