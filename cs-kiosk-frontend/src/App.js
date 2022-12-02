@@ -214,6 +214,7 @@ function App() {
                             <Users
                                 navigate={navigate}
                                 setActiveHref={setActiveHref}
+                                users={users}
                             />
                         }
                     />

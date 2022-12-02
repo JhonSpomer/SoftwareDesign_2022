@@ -41,25 +41,6 @@ export default function Users(props) {
             ),
             sections: [
                 {
-                    id: "type",
-                    header: "Type",
-                    //content: item => item.slideType.slice(0, 1).toUpperCase() + item.slideType.slice(1),
-                    width: "50"
-                },
-                {
-                    id: "preview",
-                    header: "Preview",
-                    content: item => ({
-                        "link": () => <iframe
-                            src={item.username}
-                            // width={"2000vw"}
-                            // height={"1000vh"}
-                            // csp={`frame-ancestors ${slide.content};`}
-                        />
-                    }[item.slideType]()),
-                    width: "50"
-                },
-                {
                     id: "actions",
                     header: "Actions",
                     content: item => <SpaceBetween
