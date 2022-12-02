@@ -33,7 +33,38 @@ module.exports = {
         }
     },
 
-    modSlide: async function (_slideName, _slideType, _user, _date, _expDate, _content, _fileExt, targetID) {
+    modUser: async function (_oldUN, _oldPS, _newUN, _newPS) {
+        await client.connect();
+        try {
+            // check if there is a user with the given credentials
+            if (!module.exports.checkForUser(_oldUN, _oldPS))
+            {
+                console.log("User does not exist. Use NewUser to create a new user")
+                return false;
+            }
+
+            if (module.exports.checkForUser(_newUN)) {
+                return false;
+            }
+
+            // create a document with just the fields to be updated
+            const upDoc =
+            {
+                username: _newUN,
+                password: _newPS,
+            };
+            //update document with given username
+            //upsert set to true - will insert given document if it does not already exixst
+            const result = await users.updateOne({ username: _oldUN, password: _oldPS }, { $set: upDoc }, { upsert: false });
+            //console.log(`A document was updated with the _id: ${result.upsertedId}`);
+            return result.upsertedId.toHexString();
+        }
+        finally {
+            // await client.close();
+        }
+    },
+
+    modSlide: async function (_slideName, _slideType, _user, _date, _expDate, _content, _fileExt, targetID, _approved = false) {
         await client.connect();
         try {
             //if no existing document ID is provided, create a new slide record.
@@ -47,7 +78,8 @@ module.exports = {
                     lastModifiedBy: _user,
                     expiration_date: _expDate,
                     content: _content,
-                    fileExt: _fileExt
+                    fileExt: _fileExt,
+                    approved: _approved
                 };
                 const result = await slides.insertOne(slideDoc, { upsert: true });
                 // console.log(`A document was created with the _id: ${result.insertedId}`);
@@ -167,7 +199,7 @@ module.exports = {
         await client.connect();
         const rawObj = await slides.find();
         rawObj.rewind();
-        return slides.toArray();
+        return rawObj.toArray();
     },
 
     modSlideOrder: async function (_idOrder) {

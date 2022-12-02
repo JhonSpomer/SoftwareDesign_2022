@@ -11,24 +11,24 @@ const users = database.collection("users");
 const config = database.collection("Config_data");
 //const bucket = new mongodb.GridFSBucket(database, { bucketName: 'slideFiles' });
 module.exports = {
-    // checkForUser: async function (UN, PS) {
-    //     await client.connect();
-    //     if (PS === undefined) {
-    //         if (await users.find({"username": UN}).count() > 0) {
-    //             return true;
-    //         } else {
-    //             return false;
-    //         }
-    //     } else {
-    //         if (await users.find({"username": UN, "password": PS}).count() === 1) {
-    //             return true;
-    //         } else if (await users.find({"username": UN, "password": PS}).count() > 1) {
-    //             return "duplicate user records";
-    //         } else {
-    //             return false;
-    //         }
-    //     }
-    // },
+    checkForUser: async function (UN, PS) {
+        await client.connect();
+        if (PS === undefined) {
+            if (await users.find({"username": UN}).count() > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            if (await users.find({"username": UN, "password": PS}).count() === 1) {
+                return true;
+            } else if (await users.find({"username": UN, "password": PS}).count() > 1) {
+                return "duplicate user records";
+            } else {
+                return false;
+            }
+        }
+    },
 
     checkForSU: async function (_UN, _PS) {
         await client.connect();
@@ -77,7 +77,7 @@ module.exports = {
         await client.connect();
         try {
             // check if there is a user with the given credentials
-            if (!module.exports.checkForUser)
+            if (!module.exports.checkForUser(_oldUN))
             {
                 console.log("User does not exist. Use NewUser to create a new user")
                 return false;
@@ -91,6 +91,10 @@ module.exports = {
             let upDoc;
             if (_newUN === undefined && _newPS !== undefined) {
                 upDoc = {password: _newPS};
+                //upsert set to true - will insert given document if it does not already exixst
+                const result = await users.updateOne({ username: _oldUN}, { $set: upDoc }, { upsert: false });
+                //console.log(`A document was updated with the _id: ${result.upsertedId}`);
+                return result.upsertedId.toHexString();
             }
             
             // if (_newPS === undefined && _newUN !== undefined) {
@@ -150,7 +154,7 @@ module.exports = {
         await client.connect();
         const rawObj = await users.find();
         rawObj.rewind();
-        return users.toArray();
+        return rawObj.toArray();
     },
 
     newConfigFile: async function (newDoc) {
