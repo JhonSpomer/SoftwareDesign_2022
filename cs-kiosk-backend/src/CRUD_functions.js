@@ -37,13 +37,13 @@ module.exports = {
         await client.connect();
         try {
             // check if there is a user with the given credentials
-            if (!module.exports.checkForUser(_oldUN, _oldPS))
+            if (!await module.exports.checkForUser(_oldUN, _oldPS))
             {
                 console.log("User does not exist. Use NewUser to create a new user")
                 return false;
             }
 
-            if (module.exports.checkForUser(_newUN)) {
+            if (_oldUN !== _newUN && await module.exports.checkForUser(_newUN)) {
                 console.log("Duplicate user found. Cannot change username.");
                 return false;
             }
@@ -57,9 +57,8 @@ module.exports = {
             console.log("Got here!");
             //update document with given username
             //upsert set to true - will insert given document if it does not already exixst
-            const result = await users.updateOne({ username: _oldUN, password: _oldPS }, { $set: upDoc }, { upsert: false });
+            await users.updateOne({ username: _oldUN, password: _oldPS }, { $set: upDoc }, { upsert: false });
             //console.log(`A document was updated with the _id: ${result.upsertedId}`);
-            return result.upsertedId.toHexString();
         }
         finally {
             // await client.close();
