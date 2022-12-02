@@ -146,6 +146,13 @@ module.exports = {
         }
     },
 
+    getAllUsers: async function () {
+        await client.connect();
+        const rawObj = await users.find();
+        rawObj.rewind();
+        return users.toArray();
+    },
+
     newConfigFile: async function (newDoc) {
         const result = await config.insertOne(newDoc);
         return result.insertedId.toHexString();
