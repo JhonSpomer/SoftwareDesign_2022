@@ -61,6 +61,7 @@ export default function EditUser(props) {
                                 "Authorization": `Basic ${credentials}`
                             }
                         });
+                        console.log(res);
                         if (res.ok) {
                             props.setActiveHref("/profile");
                             props.navigate("/profile");
