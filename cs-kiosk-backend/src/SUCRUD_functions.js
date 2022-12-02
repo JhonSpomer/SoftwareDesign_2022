@@ -166,7 +166,8 @@ module.exports = {
     getDBStats: async function ()
     {
         await client.connect();
-        console.log(await database.stats({scale: 1024*1024}));
+        const stats = await database.stats({scale: 1024*1024});
+        console.log(stats);
         return;
     }
 }
