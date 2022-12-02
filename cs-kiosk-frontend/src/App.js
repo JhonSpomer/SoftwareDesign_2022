@@ -157,7 +157,11 @@ function App() {
 
         const credentials = window.sessionStorage.getItem("UserCreds");
 
-        if (!credentials) navigate("/login");
+        if (!credentials) {
+            navigate("/login");
+        } else {
+            setNavValue(false);
+        }
 
         return () => {
             connection.close();
@@ -184,7 +188,7 @@ function App() {
                         {type: "link", text: "Admin", href: "admin"},
                         {type: "link", text: "Preview", href: "preview"},
                         {type: "link", text: "Users", href: "users"},
-                        {type: "link", text: "Login", href: "/"},
+                        {type: "link", text: "Login", href: "login"},
                         {type: "divider"},
                         {
                             //We don't have a documentation website to link to at this time; thus, I've commented this segment out as to not misslead users. -Jhon
@@ -257,7 +261,7 @@ function App() {
                     />
 
                     <Route
-                        path="/"
+                        path="/login"
                         element={
                             <ContentLayout
                                 header={<Header
@@ -273,11 +277,11 @@ function App() {
                                                 <Button
                                                     variant="primary"
                                                     disabled={!checked}
-                                                    onClick={() => {
+                                                    onClick={async () => {
+                                                        await query(userValue, passwordValue);
                                                         setUserValue("");
                                                         setPasswordValue("");
                                                         setActiveHref("admin");
-                                                        query(userValue, passwordValue);
                                                         //sessionStorage.setItem(userValue);
                                                         //NavBarBool();
                                                     }}

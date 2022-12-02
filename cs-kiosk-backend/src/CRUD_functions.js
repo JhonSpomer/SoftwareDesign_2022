@@ -44,7 +44,7 @@ module.exports = {
             }
 
             if (module.exports.checkForUser(_newUN)) {
-                console.log("User already exists")
+                console.log("Duplicate user found. Cannot change username.");
                 return false;
             }
 
@@ -54,6 +54,7 @@ module.exports = {
                 username: _newUN,
                 password: _newPS,
             };
+            console.log("Got here!");
             //update document with given username
             //upsert set to true - will insert given document if it does not already exixst
             const result = await users.updateOne({ username: _oldUN, password: _oldPS }, { $set: upDoc }, { upsert: false });

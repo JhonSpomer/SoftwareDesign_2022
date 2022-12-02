@@ -21,13 +21,24 @@ import FormField from "@cloudscape-design/components/form-field";
 import Input from "@cloudscape-design/components/input";
 import ContentLayout from "@cloudscape-design/components/content-layout";
 import Container from "@cloudscape-design/components/container";
+import Alert from "@cloudscape-design/components/alert";
 
 export default function EditUser(props) {
+    let oldUsername = "", oldPassword = "";
     const
         [error, setError] = useState(undefined),
+        credentials = window.sessionStorage.getItem("UserCreds");
+    if (!credentials) setError(<Alert
+        type="error"
+        header="You are not logged in."
+    >
+        Reload the page or navigate to the login tab to login.
+    </Alert>);
+    else [oldUsername, oldPassword] = window.atob(credentials).split(":");
+    const
         [passwordError, setPasswordError] = useState(undefined),
-        [username, setUsername] = useState(""),
-        [password, setPassword] = useState(""),
+        [newUsername, setNewUsername] = useState(oldUsername),
+        [newPassword, setNewPassword] = useState(""),
         [passwordConfirm, setPasswordConfirm] = useState("");
 
     return <ContentLayout
@@ -64,18 +75,21 @@ export default function EditUser(props) {
                             variant="primary"
                             onClick={async event => {
                                 event.preventDefault();
-                                if (password !== passwordConfirm) {
+                                if (newPassword !== passwordConfirm) {
                                     setPasswordError("Passwords do not match. Please type matching passwords.");
                                     return;
                                 }
-                                const credentials = window.sessionStorage.getItem("UserCreds");
                                 const res = await fetch("http://localhost:9000/user.json", {
                                     method: "POST",
                                     mode: "cors",
                                     headers: {
                                         "Content-Type": "application/json",
                                         "Authorization": `Basic ${credentials}`
-                                    }
+                                    },
+                                    body: JSON.stringify({
+                                        oldUsername, oldPassword,
+                                        newUsername, newPassword
+                                    })
                                 });
                                 console.log(res);
                                 if (res.ok) {
@@ -97,8 +111,8 @@ export default function EditUser(props) {
                     >
                         <Input
                             type="text"
-                            value={username}
-                            onChange={event => setUsername(event.detail.value)}
+                            value={newUsername}
+                            onChange={event => setNewUsername(event.detail.value)}
                         />
                     </FormField>
                     <FormField
@@ -106,8 +120,8 @@ export default function EditUser(props) {
                     >
                         <Input
                             type="password"
-                            value={password}
-                            onChange={event => setPassword(event.detail.value)}
+                            value={newPassword}
+                            onChange={event => setNewPassword(event.detail.value)}
                         />
                     </FormField>
                     <FormField
