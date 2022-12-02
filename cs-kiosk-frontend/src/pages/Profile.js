@@ -58,7 +58,7 @@ export default function Profile() {
                 <FormField
                     label="Password"
                 >
-                    {password.slice(0, 1) + [].fill("•", 0, password.length - 2).join("") + password.slice(-1)}
+                    {password.slice(0, 1) + (new Array(password.length - 2)).fill("●", 0, password.length - 2).join("") + password.slice(-1)}
                 </FormField>
             </Container>
         </SpaceBetween>}
