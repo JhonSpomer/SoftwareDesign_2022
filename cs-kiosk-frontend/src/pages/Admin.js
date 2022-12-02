@@ -36,7 +36,7 @@ export default function Admin(props) {
         header={<Header
             variant="h1"
         >
-            Edit Username and Password
+            Slide List
         </Header>}
     >
         <Cards

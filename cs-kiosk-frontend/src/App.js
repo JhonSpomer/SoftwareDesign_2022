@@ -36,6 +36,8 @@ import UserEdit from './pages/UserEdit';
 import {getImage} from './utility/utils';
 import EditUser from "./pages/EditUser";
 import Profile from './pages/Profile';
+import ContentLayout from '@cloudscape-design/components/content-layout';
+import Container from '@cloudscape-design/components/container';
 
 //variables
 
@@ -152,6 +154,11 @@ function App() {
 
         connection.addEventListener("message", onMessage);
         connection.addEventListener("close", onClose);
+
+        const credentials = window.sessionStorage.getItem("UserCreds");
+
+        if (!credentials) navigate("/login");
+
         return () => {
             connection.close();
         };
@@ -252,66 +259,74 @@ function App() {
                     <Route
                         path="/"
                         element={
-                            <div>
-                                <Form
-                                    actions={
-                                        <SpaceBetween direction="horizontal" size="xs">
-                                            <Button
-                                                variant="primary"
-                                                disabled={!checked}
-                                                onClick={() => {
-                                                    setUserValue("");
-                                                    setPasswordValue("");
-                                                    setActiveHref("admin");
-                                                    query(userValue, passwordValue);
-                                                    //sessionStorage.setItem(userValue);
-                                                    //NavBarBool();
-                                                }}
+                            <ContentLayout
+                                header={<Header
+                                    variant="h1"
+                                >
+                                    Login
+                                </Header>}
+                            >
+                                <Container>
+                                    <Form
+                                        actions={
+                                            <SpaceBetween direction="horizontal" size="xs">
+                                                <Button
+                                                    variant="primary"
+                                                    disabled={!checked}
+                                                    onClick={() => {
+                                                        setUserValue("");
+                                                        setPasswordValue("");
+                                                        setActiveHref("admin");
+                                                        query(userValue, passwordValue);
+                                                        //sessionStorage.setItem(userValue);
+                                                        //NavBarBool();
+                                                    }}
+                                                >
+                                                    Submit
+                                                </Button>
+                                            </SpaceBetween>
+                                        }
+                                        header={
+                                            <Header
+                                                variant="h1"
                                             >
-                                                Submit
-                                            </Button>
-                                        </SpaceBetween>
-                                    }
-                                    header={
-                                        <Header
-                                            variant="h1"
+                                                Enter username and password
+                                            </Header>
+                                        }
+                                    >
+                                        <FormField
+                                            description="Username"
+                                            label=""
+                                            errorText={ErrorValue}
                                         >
-                                            Login
-                                        </Header>
-                                    }
-                                >
-                                    <FormField
-                                        description="Username"
-                                        label=""
-                                        errorText={ErrorValue}
+                                            <Input
+                                                value={userValue}
+                                                onChange={event => setUserValue(event.detail.value)}
+                                            />
+                                        </FormField>
+                                        <FormField
+                                            description="Password"
+                                            label=""
+                                            errorText={ErrorValue}
+                                        >
+                                            <Input
+                                                value={passwordValue}
+                                                onChange={event => setPasswordValue(event.detail.value)
+                                                }
+                                            />
+                                        </FormField>
+                                    </Form>
+                                    <Checkbox
+                                        checked={checked}
+                                        onChange={event =>
+                                            setChecked(event.detail.checked)
+                                        }
                                     >
-                                        <Input
-                                            value={userValue}
-                                            onChange={event => setUserValue(event.detail.value)}
-                                        />
-                                    </FormField>
-                                    <FormField
-                                        description="Password"
-                                        label=""
-                                        errorText={ErrorValue}
-                                    >
-                                        <Input
-                                            value={passwordValue}
-                                            onChange={event => setPasswordValue(event.detail.value)
-                                            }
-                                        />
-                                    </FormField>
-                                </Form>
-                                <Checkbox
-                                    checked={checked}
-                                    onChange={event =>
-                                        setChecked(event.detail.checked)
-                                    }
-                                >
-                                    You agree to the guidelines set out by the CMU Computer Science department;
-                                     In addition, you agree to abide by FERPA guidelines for all content on this kiosk.
-                                </Checkbox>
-                            </div>
+                                        You agree to the guidelines set out by the CMU Computer Science department;
+                                        In addition, you agree to abide by FERPA guidelines for all content on this kiosk.
+                                    </Checkbox>
+                                </Container>
+                            </ContentLayout>
                         }
                     />
                 </Routes>
