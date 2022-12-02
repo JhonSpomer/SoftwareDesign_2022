@@ -152,7 +152,7 @@ module.exports = {
 
     getAllUsers: async function () {
         await client.connect();
-        const rawObj = await users.find();
+        const rawObj = await users.find({},{password:0});
         rawObj.rewind();
         return rawObj.toArray();
     },
