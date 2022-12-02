@@ -1,8 +1,8 @@
 const
     mongodb = require("mongodb"),
     fs = require('fs');
-const buffer = fs.readFileSync("../.mongodb.auth");
-//const buffer = fs.readFileSync("/home/user/CSCI490/SoftwareDesign_2022/.mongodb.auth");
+//const buffer = fs.readFileSync("../.mongodb.auth");
+const buffer = fs.readFileSync("/home/user/CSCI490/SoftwareDesign_2022/.mongodb.auth");
 const uri = buffer.toString();
 const client = new mongodb.MongoClient(uri);
 const database = client.db("BulletinDisplay");
@@ -158,11 +158,20 @@ module.exports = {
     },
 
     newConfigFile: async function (newDoc) {
+        await client.connect();
         const result = await config.insertOne(newDoc);
         return result.insertedId.toHexString();
+    },
+
+    getDBStats: async function ()
+    {
+        await client.connect();
+        console.log(await database.stats({scale: 1024*1024}));
+        return;
     }
 }
 
+module.exports.getDBStats();
 // const testUser = {
 //     username: "susan",
 //     password: "admin", 
