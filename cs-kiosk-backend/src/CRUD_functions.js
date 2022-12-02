@@ -13,7 +13,7 @@ module.exports = {
     checkForUser: async function (UN, PS) {
         await client.connect();
         if (PS === undefined) {
-            if (users.find({"username": UN}).count() > 0) {
+            if (await users.find({"username": UN}).count() > 0) {
                 return true;
             }
             else {
@@ -44,6 +44,7 @@ module.exports = {
             }
 
             if (module.exports.checkForUser(_newUN)) {
+                console.log("User already exists")
                 return false;
             }
 
