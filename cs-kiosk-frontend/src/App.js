@@ -109,18 +109,23 @@ function App() {
     async function loadUsers() {
 
         const usersRes = await fetch(new URL(`http://localhost:9000/users.json`), {
-            method: "GET"
+            method: "GET",
+            mode: "cors"
         });
+        console.log("clarity-----");
+        console.log(usersRes.ok, usersRes);
 
         try {
             const newUsers = await usersRes.json();
-            const
-                newFiles = [],
-                ids = [];
-            newFiles.splice(0, newFiles.length, ...(await Promise.all(newFiles)));
-            for (const key in files) delete files[key];
-            for (let i = 0; i < newFiles.length; i++) files[ids[i]] = newFiles[i];
-            console.log(newFiles);
+            console.log(newUsers);
+
+            //const
+            //    newFiles = [],
+           //     ids = [];
+            //newFiles.splice(0, newFiles.length, ...(await Promise.all(newFiles)));
+           // for (const key in files) delete files[key];
+           // for (let i = 0; i < newFiles.length; i++) files[ids[i]] = newFiles[i];
+            //console.log(newFiles);
             //setFiles({ ...files });
             setUsers(newUsers);
         } catch (error) {

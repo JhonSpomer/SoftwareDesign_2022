@@ -151,13 +151,14 @@ expressWs(api);
     });
 
     api.get("/users.json", async (req, res) => {
-        const user = await SUdb.getAllUsers(req.query.user);
-        console.log(req.query.users);
-        console.log(users);
-        if (users) {
+        const user = await SUdb.getAllUsers();
+        console.log(user);
+        //console.log(user);
+        if (user) {
+            res.setHeader("Content-Type", "application/json");
             res
                 .status(200)
-                .send(JSON.stringify(users));
+                .send(JSON.stringify(user));
         } else {
             res
                 .status(404)
