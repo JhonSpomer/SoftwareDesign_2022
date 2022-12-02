@@ -13,6 +13,7 @@ Edit user page for the user documentation. Should only be accessed by a super us
 
 
 import React, {useState, useEffect} from "react";
+import {Buffer} from 'buffer';
 import Form from "@cloudscape-design/components/form";
 import SpaceBetween from "@cloudscape-design/components/space-between";
 import Button from "@cloudscape-design/components/button";
@@ -93,6 +94,11 @@ export default function EditUser(props) {
                                 });
                                 console.log(res);
                                 if (res.ok) {
+                                    let Creds = newUsername + ':' + newPassword;
+                                    var encodedCreds = Buffer.from(Creds);
+                                    console.log(Creds);
+                                    let base64Creds = encodedCreds.toString('base64');
+                                    window.sessionStorage.setItem("UserCreds", base64Creds);
                                     props.setActiveHref("/profile");
                                     props.navigate("/profile");
                                     return;

@@ -43,18 +43,26 @@ import Container from '@cloudscape-design/components/container';
 
 function App() {
     const
-        navigate = useNavigate(),
+        [navigationHide, setNavValue] = useState(true),
+        [activeHref, setActiveHref] = useState("/"),
         [userValue, setUserValue] = useState(),
         [passwordValue, setPasswordValue] = useState(""),
         [ErrorValue, setErrorValue] = useState(""),
-        [activeHref, setActiveHref] = useState("/"),
-        [navigationHide, setNavValue] = useState(true),
         [toolsHide, setToolsValue] = useState(true),
-        location = useLocation(),
         [checked, setChecked] = useState(false),
         [slides, setSlides] = useState([]),
         [users, setUsers] = useState([]),
-        [files, setFiles] = useState({});
+        [files, setFiles] = useState({}),
+        navigate = useNavigate(),
+        location = useLocation();
+
+    console.log(location.pathname);
+    const credentials = window.sessionStorage.getItem("UserCreds");
+    if (location.pathname !== "/login") {
+        if (!credentials) {
+            navigate("/login");
+        }
+    }
 
     useEffect(() => {
         if (location.pathname === "/") {
@@ -155,11 +163,7 @@ function App() {
         connection.addEventListener("message", onMessage);
         connection.addEventListener("close", onClose);
 
-        const credentials = window.sessionStorage.getItem("UserCreds");
-
-        if (!credentials) {
-            navigate("/login");
-        } else {
+        if (credentials) {
             setNavValue(false);
         }
 
@@ -184,11 +188,10 @@ function App() {
                         }
                     }}
                     items={[
-                        {type: "link", text: "User Settings", href: "profile"},
-                        {type: "link", text: "Admin", href: "admin"},
+                        {type: "link", text: "Profile", href: "profile"},
                         {type: "link", text: "Preview", href: "preview"},
+                        {type: "link", text: "Slides", href: "slides"},
                         {type: "link", text: "Users", href: "users"},
-                        {type: "link", text: "Login", href: "login"},
                         {type: "divider"},
                         {
                             //We don't have a documentation website to link to at this time; thus, I've commented this segment out as to not misslead users. -Jhon
@@ -208,7 +211,7 @@ function App() {
                     <Route path="/test" element={<Tests />} />
                     <Route path="/profile" element={<Profile />} />
                     <Route
-                        path="/admin"
+                        path="/slides"
                         element={
                             <Admin
                                 navigate={navigate}
@@ -364,7 +367,7 @@ function App() {
             const value = await res.text();
             if (value === 'authenticated') {
                 setNavValue(false);
-                navigate("/admin");
+                navigate("/slides");
             }
         }
     }

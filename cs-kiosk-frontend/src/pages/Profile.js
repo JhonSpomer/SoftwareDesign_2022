@@ -32,6 +32,10 @@ export default function Profile() {
     </Alert>);
     else [username, password] = window.atob(credentials).split(":");
 
+    useState(() => {
+        [username, password] = window.atob(credentials).split(":");
+    }, []);
+
     return <ContentLayout
         header={<Header
             variant="h1"
