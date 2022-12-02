@@ -261,6 +261,7 @@ expressWs(api);
                 await db.modSlideOrder(order.filter(i => i != req.query.id));
                 console.log(req.query.id);
                 await db.delSlide(req.query.id);
+                await db.delFile(req.query.id);
                 updateAllConnections();
                 res
                     .status(200)

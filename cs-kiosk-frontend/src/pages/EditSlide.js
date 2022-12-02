@@ -2,14 +2,9 @@
 Last updated: 11/29/2022
 Last updated by: Jhon & Matt
 Last change: Connecting to the actual endpoint that talks to the backend.
-
-
-
 This page allows the user to modify or create a new slide to put into the carousel. It should support links, pdf, png/jpg. Currently it only supports png.jpg and
 links, including web3!
-
 --BUGS--
-
 --TODO--
 */
 
@@ -246,6 +241,7 @@ export default function EditSlide(props) {
             } else {
                 console.log("edit slide");
                 console.log(location);
+                
             }
 
             const href = `/preview`;
@@ -255,4 +251,3 @@ export default function EditSlide(props) {
         onCancel={() => props.navigate("/admin")}
     />;
 }
-
