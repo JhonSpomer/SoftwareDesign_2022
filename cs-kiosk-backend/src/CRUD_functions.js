@@ -95,7 +95,8 @@ module.exports = {
                     lastModifiedBy: _user,
                     expiration_date: _expDate,
                     content: _content,
-                    fileExt: _fileExt
+                    fileExt: _fileExt,
+                    approved: _approved
                 };
                 const result = await slides.updateOne({ _id: mongodb.ObjectId(targetID) }, { $set: slideDoc }, { upsert: true });
                 // console.log(`A document was updated with the _id: ${result.upsertedId}`);
