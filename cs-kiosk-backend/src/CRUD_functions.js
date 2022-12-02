@@ -144,7 +144,7 @@ module.exports = {
     delFile: async function (_targetID) {
         await client.connect();
         try {
-            return bucket.delete(mongodb.ObjectId(_targetID));
+            return await bucket.delete(mongodb.ObjectId(_targetID));
         }
         finally {
             // await client.close();
