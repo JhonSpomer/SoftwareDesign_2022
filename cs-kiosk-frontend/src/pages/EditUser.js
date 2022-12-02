@@ -22,6 +22,7 @@ import Input from "@cloudscape-design/components/input";
 
 export default function EditUser(props) {
     const
+        [error, setError] = useState(undefined),
         [passwordError, setPasswordError] = useState(undefined),
         [username, setUsername] = useState(""),
         [password, setPassword] = useState(""),
@@ -45,13 +46,29 @@ export default function EditUser(props) {
                 </Button>
                 <Button
                     variant="primary"
-                    onClick={event => {
+                    onClick={async event => {
                         event.preventDefault();
                         if (password !== passwordConfirm) {
                             setPasswordError("Passwords do not match. Please type matching passwords.");
                             return;
                         }
-                        props.navigate("/users");
+                        const credentials = window.sessionStorage.getItem("UserCreds");
+                        const res = await fetch("http://localhost:9000/user.json", {
+                            method: "POST",
+                            mode: "cors",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "Authorization": `Basic ${credentials}`
+                            }
+                        });
+                        if (res.ok) {
+                            props.setActiveHref("/profile");
+                            props.navigate("/profile");
+                            return;
+                        } else {
+                            setError("A server error occurred. Please try again later.");
+                            return;
+                        }
                     }}
                 >
                     Submit

@@ -187,10 +187,31 @@ expressWs(api);
             let buffer = "";
             req.on("data", chunk => buffer += chunk.toString());
             req.once("close", async () => {
-                const newUserCredentials = JSON.parse(buffer);
-                res
-                    .status(200)
-                    .send("Modified user.");
+                try {
+                    const {oldUsername, oldPassword, newUsername, newPassword} = JSON.parse(buffer);
+                    if (req.username !== oldUsername || req.password !== oldPassword) {
+                        res
+                            .status(401)
+                            .send("permission denied");
+                        return;
+                    }
+                    await SUdb.modUser(
+                        oldUsername,
+                        oldPassword,
+                        newUsername,
+                        newPassword
+                    );
+                    res
+                        .status(200)
+                        .send("modified user");
+                    return;
+                } catch (error) {
+                    console.error(error);
+                    res
+                        .status(400)
+                        .send("bad request");
+                    return;
+                }
             });
         }
         res
