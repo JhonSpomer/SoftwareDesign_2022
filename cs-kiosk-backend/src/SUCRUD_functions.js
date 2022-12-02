@@ -84,7 +84,7 @@ module.exports = {
             }
 
             if (module.exports.checkForUser(_newUN)) {
-                return "username taken";
+                return false;
             }
 
             // create a document with just the fields to be updated
