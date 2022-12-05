@@ -14,13 +14,13 @@ module.exports = {
     checkForUser: async function (UN, PS) {
         await client.connect();
         if (PS === undefined) {
-            if (await users.find({"username": UN}).count() > 0) {
+            if (await users.findOne({"username": UN}) !== null) {
                 return true;
             } else {
                 return false;
             }
         } else {
-            if (await users.find({"username": UN, "password": PS}).count() === 1) {
+            if (await users.findOne({"username": UN, "password": PS}) !== null) {
                 return true;
             } else if (await users.find({"username": UN, "password": PS}).count() > 1) {
                 return "duplicate user records";
@@ -33,14 +33,14 @@ module.exports = {
     checkForSU: async function (_UN, _PS) {
         await client.connect();
         if (PS === undefined) {
-            if (await users.find({"username": UN}).count() > 0) {
+            if (await users.findOne({"username": UN}) !== null) {
                 return true;
             } else {
                 return false;
             }
         }
         else {
-            if (await users.find({"username": UN, "password": PS, "superUser": true}).count() === 1 ) {
+            if (await users.findOne({"username": UN, "password": PS, "superUser": true}) !== null) {
                 return true;
             } else if (await users.find({"username": UN, "password": PS, "superUser": true}).count() > 1) {
                 return "duplicate user records, please contact database administrator";
@@ -57,13 +57,20 @@ module.exports = {
             return "username taken";
         }
         //create a document to insert
-        const doc =
+        const userDoc =
         {
             username: _UN,
             password: _PS,
             superUser: _SU
         };
-        const result = await users.insertOne(doc);
+        //console.log("check 3");
+        const result = await users.insertOne(userDoc);
+        console.log(`A document was inserted with the _id: ${result.insertedId}`);
+        const check = await module.exports.getUser(result.insertedId);
+        if (!ld.isEqual(check, userDoc)) 
+        {
+            console.log("getslide returned a different document than the one just uploaded.");
+        }
         return result.insertedId.toHexString();
     },
 
@@ -78,24 +85,30 @@ module.exports = {
                 return false;
             }
 
-            if (module.exports.checkForUser(_newUN)) {
-                return "username taken";
-            }
+
+
 
             // create a document with just the fields to be updated
             let upDoc;
             if (_newUN === undefined && _newPS !== undefined) {
                 upDoc = {password: _newPS};
                 //upsert set to true - will insert given document if it does not already exixst
-                const result = await users.updateOne({ username: _oldUN}, { $set: upDoc }, { upsert: false });
-                return result.upsertedId.toHexString();
+                // const result = await users.updateOne({ username: _oldUN, password: _oldPS}, { $set: upDoc }, { upsert: false });
+                //console.log(`A document was updated with the _id: ${result.upsertedId}`);
+                // return result.upsertedId.toHexString();
             }
             
-            // if (_newPS === undefined && _newUN !== undefined) {
-            //     upDoc = {password: _newUN};
-            // }
+            if (_newPS === undefined && _newUN !== undefined) {
+                if (module.exports.checkForUser(_newUN)) {
+                    return "username taken";
+                }
+                upDoc = {password: _newUN};
+            }
 
             else {
+                if (module.exports.checkForUser(_newUN)) {
+                    return "username taken";
+                }
             
                 upDoc =
                 {

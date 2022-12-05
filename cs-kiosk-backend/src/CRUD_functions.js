@@ -1,6 +1,7 @@
 const
     mongodb = require("mongodb"),
     fs = require('fs');
+    ld = require('lodash');
 const buffer = fs.readFileSync("../.mongodb.auth");
 const uri = buffer.toString();
 const client = new mongodb.MongoClient(uri);
@@ -13,7 +14,7 @@ module.exports = {
     checkForUser: async function (UN, PS) {
         await client.connect();
         if (PS === undefined) {
-            if (await users.find({"username": UN}).count() > 0) {
+            if (await users.findOne({"username": UN}) !== null) {
                 return true;
             }
             else {
@@ -21,7 +22,7 @@ module.exports = {
             }
         }
         else {
-            if (await users.find({ "username": UN, "password": PS }).count() === 1) {
+            if (await users.findOne({ "username": UN, "password": PS }) !== null) {
                 return true;
             }
             else if (await users.find({"username": UN, "password": PS}).count() > 1) {
@@ -73,13 +74,20 @@ module.exports = {
                     slideType: _slideType,
                     slideOwner: _user,
                     lastModifiedBy: _user,
+                    lastModifiedDate: _date,
                     expiration_date: _expDate,
                     content: _content,
                     fileExt: _fileExt,
                     approved: _approved
                 };
                 const result = await slides.insertOne(slideDoc, { upsert: true });
-                return result.insertedId.toHexString();
+                // console.log(`A document was created with the _id: ${result.insertedId}`);
+                const check = await module.exports.getSlide(result.upsertedId);
+                if (!ld.isEqual(check, slideDoc)) 
+                {
+                    console.log("getslide returned a different document than the one just uploaded.");
+                }
+                return result.upsertedId.toHexString();
             }
             else {
                 // slide metadata document
@@ -89,12 +97,19 @@ module.exports = {
                     slideType: _slideType,
                     // an existing document should already have an owner.
                     lastModifiedBy: _user,
+                    lastModifiedDate: _date,
                     expiration_date: _expDate,
                     content: _content,
                     fileExt: _fileExt,
                     approved: _approved
                 };
                 const result = await slides.updateOne({ _id: mongodb.ObjectId(targetID) }, { $set: slideDoc }, { upsert: true });
+                // console.log(`A document was updated with the _id: ${result.upsertedId}`);
+                // const check = await module.exports.getSlide(result.upsertedId);
+                // if (!ld.isEqual(check, slideDoc)) 
+                // {
+                //     console.log("getslide returned a different document than the one just uploaded.");
+                // }
                 return result.upsertedId.toHexString();
             }
 
@@ -144,7 +159,7 @@ module.exports = {
             // await client.close();
         }
     },
-    modFile: async function (_RS, _name, _type, _user, _date, _expDate, _fileExt, targetID) {
+    modFile: async function (_ReadStream, _name, _type, _user, _date, _expDate, _fileExt, targetID) {
         await client.connect();
         return new Promise(async (resolve, reject) => {
             try {
