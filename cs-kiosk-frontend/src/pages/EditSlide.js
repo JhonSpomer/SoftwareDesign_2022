@@ -31,7 +31,7 @@ export default function EditSlide(props) {
 
     useEffect(() => {
         if (id === undefined) return;
-        const foundSlide = props.slides.find(s => void(console.log("Ids:", s._id, id)) || s._id === id);
+        const foundSlide = props.slides.find(s => s._id === id);
         if (!foundSlide) {
             props.navigate("/edit/slide/new");
             return;
@@ -68,7 +68,6 @@ export default function EditSlide(props) {
                 >
                     <RadioGroup
                         onChange={event => {
-                            console.log(slide);
                             setSlide({...slide, slideType: event.detail.value});
                         }}
                         value={slide.slideType || "none"}
@@ -157,9 +156,7 @@ export default function EditSlide(props) {
                     //
                     //====================================LINK=======================================================
                     //
-                    console.log(slide);
                     let Creds = sessionStorage.getItem("UserCreds");
-                    console.log("Credentials:", Creds);
                     const res = await fetch(`http://localhost:9000/slide.json`, {
                         method: "POST",
                         mode: 'cors',
@@ -179,7 +176,7 @@ export default function EditSlide(props) {
                         return;
                     }
                     let Creds = sessionStorage.getItem("UserCreds");
-                    console.log("Credentials:", Creds);
+                    console.log("Uploading image");
                     const res = await fetch(`http://localhost:9000/image/new?type=${match[1]}`, {
                         method: "POST",
                         mode: 'cors',
@@ -190,10 +187,8 @@ export default function EditSlide(props) {
                         body: file
                     });
                     const IDvalue = await res.text();
-                    console.log(IDvalue);
                     if (res.ok) {
                         let Creds = sessionStorage.getItem("UserCreds");
-                        console.log("Credentials:", Creds);
                         const res2 = await fetch(`http://localhost:9000/slide.json`, {
                             method: "POST",
                             mode: 'cors',
@@ -210,7 +205,6 @@ export default function EditSlide(props) {
                     // ==========================PDF========================================
                     //
                     let Creds = sessionStorage.getItem("UserCreds");
-                    console.log("Credentials:", Creds);
                     const res = await fetch(`http://localhost:9000/pdf/new`, {
                         method: "POST",
                         mode: 'cors',
@@ -222,10 +216,8 @@ export default function EditSlide(props) {
                         body: file
                     });
                     const IDvalue = await res.text();
-                    console.log(IDvalue);
                     if (res.ok) {
                         let Creds = sessionStorage.getItem("UserCreds");
-                        console.log("Credentials:", Creds);
                         const res2 = await fetch(`http://localhost:9000/slide.json`, {
                             method: "POST",
                             mode: 'cors',
@@ -238,10 +230,6 @@ export default function EditSlide(props) {
                         // const IDTest = await res2.text();
                     }
                 }
-            } else {
-                console.log("edit slide");
-                console.log(location);
-                
             }
 
             const href = `/preview`;

@@ -115,7 +115,8 @@ module.exports = {
         try {
             //delete document with given uID
             //const result = 
-            await slides.deleteOne({ _id: mongodb.ObjectId(_targetID) });
+            const deleted = await slides.findOneAndDelete({_id: mongodb.ObjectId(_targetID)});
+            return deleted;
             //console.log(`${result.deletedId} document(s) deleted.`);
         }
         finally {
@@ -162,7 +163,7 @@ module.exports = {
             }
             else {
                 // //delete old slide
-                await module.exports.delSlide(mongodb.ObjectId(targetID));
+                await module.exports.delFile(mongodb.ObjectId(targetID));
                 //upload new slide
                 const stream = bucket.openUploadStreamWithId(mongodb.ObjectId(targetID), _name, { metadata: { type: _type, owner: _user, lastModifiedBy: _user, lastModifiedDate: _date, expDate: _expDate, fileExt: _fileExt } });
                 const result = await _RS.pipe(stream);

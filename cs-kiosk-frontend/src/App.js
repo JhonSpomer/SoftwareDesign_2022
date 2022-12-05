@@ -41,6 +41,12 @@ import Container from '@cloudscape-design/components/container';
 
 //variables
 
+function SendToPreview(props) {
+    props.setActiveHref("/preview");
+    props.navigate("/preview");
+    return <div>Please navigate elsewhere or reload the page. This page is empty.</div>;
+}
+
 function App() {
     const
         [navigationHide, setNavValue] = useState(true),
@@ -56,10 +62,10 @@ function App() {
         navigate = useNavigate(),
         location = useLocation();
 
-    console.log(location.pathname);
     const credentials = window.sessionStorage.getItem("UserCreds");
     if (location.pathname !== "/login") {
         if (!credentials) {
+            // setActiveHref("/login");
             navigate("/login");
         }
     }
@@ -69,6 +75,7 @@ function App() {
             setNavValue(true);
             setToolsValue(true);
         }
+        setActiveHref(location.pathname);
     }, [location]);
 
     //Currently unused, Commented out but left for completness.
@@ -102,7 +109,6 @@ function App() {
             newFiles.splice(0, newFiles.length, ...(await Promise.all(newFiles)));
             for (const key in files) delete files[key];
             for (let i = 0; i < newFiles.length; i++) files[ids[i]] = newFiles[i];
-            console.log(newFiles);
             setFiles({ ...files });
             setSlides(newSlides);
         } catch (error) {
@@ -122,12 +128,9 @@ function App() {
             method: "GET",
             mode: "cors"
         });
-        console.log("clarity-----");
-        console.log(usersRes.ok, usersRes);
 
         try {
             const newUsers = await usersRes.json();
-            console.log(newUsers);
 
             //const
             //    newFiles = [],
@@ -188,10 +191,10 @@ function App() {
                         }
                     }}
                     items={[
-                        {type: "link", text: "Profile", href: "profile"},
-                        {type: "link", text: "Preview", href: "preview"},
-                        {type: "link", text: "Slides", href: "slides"},
-                        {type: "link", text: "Users", href: "users"},
+                        {type: "link", text: "Profile", href: "/profile"},
+                        {type: "link", text: "Preview", href: "/preview"},
+                        {type: "link", text: "Slides", href: "/slides"},
+                        {type: "link", text: "Users", href: "/users"},
                         {type: "divider"},
                         {
                             //We don't have a documentation website to link to at this time; thus, I've commented this segment out as to not misslead users. -Jhon
@@ -207,9 +210,18 @@ function App() {
 
             content={
                 <Routes>
-                    <Route path="*" element={<div>Oh no! You appear to have gotten lost. Please restart the system to get back to the login page. If this does not fix this problem. Please contact the system maintence team.</div>} />
+                    <Route
+                        path="*"
+                        element={<SendToPreview
+                            navigate={navigate}
+                            setActiveHref={setActiveHref}
+                        />}
+                    />
                     <Route path="/test" element={<Tests />} />
-                    <Route path="/profile" element={<Profile />} />
+                    <Route path="/profile" element={<Profile
+                        navigate={navigate}
+                        setActiveHref={setActiveHref}
+                    />} />
                     <Route
                         path="/slides"
                         element={
@@ -281,10 +293,10 @@ function App() {
                                                     variant="primary"
                                                     disabled={!checked}
                                                     onClick={async () => {
-                                                        await query(userValue, passwordValue);
                                                         setUserValue("");
                                                         setPasswordValue("");
-                                                        setActiveHref("admin");
+                                                        await query(userValue, passwordValue);
+                                                        // setActiveHref("/slides");
                                                         //sessionStorage.setItem(userValue);
                                                         //NavBarBool();
                                                     }}
@@ -307,6 +319,7 @@ function App() {
                                             errorText={ErrorValue}
                                         >
                                             <Input
+                                                type="text"
                                                 value={userValue}
                                                 onChange={event => setUserValue(event.detail.value)}
                                             />
@@ -317,6 +330,7 @@ function App() {
                                             errorText={ErrorValue}
                                         >
                                             <Input
+                                                type="password"
                                                 value={passwordValue}
                                                 onChange={event => setPasswordValue(event.detail.value)
                                                 }
@@ -345,15 +359,12 @@ function App() {
         //check if user credentials are in database
 
         let jsondata = JSON.stringify({ username: usrName, password: pssWord });
-        console.log(jsondata);
         let Creds = usrName + ':' + pssWord;
         var EncodedCreds = Buffer.from(Creds);
-        console.log(Creds);
         let base64Creds = EncodedCreds.toString('base64');
 
 
         window.sessionStorage.setItem("UserCreds", base64Creds);
-        console.log(base64Creds);
         const res = await fetch('http://localhost:9000/authenticate.json', {
             method: "POST",
             mode: 'cors',
@@ -367,6 +378,7 @@ function App() {
             const value = await res.text();
             if (value === 'authenticated') {
                 setNavValue(false);
+                setActiveHref("/slides");
                 navigate("/slides");
             }
         }

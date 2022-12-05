@@ -264,13 +264,12 @@ expressWs(api);
                 const order = await db.getSlideOrder();
                 await db.modSlideOrder(order.filter(i => i != req.query.id));
                 console.log(req.query.id);
-                await db.delSlide(req.query.id);
-                await db.delFile(req.query.id);
+                const deleted = await db.delSlide(req.query.id);
+                if (deleted.value.type === "image" || deleted.value.type === "pdf") await db.delFile(deleted.value.content);
                 updateAllConnections();
                 res
                     .status(200)
                     .send("deleting slide with id " + req.query.id);
-                console.log("deleting " + req.query.id);
             } catch (e) {
                 console.log("Failed to delete");
             }
@@ -309,6 +308,7 @@ expressWs(api);
     });
 
     api.post("/image/new", requireAuthentication, async (req, res) => {
+        console.log("Creating image");
         if (req.username && req.password) {
             if (req.query.type !== "png" && req.query.type !== "jpg") {
                 res
@@ -317,6 +317,7 @@ expressWs(api);
                 return;
             }
             if (req.query.type === "jpg") req.query.type = "jpeg";
+            console.log(req.body);
             const id = await db.modFile(
                 stream.Readable.from(Buffer.from(req.body)),
                 req.query.type,
@@ -418,3 +419,6 @@ expressWs(api);
         server.close();
     });
 })();
+
+process.on("uncaughtException", console.error);
+process.on("unhandledRejection", console.error);

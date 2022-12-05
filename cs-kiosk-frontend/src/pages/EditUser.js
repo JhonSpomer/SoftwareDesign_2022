@@ -58,6 +58,7 @@ export default function EditUser(props) {
         >
             <form onSubmit={event => event.preventDefault()}>
                 <Form
+                    errorText={error}
                     header={<Header
                         variant="h1"
                     >
@@ -92,11 +93,9 @@ export default function EditUser(props) {
                                         newUsername, newPassword
                                     })
                                 });
-                                console.log(res);
                                 if (res.ok) {
                                     let Creds = newUsername + ':' + newPassword;
-                                    var encodedCreds = Buffer.from(Creds);
-                                    console.log(Creds);
+                                    let encodedCreds = Buffer.from(Creds);
                                     let base64Creds = encodedCreds.toString('base64');
                                     window.sessionStorage.setItem("UserCreds", base64Creds);
                                     props.setActiveHref("/profile");

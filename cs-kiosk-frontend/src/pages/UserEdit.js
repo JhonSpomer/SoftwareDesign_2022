@@ -33,9 +33,9 @@ export default function UserEdit(props) {
             onChange={event => setPasswordValue(event.detail.value)}></Input>
         <Button
             onClick={async () => {
-                console.log("change submit");
-                console.log(UserValue);
-                console.log(PasswordValue);
+                // console.log("change submit");
+                // console.log(UserValue);
+                // console.log(PasswordValue);
                 //hit db here
 
             }

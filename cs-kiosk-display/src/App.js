@@ -25,19 +25,22 @@ export default function App() {
         {slides.length
         ? slides.map(slide => <Carousel.Item
             interval={slide.interval || 8000}
+            style={{
+                width: "100%",
+                height: "100%"
+            }}
         >
             {{
                 "link": () => <iframe
                     src={slide.content}
-                    width={"2000vw"}
-                    height={"1000vh"}
-                    // csp={`frame-ancestors ${slide.content};`}
+                    style={{
+                        width: "100vw",
+                        height: "100vh"
+                    }}
                 />,
                 "image": () => <ImgFromArrayBuffer
                     arrayBuffer={slide.content}
                     mimeType={slide.mimeType || "image/jpeg"}
-                    width="2000vw"
-                    height="1000vh"
                 />
             }[slide.slideType]()}
         </Carousel.Item>)

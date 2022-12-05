@@ -28,9 +28,9 @@ import ContentLayout from "@cloudscape-design/components/content-layout";
 
 
 export default function Users(props) {
-    useEffect(() => {
-        console.log(props.users);
-    }, []);
+    // useEffect(() => {
+    //     console.log(props.users);
+    // }, []);
     return <ContentLayout
         header={<Header
             variant="h1"
@@ -58,7 +58,7 @@ export default function Users(props) {
                             <Button
                                 onClick={async event => {
                                     event.preventDefault();
-                                    const href = `/edit/user/${item._id}`;
+                                    const href = `/edit/user/${item.username}`;
                                     props.setActiveHref(href);
                                     props.navigate(href);
                                 }}
@@ -67,10 +67,8 @@ export default function Users(props) {
                             </Button>
                             <Button
                                 onClick={() => {
-                                    console.log("del");
                                     let creds = sessionStorage.getItem("UserCreds");
-                                    console.log(creds);
-                                    const res = fetch(`http://localhost:9000/delete/slide.json?id=${item._id}`, {
+                                    const res = fetch(`http://localhost:9000/delete/user.json?username=${item.username}`, {
                                         method: "GET",
                                         mode: "cors",
                                         headers: {
@@ -124,7 +122,6 @@ export default function Users(props) {
                             const href = `/edit/user/new`;
                             props.setActiveHref(href);
                             let stored = sessionStorage.getItem("UserCreds");
-                            console.log(stored);
                             props.navigate(href);
                         }}
                     >
