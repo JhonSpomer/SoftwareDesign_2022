@@ -38,6 +38,7 @@ import EditUser from "./pages/EditUser";
 import Profile from './pages/Profile';
 import ContentLayout from '@cloudscape-design/components/content-layout';
 import Container from '@cloudscape-design/components/container';
+import StatusIndicator from "@cloudscape-design/components/status-indicator";
 
 //variables
 
@@ -59,6 +60,7 @@ function App() {
         [slides, setSlides] = useState([]),
         [users, setUsers] = useState([]),
         [files, setFiles] = useState({}),
+        [loginLoading, setLoginLoading] = useState(false),
         navigate = useNavigate(),
         location = useLocation();
 
@@ -291,7 +293,8 @@ function App() {
                                             <SpaceBetween direction="horizontal" size="xs">
                                                 <Button
                                                     variant="primary"
-                                                    disabled={!checked}
+                                                    disabled={!checked && loginLoading}
+                                                    loading={loginLoading}
                                                     onClick={async () => {
                                                         setUserValue("");
                                                         setPasswordValue("");
@@ -357,12 +360,12 @@ function App() {
 
     async function query(usrName, pssWord) {
         //check if user credentials are in database
+        setLoginLoading(true);
 
         let jsondata = JSON.stringify({ username: usrName, password: pssWord });
         let Creds = usrName + ':' + pssWord;
-        var EncodedCreds = Buffer.from(Creds);
+        let EncodedCreds = Buffer.from(Creds);
         let base64Creds = EncodedCreds.toString('base64');
-
 
         window.sessionStorage.setItem("UserCreds", base64Creds);
         const res = await fetch('http://localhost:9000/authenticate.json', {
@@ -382,6 +385,7 @@ function App() {
                 navigate("/slides");
             }
         }
+        setLoginLoading(false);
     }
 }
 

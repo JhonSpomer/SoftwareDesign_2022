@@ -22,7 +22,8 @@ export default function EditSlide(props) {
         [slide, setSlide] = useState({}),
         [oldSlide, setOldSlide] = useState({}),
         [fileName, setFileName] = useState("file.txt"),
-        [file, setFile] = useState(undefined);
+        [file, setFile] = useState(undefined),
+        [uploadLoading, setUploadLoading] = useState(false);
 
     useEffect(() => {
         const parsedLocation = window.location.href.match(/\/edit\/slide\/([^/]+)$/);
@@ -58,6 +59,7 @@ export default function EditSlide(props) {
             submitButton: "Submit and View",
             optional: "optional"
         }}
+        isLoadingNextStep={uploadLoading}
         activeStepIndex={activeStepIndex}
         steps={[
             {
@@ -150,6 +152,7 @@ export default function EditSlide(props) {
             setActiveStepIndex(event.detail.requestedStepIndex);
         }}
         onSubmit={async () => {
+            setUploadLoading(true);
             let location = window.location.href;
             if (location === 'http://localhost:3000/edit/slide/new') {
                 if (slide.slideType === 'link') {
@@ -176,7 +179,6 @@ export default function EditSlide(props) {
                         return;
                     }
                     let Creds = sessionStorage.getItem("UserCreds");
-                    console.log("Uploading image");
                     const res = await fetch(`http://localhost:9000/image/new?type=${match[1]}`, {
                         method: "POST",
                         mode: 'cors',
@@ -230,6 +232,7 @@ export default function EditSlide(props) {
                         // const IDTest = await res2.text();
                     }
                 }
+                setUploadLoading(false);
             }
 
             const href = `/preview`;

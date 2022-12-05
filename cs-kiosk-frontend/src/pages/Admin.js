@@ -29,6 +29,8 @@ import {ImgFromArrayBuffer} from "../utility/utils";
 import ContentLayout from "@cloudscape-design/components/content-layout";
 
 export default function Admin(props) {
+    const
+        [deleteLoading, setDeleteLoading] = useState(undefined);
     // useEffect(() => {
     //     console.log(props.slides);
     // }, []);
@@ -92,15 +94,19 @@ export default function Admin(props) {
                                 Edit slide
                             </Button>
                             <Button
-                                onClick={() => {
+                                disabled={deleteLoading}
+                                loading={deleteLoading === item._id}
+                                onClick={async () => {
                                     let creds = sessionStorage.getItem("UserCreds");
-                                    const res = fetch(`http://localhost:9000/delete/slide.json?id=${item._id}`, {
+                                    setDeleteLoading(item._id);
+                                    const res = await fetch(`http://localhost:9000/delete/slide.json?id=${item._id}`, {
                                         method: "GET",
                                         mode: "cors",
                                         headers: {
                                             "Authorization": `Basic ${creds}`
                                         }
                                     });
+                                    setDeleteLoading(undefined);
                                 }}
                             >
                                 Delete slide

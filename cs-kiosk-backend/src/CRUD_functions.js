@@ -146,25 +146,29 @@ module.exports = {
     },
     modFile: async function (_RS, _name, _type, _user, _date, _expDate, _fileExt, targetID) {
         await client.connect();
-        try {
-            if (targetID === undefined) {
-                const stream = bucket.openUploadStream(_name, { metadata: { type: _type, owner: _user, lastModifiedBy: _user, lastModifiedDate: _date, expDate: _expDate, fileExt: _fileExt } });
-                const result = await _RS.pipe(stream);
-                return stream.id.toHexString();
+        return new Promise(async (resolve, reject) => {
+            try {
+                if (targetID === undefined) {
+                    const stream = bucket.openUploadStream(_name, { metadata: { type: _type, owner: _user, lastModifiedBy: _user, lastModifiedDate: _date, expDate: _expDate, fileExt: _fileExt } });
+                    const result = _RS.pipe(stream);
+                    result.once("close", () => resolve(stream.id.toHexString()));
+                    result.once("error", reject);
+                }
+                else {
+                    // //delete old slide
+                    await module.exports.delFile(mongodb.ObjectId(targetID));
+                    //upload new slide
+                    const stream = bucket.openUploadStreamWithId(mongodb.ObjectId(targetID), _name, { metadata: { type: _type, owner: _user, lastModifiedBy: _user, lastModifiedDate: _date, expDate: _expDate, fileExt: _fileExt } });
+                    const result = _RS.pipe(stream);
+                    result.once("close", () => resolve(stream.id.toHexString()));
+                    result.once("error", reject);
+                }
+    
             }
-            else {
-                // //delete old slide
-                await module.exports.delFile(mongodb.ObjectId(targetID));
-                //upload new slide
-                const stream = bucket.openUploadStreamWithId(mongodb.ObjectId(targetID), _name, { metadata: { type: _type, owner: _user, lastModifiedBy: _user, lastModifiedDate: _date, expDate: _expDate, fileExt: _fileExt } });
-                const result = await _RS.pipe(stream);
-                return stream.id.toHexString();
+            finally {
+                // await client.close();
             }
-
-        }
-        finally {
-            // await client.close();
-        }
+        });
     },
     getFile: async function (_targetID) {
         await client.connect();

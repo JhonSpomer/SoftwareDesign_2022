@@ -40,7 +40,8 @@ export default function EditUser(props) {
         [passwordError, setPasswordError] = useState(undefined),
         [newUsername, setNewUsername] = useState(oldUsername),
         [newPassword, setNewPassword] = useState(""),
-        [passwordConfirm, setPasswordConfirm] = useState("");
+        [passwordConfirm, setPasswordConfirm] = useState(""),
+        [uploadLoading, setUploadLoading] = useState(false);
 
     return <ContentLayout
         header={<Header
@@ -75,7 +76,10 @@ export default function EditUser(props) {
                         </Button>
                         <Button
                             variant="primary"
+                            disabled={uploadLoading}
+                            loading={uploadLoading}
                             onClick={async event => {
+                                setUploadLoading(true);
                                 event.preventDefault();
                                 if (newPassword !== passwordConfirm) {
                                     setPasswordError("Passwords do not match. Please type matching passwords.");
@@ -100,11 +104,8 @@ export default function EditUser(props) {
                                     window.sessionStorage.setItem("UserCreds", base64Creds);
                                     props.setActiveHref("/profile");
                                     props.navigate("/profile");
-                                    return;
-                                } else {
-                                    setError("A server error occurred. Please try again later.");
-                                    return;
-                                }
+                                } else setError("A server error occurred. Please try again later.");
+                                setUploadLoading(false);
                             }}
                         >
                             Submit
