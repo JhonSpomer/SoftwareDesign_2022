@@ -25,9 +25,6 @@ expressWs(api);
     }
 
     // function authenticate(req) {
-    //     console.log(req.get('Authorization'));
-    //     console.log(req.headers);
-
     //     let auth = (new Buffer.from(req.headers.Authorization.split(' ')[1], 'base64')).toString().split(':');
     //     return true;//db.checkForUser(auth[0], auth[1]);
     // }
@@ -54,11 +51,9 @@ expressWs(api);
         res.setHeader("Access-Control-Allow-Origin", req.get("Origin"));
         res.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type");
         let auth = req.get("Authorization");
-        console.log("Auth:", auth);
         if (typeof auth === "string") {
             try {
                 let [username, password] = Buffer.from(auth.split(" ")[1], "base64").toString().split(":");
-                console.log(username, password);
                 if (await db.checkForUser(username, password)) {
                     req.username = username;
                     req.password = password;
@@ -69,10 +64,6 @@ expressWs(api);
                 console.error(error);
             }
         }
-        console.log("Got here too???");
-        // res
-        //     .status(401)
-        //     .send("authentication failed");
         return next();
     }
 
@@ -105,7 +96,6 @@ expressWs(api);
         req.on("close", async () => {
             try {
                 const {username, password} = JSON.parse(buffer);
-                console.log(username, password);
                 let authRes = await db.checkForUser(username, password);
                 if (authRes === true) {
                     res
@@ -121,7 +111,7 @@ expressWs(api);
                         .send(authRes);
                 }
             } catch (e) {
-                console.log("Failed to extract username and password.");
+                console.error(e);
                 res
                     .status(401)
                     .send("not authenticated");
@@ -152,8 +142,6 @@ expressWs(api);
 
     api.get("/users.json", async (req, res) => {
         const user = await SUdb.getAllUsers();
-        console.log(user);
-        //console.log(user);
         if (user) {
             res.setHeader("Content-Type", "application/json");
             res
@@ -200,14 +188,12 @@ expressWs(api);
     });
 
     api.post("/user.json", requireAuthentication, (req, res) => {
-        console.log("Got here");
         if (req.username && req.password) {
             let buffer = "";
             req.on("data", chunk => buffer += chunk.toString());
             req.once("close", async () => {
                 try {
                     const {oldUsername, oldPassword, newUsername, newPassword} = JSON.parse(buffer);
-                    console.log("Retrieved username and password:", oldUsername, oldPassword, newUsername, newPassword);
                     if (req.username !== oldUsername || req.password !== oldPassword) {
                         res
                             .status(400)
@@ -259,11 +245,9 @@ expressWs(api);
     //adding del endpoint here. or trying anyways. ~Jhon
     api.get("/delete/slide.json", requireAuthentication, async (req, res) => {
         if (req.username && req.password) {
-            console.log("Reached delete midpoint");
             try {
                 const order = await db.getSlideOrder();
                 await db.modSlideOrder(order.filter(i => i != req.query.id));
-                console.log(req.query.id);
                 const deleted = await db.delSlide(req.query.id);
                 if (deleted.value.type === "image" || deleted.value.type === "pdf") await db.delFile(deleted.value.content);
                 updateAllConnections();
@@ -271,12 +255,13 @@ expressWs(api);
                     .status(200)
                     .send("deleting slide with id " + req.query.id);
             } catch (e) {
-                console.log("Failed to delete");
+                console.error(e);
             }
+        } else {
+            res
+                .status(401)
+                .send("not authorized");
         }
-        res
-            .status(401)
-            .send("not authorized");
     });
 
     api.get("/delete/user.json", requireSuperUserAuthentication, async (req, res) => {
@@ -301,14 +286,14 @@ expressWs(api);
             res
                 .status(200)
                 .send("Done");
+        } else {
+            res
+                .status(401)
+                .send("not authorized");
         }
-        res
-            .status(401)
-            .send("not authorized");
     });
 
     api.post("/image/new", requireAuthentication, async (req, res) => {
-        console.log("Creating image");
         if (req.username && req.password) {
             if (req.query.type !== "png" && req.query.type !== "jpg") {
                 res
@@ -317,7 +302,6 @@ expressWs(api);
                 return;
             }
             if (req.query.type === "jpg") req.query.type = "jpeg";
-            console.log(req.body);
             const id = await db.modFile(
                 stream.Readable.from(Buffer.from(req.body)),
                 req.query.type,
@@ -329,10 +313,11 @@ expressWs(api);
             res
                 .status(200)
                 .send(id);
+        } else {
+            res
+                .status(401)
+                .send("not authorized");
         }
-        res
-            .status(401)
-            .send("not authorized");
     });
 
     api.get("/image/:id", async (req, res) => {
@@ -358,10 +343,11 @@ expressWs(api);
             res
                 .status(200)
                 .send(id);
+        } else {
+            res
+                .status(401)
+                .send("not authorized");
         }
-        res
-            .status(401)
-            .send("not authorized");
     });
 
 
@@ -410,7 +396,6 @@ expressWs(api);
     win.loadURL("http://localhost:9000/carousel");
 
     // await SUdb.updUser("admin", "newAdmin", "newPassword");
-    // console.log(await db.getUser("newAdmin", "newPassword"));
 
     // Cleanup
 

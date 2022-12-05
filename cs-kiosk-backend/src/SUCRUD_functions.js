@@ -1,8 +1,8 @@
 const
     mongodb = require("mongodb"),
     fs = require('fs');
-//const buffer = fs.readFileSync("../.mongodb.auth");
-const buffer = fs.readFileSync("/home/user/CSCI490/SoftwareDesign_2022/.mongodb.auth");
+const buffer = fs.readFileSync("../.mongodb.auth");
+// const buffer = fs.readFileSync("/home/user/CSCI490/SoftwareDesign_2022/.mongodb.auth");
 const uri = buffer.toString();
 const client = new mongodb.MongoClient(uri);
 const database = client.db("BulletinDisplay");
@@ -53,9 +53,7 @@ module.exports = {
 
     newUser: async function (_UN, _PS, _SU = false) {
         await client.connect();
-        //console.log("check 1");
         if (module.exports.checkForUser(_UN)) {
-            //console.log("check 2");
             return "username taken";
         }
         //create a document to insert
@@ -65,9 +63,7 @@ module.exports = {
             password: _PS,
             superUser: _SU
         };
-        //console.log("check 3");
         const result = await users.insertOne(doc);
-        console.log(`A document was inserted with the _id: ${result.insertedId}`);
         return result.insertedId.toHexString();
     },
 
@@ -79,7 +75,6 @@ module.exports = {
             // check if there is a user with the given credentials
             if (!module.exports.checkForUser(_oldUN))
             {
-                console.log("User does not exist. Use NewUser to create a new user")
                 return false;
             }
 
@@ -93,7 +88,6 @@ module.exports = {
                 upDoc = {password: _newPS};
                 //upsert set to true - will insert given document if it does not already exixst
                 const result = await users.updateOne({ username: _oldUN}, { $set: upDoc }, { upsert: false });
-                //console.log(`A document was updated with the _id: ${result.upsertedId}`);
                 return result.upsertedId.toHexString();
             }
             
@@ -112,7 +106,6 @@ module.exports = {
             //update document with given username
             //upsert set to true - will insert given document if it does not already exixst
             const result = await users.updateOne({ username: _oldUN, password: _oldPS }, { $set: upDoc }, { upsert: false });
-            //console.log(`A document was updated with the _id: ${result.upsertedId}`);
             return result.upsertedId.toHexString();
         }
         finally {
@@ -133,7 +126,6 @@ module.exports = {
         try {
             //delete document with given username
             const result = await users.deleteOne({ username: _UN });
-            //console.log(`${result.deletedCount} document(s) deleted.`);
         }
         finally {
             // await client.close();

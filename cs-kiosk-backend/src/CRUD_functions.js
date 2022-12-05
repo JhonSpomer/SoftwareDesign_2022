@@ -39,12 +39,10 @@ module.exports = {
             // check if there is a user with the given credentials
             if (!await module.exports.checkForUser(_oldUN, _oldPS))
             {
-                console.log("User does not exist. Use NewUser to create a new user")
                 return false;
             }
 
             if (_oldUN !== _newUN && await module.exports.checkForUser(_newUN)) {
-                console.log("Duplicate user found. Cannot change username.");
                 return false;
             }
 
@@ -54,11 +52,9 @@ module.exports = {
                 username: _newUN,
                 password: _newPS,
             };
-            console.log("Got here!");
             //update document with given username
             //upsert set to true - will insert given document if it does not already exixst
             await users.updateOne({ username: _oldUN, password: _oldPS }, { $set: upDoc }, { upsert: false });
-            //console.log(`A document was updated with the _id: ${result.upsertedId}`);
         }
         finally {
             // await client.close();
@@ -83,7 +79,6 @@ module.exports = {
                     approved: _approved
                 };
                 const result = await slides.insertOne(slideDoc, { upsert: true });
-                // console.log(`A document was created with the _id: ${result.insertedId}`);
                 return result.insertedId.toHexString();
             }
             else {
@@ -100,10 +95,8 @@ module.exports = {
                     approved: _approved
                 };
                 const result = await slides.updateOne({ _id: mongodb.ObjectId(targetID) }, { $set: slideDoc }, { upsert: true });
-                // console.log(`A document was updated with the _id: ${result.upsertedId}`);
                 return result.upsertedId.toHexString();
             }
-            //console.log(`A document was updated with the _id: ${result.upsertedId}`);
 
         }
         finally {
@@ -117,7 +110,6 @@ module.exports = {
             //const result = 
             const deleted = await slides.findOneAndDelete({_id: mongodb.ObjectId(_targetID)});
             return deleted;
-            //console.log(`${result.deletedId} document(s) deleted.`);
         }
         finally {
             // await client.close();
@@ -158,7 +150,6 @@ module.exports = {
             if (targetID === undefined) {
                 const stream = bucket.openUploadStream(_name, { metadata: { type: _type, owner: _user, lastModifiedBy: _user, lastModifiedDate: _date, expDate: _expDate, fileExt: _fileExt } });
                 const result = await _RS.pipe(stream);
-                //console.log('A slide file was added with the id: ${result.uploadID._id}');
                 return stream.id.toHexString();
             }
             else {
@@ -167,7 +158,6 @@ module.exports = {
                 //upload new slide
                 const stream = bucket.openUploadStreamWithId(mongodb.ObjectId(targetID), _name, { metadata: { type: _type, owner: _user, lastModifiedBy: _user, lastModifiedDate: _date, expDate: _expDate, fileExt: _fileExt } });
                 const result = await _RS.pipe(stream);
-                //console.log('A slide file was added with the _id: ${result.insertedId}');
                 return stream.id.toHexString();
             }
 
