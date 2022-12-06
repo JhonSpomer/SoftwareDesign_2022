@@ -18,8 +18,9 @@ import FormField from "@cloudscape-design/components/form-field";
 import Header from "@cloudscape-design/components/header";
 import SpaceBetween from "@cloudscape-design/components/space-between";
 import Alert from "@cloudscape-design/components/alert";
+import Button from "@cloudscape-design/components/button";
 
-export default function Profile() {
+export default function Profile(props) {
     const
         [alert, setAlert] = useState(undefined),
         credentials = sessionStorage.getItem("UserCreds");
@@ -31,6 +32,10 @@ export default function Profile() {
         Reload the page or navigate to the login tab to login.
     </Alert>);
     else [username, password] = window.atob(credentials).split(":");
+
+    useState(() => {
+        [username, password] = window.atob(credentials).split(":");
+    }, []);
 
     return <ContentLayout
         header={<Header
@@ -60,6 +65,17 @@ export default function Profile() {
                 >
                     {password.slice(0, 1) + (new Array(password.length - 2)).fill("●", 0, password.length - 2).join("") + password.slice(-1)}
                 </FormField>
+                <Button
+                    variant="normal"
+                    onClick={async event => {
+                        event.preventDefault();
+                        const href = `/edit/user/${username}`;
+                        props.setActiveHref(href);
+                        props.navigate(href);
+                    }}
+                >
+                    Change
+                </Button>
             </Container>
         </SpaceBetween>}
     </ContentLayout>;

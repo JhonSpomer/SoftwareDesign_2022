@@ -13,6 +13,7 @@ Edit user page for the user documentation. Should only be accessed by a super us
 
 
 import React, {useState, useEffect} from "react";
+import {Buffer} from 'buffer';
 import Form from "@cloudscape-design/components/form";
 import SpaceBetween from "@cloudscape-design/components/space-between";
 import Button from "@cloudscape-design/components/button";
@@ -39,7 +40,8 @@ export default function EditUser(props) {
         [passwordError, setPasswordError] = useState(undefined),
         [newUsername, setNewUsername] = useState(oldUsername),
         [newPassword, setNewPassword] = useState(""),
-        [passwordConfirm, setPasswordConfirm] = useState("");
+        [passwordConfirm, setPasswordConfirm] = useState(""),
+        [uploadLoading, setUploadLoading] = useState(false);
 
     return <ContentLayout
         header={<Header
@@ -57,6 +59,7 @@ export default function EditUser(props) {
         >
             <form onSubmit={event => event.preventDefault()}>
                 <Form
+                    errorText={error}
                     header={<Header
                         variant="h1"
                     >
@@ -73,7 +76,10 @@ export default function EditUser(props) {
                         </Button>
                         <Button
                             variant="primary"
+                            disabled={uploadLoading}
+                            loading={uploadLoading}
                             onClick={async event => {
+                                setUploadLoading(true);
                                 event.preventDefault();
                                 if (newPassword !== passwordConfirm) {
                                     setPasswordError("Passwords do not match. Please type matching passwords.");
@@ -91,15 +97,15 @@ export default function EditUser(props) {
                                         newUsername, newPassword
                                     })
                                 });
-                                console.log(res);
                                 if (res.ok) {
+                                    let Creds = newUsername + ':' + newPassword;
+                                    let encodedCreds = Buffer.from(Creds);
+                                    let base64Creds = encodedCreds.toString('base64');
+                                    window.sessionStorage.setItem("UserCreds", base64Creds);
                                     props.setActiveHref("/profile");
                                     props.navigate("/profile");
-                                    return;
-                                } else {
-                                    setError("A server error occurred. Please try again later.");
-                                    return;
-                                }
+                                } else setError("A server error occurred. Please try again later.");
+                                setUploadLoading(false);
                             }}
                         >
                             Submit

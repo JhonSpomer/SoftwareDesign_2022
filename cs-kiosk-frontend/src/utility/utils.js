@@ -5,8 +5,6 @@ export function ImgFromArrayBuffer(props) {
         arrayBuffer = props.arrayBuffer,
         mimeType = props.mimeType,
         innerProps = {...props};
-    console.log(arrayBuffer);
-    console.log(mimeType);
     delete innerProps["arrayBuffer"];
     delete innerProps["mimeType"];
     return <img

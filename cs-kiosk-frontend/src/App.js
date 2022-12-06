@@ -38,29 +38,46 @@ import EditUser from "./pages/EditUser";
 import Profile from './pages/Profile';
 import ContentLayout from '@cloudscape-design/components/content-layout';
 import Container from '@cloudscape-design/components/container';
+import StatusIndicator from "@cloudscape-design/components/status-indicator";
 
 //variables
 
+function SendToPreview(props) {
+    props.setActiveHref("/preview");
+    props.navigate("/preview");
+    return <div>Please navigate elsewhere or reload the page. This page is empty.</div>;
+}
+
 function App() {
     const
-        navigate = useNavigate(),
+        [navigationHide, setNavValue] = useState(true),
+        [activeHref, setActiveHref] = useState("/"),
         [userValue, setUserValue] = useState(),
         [passwordValue, setPasswordValue] = useState(""),
         [ErrorValue, setErrorValue] = useState(""),
-        [activeHref, setActiveHref] = useState("/"),
-        [navigationHide, setNavValue] = useState(true),
         [toolsHide, setToolsValue] = useState(true),
-        location = useLocation(),
         [checked, setChecked] = useState(false),
         [slides, setSlides] = useState([]),
         [users, setUsers] = useState([]),
-        [files, setFiles] = useState({});
+        [files, setFiles] = useState({}),
+        [loginLoading, setLoginLoading] = useState(false),
+        navigate = useNavigate(),
+        location = useLocation();
+
+    const credentials = window.sessionStorage.getItem("UserCreds");
+    if (location.pathname !== "/login") {
+        if (!credentials) {
+            // setActiveHref("/login");
+            navigate("/login");
+        }
+    }
 
     useEffect(() => {
         if (location.pathname === "/") {
             setNavValue(true);
             setToolsValue(true);
         }
+        setActiveHref(location.pathname);
     }, [location]);
 
     //Currently unused, Commented out but left for completness.
@@ -94,7 +111,6 @@ function App() {
             newFiles.splice(0, newFiles.length, ...(await Promise.all(newFiles)));
             for (const key in files) delete files[key];
             for (let i = 0; i < newFiles.length; i++) files[ids[i]] = newFiles[i];
-            console.log(newFiles);
             setFiles({ ...files });
             setSlides(newSlides);
         } catch (error) {
@@ -114,12 +130,9 @@ function App() {
             method: "GET",
             mode: "cors"
         });
-        console.log("clarity-----");
-        console.log(usersRes.ok, usersRes);
 
         try {
             const newUsers = await usersRes.json();
-            console.log(newUsers);
 
             //const
             //    newFiles = [],
@@ -155,11 +168,7 @@ function App() {
         connection.addEventListener("message", onMessage);
         connection.addEventListener("close", onClose);
 
-        const credentials = window.sessionStorage.getItem("UserCreds");
-
-        if (!credentials) {
-            navigate("/login");
-        } else {
+        if (credentials) {
             setNavValue(false);
         }
 
@@ -184,11 +193,10 @@ function App() {
                         }
                     }}
                     items={[
-                        {type: "link", text: "User Settings", href: "profile"},
-                        {type: "link", text: "Admin", href: "admin"},
-                        {type: "link", text: "Preview", href: "preview"},
-                        {type: "link", text: "Users", href: "users"},
-                        {type: "link", text: "Login", href: "login"},
+                        {type: "link", text: "Profile", href: "/profile"},
+                        {type: "link", text: "Preview", href: "/preview"},
+                        {type: "link", text: "Slides", href: "/slides"},
+                        {type: "link", text: "Users", href: "/users"},
                         {type: "divider"},
                         {
                             //We don't have a documentation website to link to at this time; thus, I've commented this segment out as to not misslead users. -Jhon
@@ -204,11 +212,20 @@ function App() {
 
             content={
                 <Routes>
-                    <Route path="*" element={<div>Oh no! You appear to have gotten lost. Please restart the system to get back to the login page. If this does not fix this problem. Please contact the system maintence team.</div>} />
-                    <Route path="/test" element={<Tests />} />
-                    <Route path="/profile" element={<Profile />} />
                     <Route
-                        path="/admin"
+                        path="*"
+                        element={<SendToPreview
+                            navigate={navigate}
+                            setActiveHref={setActiveHref}
+                        />}
+                    />
+                    <Route path="/test" element={<Tests />} />
+                    <Route path="/profile" element={<Profile
+                        navigate={navigate}
+                        setActiveHref={setActiveHref}
+                    />} />
+                    <Route
+                        path="/slides"
                         element={
                             <Admin
                                 navigate={navigate}
@@ -276,12 +293,13 @@ function App() {
                                             <SpaceBetween direction="horizontal" size="xs">
                                                 <Button
                                                     variant="primary"
-                                                    disabled={!checked}
+                                                    disabled={!checked && loginLoading}
+                                                    loading={loginLoading}
                                                     onClick={async () => {
-                                                        await query(userValue, passwordValue);
                                                         setUserValue("");
                                                         setPasswordValue("");
-                                                        setActiveHref("admin");
+                                                        await query(userValue, passwordValue);
+                                                        // setActiveHref("/slides");
                                                         //sessionStorage.setItem(userValue);
                                                         //NavBarBool();
                                                     }}
@@ -304,6 +322,7 @@ function App() {
                                             errorText={ErrorValue}
                                         >
                                             <Input
+                                                type="text"
                                                 value={userValue}
                                                 onChange={event => setUserValue(event.detail.value)}
                                             />
@@ -314,6 +333,7 @@ function App() {
                                             errorText={ErrorValue}
                                         >
                                             <Input
+                                                type="password"
                                                 value={passwordValue}
                                                 onChange={event => setPasswordValue(event.detail.value)
                                                 }
@@ -340,17 +360,14 @@ function App() {
 
     async function query(usrName, pssWord) {
         //check if user credentials are in database
+        setLoginLoading(true);
 
         let jsondata = JSON.stringify({ username: usrName, password: pssWord });
-        console.log(jsondata);
         let Creds = usrName + ':' + pssWord;
-        var EncodedCreds = Buffer.from(Creds);
-        console.log(Creds);
+        let EncodedCreds = Buffer.from(Creds);
         let base64Creds = EncodedCreds.toString('base64');
 
-
         window.sessionStorage.setItem("UserCreds", base64Creds);
-        console.log(base64Creds);
         const res = await fetch('http://localhost:9000/authenticate.json', {
             method: "POST",
             mode: 'cors',
@@ -364,9 +381,11 @@ function App() {
             const value = await res.text();
             if (value === 'authenticated') {
                 setNavValue(false);
-                navigate("/admin");
+                setActiveHref("/slides");
+                navigate("/slides");
             }
         }
+        setLoginLoading(false);
     }
 }
 

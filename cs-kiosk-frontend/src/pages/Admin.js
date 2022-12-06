@@ -29,9 +29,11 @@ import {ImgFromArrayBuffer} from "../utility/utils";
 import ContentLayout from "@cloudscape-design/components/content-layout";
 
 export default function Admin(props) {
-    useEffect(() => {
-        console.log(props.slides);
-    }, []);
+    const
+        [deleteLoading, setDeleteLoading] = useState(undefined);
+    // useEffect(() => {
+    //     console.log(props.slides);
+    // }, []);
     return <ContentLayout
         header={<Header
             variant="h1"
@@ -92,17 +94,19 @@ export default function Admin(props) {
                                 Edit slide
                             </Button>
                             <Button
-                                onClick={() => {
-                                    console.log("del");
+                                disabled={deleteLoading}
+                                loading={deleteLoading === item._id}
+                                onClick={async () => {
                                     let creds = sessionStorage.getItem("UserCreds");
-                                    console.log(creds);
-                                    const res = fetch(`http://localhost:9000/delete/slide.json?id=${item._id}`, {
+                                    setDeleteLoading(item._id);
+                                    const res = await fetch(`http://localhost:9000/delete/slide.json?id=${item._id}`, {
                                         method: "GET",
                                         mode: "cors",
                                         headers: {
                                             "Authorization": `Basic ${creds}`
                                         }
                                     });
+                                    setDeleteLoading(undefined);
                                 }}
                             >
                                 Delete slide
@@ -150,7 +154,6 @@ export default function Admin(props) {
                             const href = `/edit/slide/new`;
                             props.setActiveHref(href);
                             let stored = sessionStorage.getItem("UserCreds");
-                            console.log(stored);
                             props.navigate(href);
                         }}
                     >
