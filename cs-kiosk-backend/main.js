@@ -261,11 +261,12 @@ expressWs(api);
         if (req.username && req.password) {
             console.log("Reached delete midpoint");
             try {
-                const order = await db.getSlideOrder();
+                const
+                    order = await db.getSlideOrder(),
+                    slide = await db.getSlide(req.query.id);
                 await db.modSlideOrder(order.filter(i => i != req.query.id));
-                console.log(req.query.id);
                 await db.delSlide(req.query.id);
-                await db.delFile(req.query.id);
+                await db.delFile(slide.content);
                 updateAllConnections();
                 res
                     .status(200)
@@ -273,6 +274,7 @@ expressWs(api);
                 console.log("deleting " + req.query.id);
             } catch (e) {
                 console.log("Failed to delete");
+                console.log(e);
             }
         }
         res
