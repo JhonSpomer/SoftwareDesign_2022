@@ -1,3 +1,17 @@
+# Project Overview Written By Authors
+
+## Contributions
+
+* Jhon Spomer
+    * Worked on frontend components, including the admin dashboard and the client-side logic to connect to the server
+    * Implemented tests for frontend and api connection from the frontend
+* Isaac van Horn
+    * Built database functions specific for the project (add/delete slides, add/delete images, etc.)
+    * Implemented tests for database functions
+* Matthew Montoni-Tiller
+    * Wrote the server code that connected the frontend and the database, including api endpoints and query parsing
+    * Created the slide carousel piece of the project, and implemented auto-update functionality for it
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
